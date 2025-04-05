@@ -1,0 +1,33 @@
+<!-- <p>teacher-main-page works!</p>
+
+<app-login></app-login>
+<app-logout></app-logout>
+<app-register></app-register> -->
+
+<div class="flex flex-row">
+
+  <div class="flex sm:hidden flex-row absolute z-30 w-screen h-screen"
+  [ngClass]="{'font-bold hidden': this.visualStatesService.leftMenuCondition() === false}">
+    <div class="flex" >
+      <app-left-menu></app-left-menu>
+    </div>
+    <div class="grow bg-neutral-300 opacity-40" (click)="toggleShowLeftMenuHeader()">
+    </div>
+  </div>
+
+  <div class="hidden sm:flex">
+    <div [ngClass]="{'sm:hidden': this.visualStatesService.leftMenuCondition() === true}">
+      <app-left-menu></app-left-menu>
+    </div>
+  </div>
+
+  <div class="grow">
+    <app-chat></app-chat>
+  </div>
+
+</div>
+
+<!--
+@if(this.authService.currentUserSig()) {
+  <div class="w-9 h-9 bg-red-500"></div>
+} -->

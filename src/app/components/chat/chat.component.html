@@ -1,0 +1,151 @@
+<div class="bg-gray-50 dark:bg-neutral-800 relative h-[100dvh] w-full overflow-auto transition-width">
+
+  <!--
+    @if(showStayTune == true) {
+      <app-modal-info (showStayTuned)="fromModalInfo($event)"> </app-modal-info>
+      } -->
+
+
+
+  <div class="flex h-full w-full flex-col focus-visible:outline-0 min-h-14 pt-2">
+
+    <div class="w-full flex flex-row h-16">
+      <!-- <div (click)="toggleShowHeader()" class="md:hidden z-30 cursor-pointer">
+          <app-top-left></app-top-left>
+        </div> -->
+      <div class="grow m-auto">
+        <div class="flex flex-grow place-content-center">
+          <!-- <app-dropdowntitle></app-dropdowntitle> -->
+          <div class="bg-green-300 cursor-pointer" (click)="toggleShowLeftMenuHeader()">boton show handler </div>
+          <div class="bg-red-300 cursor-pointer" (click)="sendMessage_stream_without_text()">boton test</div>
+        </div>
+      </div>
+      <!-- <div class="">
+          <app-top-right (showModalHandler)="fromTopRight($event)"></app-top-right>
+        </div> -->
+    </div>
+
+    <div class="grow p-1 flex flex-col">
+
+      <div #messagesContainer class="grow h-60 m-auto w-full overflow-y-auto px-3 scroll-smooth">
+        <div class="flex flex-col sm:w-12/12 md:w-11/12 lg:w-[720px] xl:w-[800px] m-auto"
+          *ngFor="let message of chatMessages">
+
+          <!-- <div class="max-w-[80%] rounded-3xl mt-3 mb-4 py-2 px-4 break-words whitespace-pre-wrap"
+              [ngClass]="{ 'assistant-message': message.role === 'assistant', 'user-message': message.role === 'user' }">
+              <div class="text-gray-800 dark:text-gray-200">{{ message.message }}</div>
+              <div>{{ message.content }}</div>
+            </div> -->
+
+          <div
+            class="self-end max-w-[80%] rounded-3xl rounded-br-md text-gray-800 dark:text-neutral-200 bg-gray-200 dark:bg-neutral-700 mt-3 mb-4 py-2 px-4 break-words whitespace-pre-wrap"
+            [ngClass]="{ 'assistant-message': message.role === 'assistant',  'user-message': message.role === 'user' }">
+            <div class="text-gray-800 dark:text-gray-200">{{ message.message }}</div>
+
+            <div>{{ message.content }}</div>
+          </div>
+
+        </div>
+
+        @if(loadingResponse && !startingResponse){
+        <div class="relative top-[-14px] sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/122 xl:w-1/2 m-auto">
+          <app-message-waiting></app-message-waiting>
+        </div>
+        }
+      </div>
+
+
+
+      <!-- <div [ngClass]="showArrowDown ? 'arrow-show' : 'arrow-not-show'">
+        <div (click)="scrollToBottomFromArrow()"
+          class="cursor-pointer absolute bottom-[90px] z-10 rounded-full bg-amber-100 border text-token-text-secondary border-token-border-light right-1/2 translate-x-1/2 bg-token-main-surface-primary w-8 h-8 flex items-center justify-center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            class="icon-md text-token-text-primary">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M12 21C11.7348 21 11.4804 20.8946 11.2929 20.7071L4.29289 13.7071C3.90237 13.3166 3.90237 12.6834 4.29289 12.2929C4.68342 11.9024 5.31658 11.9024 5.70711 12.2929L11 17.5858V4C11 3.44772 11.4477 3 12 3C12.5523 3 13 3.44772 13 4V17.5858L18.2929 12.2929C18.6834 11.9024 19.3166 11.9024 19.7071 12.2929C20.0976 12.6834 20.0976 13.3166 19.7071 13.7071L12.7071 20.7071C12.5196 20.8946 12.2652 21 12 21Z"
+              fill="currentColor"></path>
+          </svg>
+        </div>
+      </div> -->
+
+        <div [ngClass]="showArrowDown ? 'arrow-show' : 'arrow-not-show'" class="relative">
+          <!-- <div class="arrow-show bg-red-100 relative"> -->
+          <div (click)="scrollToBottomFromArrow()"
+            class="cursor-pointer absolute bottom-1.5 right-1/2 rounded-full bg-amber-100 border w-8 h-8 flex items-center justify-center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+              class="icon-md text-token-text-primary">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M12 21C11.7348 21 11.4804 20.8946 11.2929 20.7071L4.29289 13.7071C3.90237 13.3166 3.90237 12.6834 4.29289 12.2929C4.68342 11.9024 5.31658 11.9024 5.70711 12.2929L11 17.5858V4C11 3.44772 11.4477 3 12 3C12.5523 3 13 3.44772 13 4V17.5858L18.2929 12.2929C18.6834 11.9024 19.3166 11.9024 19.7071 12.2929C20.0976 12.6834 20.0976 13.3166 19.7071 13.7071L12.7071 20.7071C12.5196 20.8946 12.2652 21 12 21Z"
+                fill="currentColor"></path>
+            </svg>
+          </div>
+        </div>
+
+
+        <div
+          class="flex flex-col p-4 mt-4 mb-8 gap-4 w-full sm:w-9/12 max-w-96 sm:max-w-none md:w-8/12 lg:w-7/12 2xl:w-1/2 m-auto bg-gray-50 dark:bg-neutral-700 rounded-md shadow-md border">
+
+          <textarea #chatInput [(ngModel)]="userMessage"
+            class="w-full text-gray-800 dark:text-gray-200 py-1 px-3 ring-0 bg-transparent resize-none overflow-hidden focus:outline-none focus:ring-0 focus:border-none appearance-none"
+            rows="1" placeholder="Escribe un mensaje..." aria-label="Escribe un mensaje" (input)="adjustHeight()"
+            (keydown)="handleKeydown($event)">
+          </textarea>
+
+          <div class="flex justify-end">
+            <div role="button" aria-label="Enviar mensaje" tabindex="0"
+              class="w-8 h-8 text-center bg-black dark:bg-white rounded-full cursor-pointer"
+              (click)="sendMessage_stream()">
+              <mat-icon fontIcon="arrow_upward" class="mt-1 scale-125 text-white dark:text-gray-800"></mat-icon>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+      <!-- <div
+          class="flex flex-row p-4 mt-4 gap-4 w-full sm:w-9/12 max-w-96 sm:max-w-none md:w-8/12 lg:w-7/12 2xl:w-1/2 m-auto bg-gray-50 dark:bg-neutral-700 rounded-md shadow-md mb-4 border">
+
+          <textarea
+            #chatInput
+            [(ngModel)]="userMessage"
+            class="grow text-gray-800 dark:text-gray-200 py-1 px-3 ring-0 bg-transparent resize-none overflow-hidden focus:outline-none focus:ring-0 focus:border-none appearance-none"
+            rows="1"
+            placeholder="Escribe un mensaje..."
+            aria-label="Escribe un mensaje"
+            (input)="adjustHeight()"
+            (keydown)="handleKeydown($event)">
+          </textarea>
+
+          <div
+            role="button"
+            aria-label="Enviar mensaje"
+            tabindex="0"
+            class="w-8 h-8 text-center bg-black dark:bg-white rounded-full cursor-pointer"
+            (click)="sendMessage_stream()">
+            <mat-icon fontIcon="arrow_upward" class="mt-1 scale-125 text-white dark:text-gray-800"></mat-icon>
+          </div>
+        </div> -->
+
+
+
+      <!-- El de abajo es el antiguo -->
+      <!-- <div
+          class="flex flex-row p-4 mt-4 gap-4 w-full sm:w-9/12 max-w-96 sm:max-w-none md:w-8/12 lg:w-7/12 2xl:w-1/2 m-auto bg-gray-50 dark:bg-neutral-700 rounded-md shadow-md mb-4 border">
+          <textarea #chatInput [(ngModel)]="userMessage"
+            class="grow text-gray-800 dark:text-gray-200 py-1 px-3 ring-0 bg-transparent resize-none overflow-hidden focus:outline-none focus:ring-0 focus:border-none appearance-none"
+            rows="1" placeholder="Type a message..." (input)="adjustHeight()"
+            (keydown.enter)="sendMessage_stream()">
+          </textarea>
+
+          <div class="w-8 h-8 text-center bg-black dark:bg-white rounded-full"
+            (click)="sendMessage_stream()">
+            <mat-icon fontIcon="arrow_upward" class="mt-1 scale-125 text-white dark:text-gray-800"></mat-icon>
+          </div>
+        </div> -->
+
+    </div>
+
+  </div>
+</div>
