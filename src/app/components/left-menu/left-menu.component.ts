@@ -16,9 +16,16 @@ export class LeftMenuComponent {
 
   boldKey: string | null = null;
 
-  toggleBold(key: string) {
+  toggleBold(key: string, value: string) {
     this.boldKey = this.boldKey === key ? null : key;
     console.log(key);
-    this.pagesService.definePages(key)
+    this.pagesService.definePages(key, value)
   }
+
+  selectAll() {
+    this.pagesService.defineAll()
+    console.log(this.pagesService.pagesSelected);
+    this.boldKey = null;
+  }
+
 }
