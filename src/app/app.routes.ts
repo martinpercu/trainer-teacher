@@ -5,6 +5,7 @@ import { LoginComponent } from '@components/auth/login/login.component';
 import { ChatComponent } from '@components/chat/chat.component';
 import { LeftMenuComponent } from '@components/left-menu/left-menu.component';
 import { EthicSupervisorsComponent } from '@components/pdfs/ethic-supervisors/ethic-supervisors.component';
+import { PdfviewerComponent } from '@components/pdfviewer/pdfviewer.component'
 
 
 export const routes: Routes = [
@@ -18,6 +19,9 @@ export const routes: Routes = [
   },
   { path: 'teacher/employee',
     component: TeacherMainPageComponent
+  },
+  { path: 'pdf-viewer',
+    component: PdfviewerComponent
   },
   {
     path:'login',

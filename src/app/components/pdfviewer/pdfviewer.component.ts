@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { PagesService } from '@services/pages.service'; // Asegúrate de ajustar la ruta al servicio
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-pdfviewer',
@@ -7,5 +10,16 @@ import { Component } from '@angular/core';
   styleUrl: './pdfviewer.component.css'
 })
 export class PdfviewerComponent {
+  private pagesService = inject(PagesService);
+  private sanitizer = inject(DomSanitizer);
+
+  get safePdfUrl(): SafeResourceUrl | null {
+    const path = this.pagesService.docPath(); // Obtiene el path como 'pdfs/ethics-supervisors.pdf'
+    if (path) {
+      const fullPath = `/assets/${path}`; // Construye la URL completa
+      return this.sanitizer.bypassSecurityTrustResourceUrl(fullPath);
+    }
+    return null;
+  }
 
 }
