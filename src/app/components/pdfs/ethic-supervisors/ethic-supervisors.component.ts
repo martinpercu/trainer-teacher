@@ -12,7 +12,6 @@ export class EthicSupervisorsComponent {
 
   pdfUrl: string = 'assets/pdfs/ethics-supervisors.pdf'; // Reemplaza con la URL real de tu PDF
 
-
   constructor() {}
 
   ngOnInit(): void {

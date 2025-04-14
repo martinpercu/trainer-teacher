@@ -12,14 +12,12 @@ import { TopRightComponent } from '@components/top-right/top-right.component';
 
 import { ChatMessage } from '@models/chatMessage';
 
-import { AuthService } from '@services/auth.service';
 import { VisualStatesService } from '@services/visual-states.service';
 import { PagesService } from '@services/pages.service';
 
 
 @Component({
   selector: 'app-chat',
-  // imports: [CommonModule, FormsModule, HttpClientModule, HeaderComponent, DropdowntitleComponent, TopRightComponent, TopLeftComponent, MatIconModule, MessageWaitingComponent, ModalInfoComponent],
   imports: [CommonModule, FormsModule, MatIconModule, MessageWaitingComponent, TopRightComponent],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
@@ -32,15 +30,11 @@ export class ChatComponent {
 
 
   private http = inject(HttpClient);
-  // private assistSelector = inject(AssistantselectorService);
-  private authService = inject(AuthService);
   visualStatesService = inject(VisualStatesService);
   pagesService = inject(PagesService);
 
 
   userMessage: string = '';
-  botResponse: string = '';
-  isLoading: boolean = false;
 
   messages: string[] = [];
 
@@ -79,27 +73,12 @@ export class ChatComponent {
   showArrowDown: boolean = false;
   userScrolled: boolean = false; // Nueva bandera para controlar el scroll manual
 
-  showHeader = signal(false);
-
-  showStayTune: boolean = true;
-
+  // showHeader = signal(false);
 
   hardTest: string = 'Just ask me 2 serious questions. Try to force me to answer this questions very precise if I do not well; please help me and let me know about the answers';
   shortTest: string = 'Please, just ask me 1 easy question to test my knowledge';
   startLesson: string = 'In the docs you will find one starting with "Section " this is the subject of this lesson. Please order the others docs and find the best way to teach me this info. Please start with no more than 110 words to explain me and then just ask me if I want to continue the lesson or if I need you to explain me again the same.'
   startLessonFull: string = 'Can you explain "Ethics Management for Supervisors" to me using the documents you have? Please give me a general overview of what the course is about, starting with no more than 110 words. After that, just ask me if I’d like to continue the lesson or if I want you to repeat the same explanation. Try to teach me in the most helpful way.'
-
-  // combinedUserEmailAndAssistant = computed(() => {
-  //   const currentUser = this.authService.currentUserSig();
-  //   const assistantName = this.assistSelector.assistant_name();
-  //   // Verifica si el usuario actual existe
-  //   if (currentUser) {
-  //     return currentUser.email+'-'+assistantName
-  //   } else {
-  //     // Valor alternativo cuando no hay usuario
-  //     return 'NoEmailNoUser'+'-'+assistantName
-  //   }
-  // });
 
 
   ngAfterViewInit(): void {
@@ -166,7 +145,8 @@ export class ChatComponent {
       // session_id: this.combinedUserEmailAndAssistant(),
       // system_prompt_text: this.assistSelector.assistant_description()
       // system_prompt_text: 'Eres un asistente que responde unicamente usando la informacion de los PDFs que tienes en las vectorstore',
-      pages: this.pagesService.pagesSelected()
+      pages: this.pagesService.pagesSelected(),
+      doc_path: this.pagesService.docPath()
     };
 
     const timeout = setTimeout(() => {
@@ -239,20 +219,11 @@ export class ChatComponent {
     container.scrollTop = container.scrollHeight;
   }
 
-  // toggleShowHeader() {
-  //   this.showHeader.update(prevState => !prevState)
-  // }
-
-  // adjustHeight(textarea: HTMLTextAreaElement) {
-  //   textarea.style.height = 'auto'; // Reinicia la altura para reducir si es necesario
-  // }
-
   adjustHeight(): void {
     const textarea = this.chatInput.nativeElement;
-    textarea.style.height = 'auto';
+    textarea.style.height = 'auto'; // Reinicia la altura para reducir si es necesario
     textarea.style.height = `${textarea.scrollHeight}px`;
   }
-
 
   handleKeydown(event: KeyboardEvent): void {
     if (event.key === 'Enter' && !event.shiftKey) {
@@ -261,16 +232,9 @@ export class ChatComponent {
     }
   }
 
-
-  fromTopRight(data: any) {
-    console.log(data + ' this is staytuned status');
-    this.showStayTune = data
-  };
-
   toggleShowLeftMenuHeader() {
     this.visualStatesService.togleShowLeftMenu()
   }
-
 
   sendMessage_stream_without_text(sendingMessage: string) {
     // if (this.userMessage.trim() === "") return;
@@ -316,7 +280,8 @@ export class ChatComponent {
       // session_id: this.combinedUserEmailAndAssistant(),
       // system_prompt_text: this.assistSelector.assistant_description()
       // system_prompt_text: 'Eres un profesor que analiza y entiende los documentos recibidos. Puedes hacer preguntas en relacion a los PDF y testear el conocimiento del user. Importante solamente puedes usar la informacion de los PDFs que tienes en las vectorstore',
-      pages: this.pagesService.pagesSelected()
+      pages: this.pagesService.pagesSelected(),
+      doc_path: this.pagesService.docPath()
     };
 
     console.log(formData);

@@ -10,6 +10,13 @@ import { EthicSupervisorsComponent } from '@components/pdfs/ethic-supervisors/et
 export const routes: Routes = [
   {
     path:'',
+    redirectTo: 'teacher/supervisors',
+    pathMatch: 'full'
+  },
+  { path: 'teacher/supervisors',
+    component: TeacherMainPageComponent
+  },
+  { path: 'teacher/employee',
     component: TeacherMainPageComponent
   },
   {
