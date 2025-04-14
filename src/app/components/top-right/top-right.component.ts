@@ -3,7 +3,8 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { LightdarkthemeService } from '@services/lightdarktheme.service';
 import { AuthService } from '@services/auth.service';
-import { ModalinfoService } from '@services/modalinfo.service'
+import { ModalinfoService } from '@services/modalinfo.service';
+import { VisualStatesService } from '@services/visual-states.service';
 
 import { RegisterComponent } from '@components/auth/register/register.component';
 import { LoginComponent } from '@components/auth/login/login.component';
@@ -19,6 +20,7 @@ export class TopRightComponent {
   themeService = inject(LightdarkthemeService);
   authService = inject(AuthService);
   modalinfoService = inject(ModalinfoService);
+  visualStatesService = inject(VisualStatesService);
 
   showlist: boolean = false;
   // showRegisterOrLogin: boolean = false;
@@ -64,7 +66,8 @@ export class TopRightComponent {
   }
 
   showModalInfo() {
-    this.modalinfoService.showModalInfo.set(true);
+    this.visualStatesService.showModalInfo.set(true);
+    this.switchShowList();
   }
 
 

@@ -2,7 +2,9 @@
   <div class="h-[100vh] w-[260px] bg-neutral-150 dark:bg-neutral-900 border-r border-gray-200 dark:border-none">
 
     <div class="flex flex-col gap-4 text-center pt-16 text-gray-900 dark:text-gray-300 text-base">
-      <div (click)="selectAll()" class="mb-6 text-sm font-semibold">
+      <div (click)="selectAll()"
+        class="cursor-pointer mb-6 text-sm font-semibold text-center m-auto"
+        [ngClass]="{ 'underline scale-105': boldKey === 'ALL' }">
         Ethics Management <br>for Supervisors
       </div>
 

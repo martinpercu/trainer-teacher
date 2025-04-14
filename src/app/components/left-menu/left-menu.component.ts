@@ -25,7 +25,7 @@ export class LeftMenuComponent {
   selectAll() {
     this.pagesService.defineAll()
     console.log(this.pagesService.pagesSelected);
-    this.boldKey = null;
+    this.boldKey = 'ALL';
   }
 
 }

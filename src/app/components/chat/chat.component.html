@@ -60,7 +60,7 @@
             </div> -->
 
           <div
-            class="self-end max-w-[80%] rounded-3xl rounded-br-md text-gray-800 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-750 mt-3 mb-4 py-2 px-4 break-words whitespace-pre-wrap"
+            class="self-end max-w-[80%] rounded-3xl rounded-br-md text-neutral-800 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-750 mt-3 mb-4 py-2 px-4 break-words whitespace-pre-wrap"
             [ngClass]="{ 'assistant-message': message.role === 'assistant',  'user-message': message.role === 'user' }">
             <div class="text-gray-800 dark:text-gray-200">{{ message.message }}</div>
 
@@ -77,18 +77,6 @@
       </div>
 
 
-
-      <!-- <div [ngClass]="showArrowDown ? 'arrow-show' : 'arrow-not-show'">
-        <div (click)="scrollToBottomFromArrow()"
-          class="cursor-pointer absolute bottom-[90px] z-10 rounded-full bg-amber-100 border text-token-text-secondary border-token-border-light right-1/2 translate-x-1/2 bg-token-main-surface-primary w-8 h-8 flex items-center justify-center">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-            class="icon-md text-token-text-primary">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M12 21C11.7348 21 11.4804 20.8946 11.2929 20.7071L4.29289 13.7071C3.90237 13.3166 3.90237 12.6834 4.29289 12.2929C4.68342 11.9024 5.31658 11.9024 5.70711 12.2929L11 17.5858V4C11 3.44772 11.4477 3 12 3C12.5523 3 13 3.44772 13 4V17.5858L18.2929 12.2929C18.6834 11.9024 19.3166 11.9024 19.7071 12.2929C20.0976 12.6834 20.0976 13.3166 19.7071 13.7071L12.7071 20.7071C12.5196 20.8946 12.2652 21 12 21Z"
-              fill="currentColor"></path>
-          </svg>
-        </div>
-      </div> -->
 
       <div [ngClass]="showArrowDown ? 'arrow-show' : 'arrow-not-show'" class="relative">
         <!-- <div class="arrow-show bg-red-100 relative"> -->
@@ -114,33 +102,41 @@
           (keydown)="handleKeydown($event)">
           </textarea>
 
-        <div class="flex text-neutral-600 dark:text-neutral-300 gap-3 pr-2 pl-2">
+        <div class="flex text-sm text-neutral-600 dark:text-neutral-350 gap-3 pl-2">
 
           <!-- <div class="flex gap-3 pr-2"> -->
-
-            <div
-              class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl shadow-sm border border-neutral-200"
-              (click)="sendMessage_stream_without_text(startLesson)">
-                <mat-icon>chat_info</mat-icon>
-              <!-- <div class="sm:pl-2 hidden sm:block">About</div> -->
-              <!-- <div class="hidden xs:block pl-2 truncate xs:max-w-32 sm:max-w-40 md:max-w-48 lg:max-w-56"> -->
-              <div class="hidden grow xs:block pl-2 truncate xs:max-w-32 sm:max-w-52 md:max-w-72 lg:max-w-60 xl:max-w-80">
-              <!-- <div class="flex truncate"> -->
+            @if (this.pagesService.sectionSelected() === 'All') {
+              <div
+              class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
+              (click)="sendMessage_stream_without_text(startLessonFull)">
+                <mat-icon>speaker_notes</mat-icon>
+                <div class="hidden grow xs:block pl-2 truncate xs:max-w-32 sm:max-w-52 md:max-w-72 lg:max-w-60 xl:max-w-80">
                   {{this.pagesService.titleSelected()}}
               </div>
             </div>
+            }
+            @if (this.pagesService.sectionSelected() !== 'All') {
+              <div
+              class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
+              (click)="sendMessage_stream_without_text(startLesson)">
+                <mat-icon>chat_info</mat-icon>
+                <div class="hidden grow xs:block pl-2 truncate xs:max-w-32 sm:max-w-52 md:max-w-72 lg:max-w-60 xl:max-w-80">
+                  {{this.pagesService.titleSelected()}}
+              </div>
+            </div>
+            }
 
             <div class="grow"></div>
 
             <div
-              class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl shadow-sm border border-neutral-200"
+              class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
               (click)="sendMessage_stream_without_text(shortTest)">
               <mat-icon>person_raised_hand</mat-icon>
               <div class="pl-2 hidden lg:block">easy</div>
             </div>
 
             <div
-              class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl shadow-sm border border-neutral-200"
+              class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
               (click)="sendMessage_stream_without_text(hardTest)">
               <mat-icon>quiz</mat-icon>
               <div class="pl-2 hidden lg:block">hard</div>

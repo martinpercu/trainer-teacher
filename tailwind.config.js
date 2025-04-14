@@ -9,6 +9,7 @@ module.exports = {
       colors: {
         neutral: {
           150: '#f9f9f9',
+          350: '#B4B4B4',
           750: '#303030',
           850: '#212121'
         },
