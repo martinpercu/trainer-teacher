@@ -5,14 +5,14 @@ import { LoginComponent } from '@components/auth/login/login.component';
 import { ChatComponent } from '@components/chat/chat.component';
 import { LeftMenuComponent } from '@components/left-menu/left-menu.component';
 import { EthicSupervisorsComponent } from '@components/pdfs/ethic-supervisors/ethic-supervisors.component';
-import { PdfviewerComponent } from '@components/pdfviewer/pdfviewer.component'
+import { PdfviewerComponent } from '@components/pdfviewer/pdfviewer.component';
+import { MainselectorPageComponent } from '@pages/mainselector-page/mainselector-page.component';
 
 
 export const routes: Routes = [
   {
     path:'',
-    redirectTo: 'teacher/supervisors',
-    pathMatch: 'full'
+    component: MainselectorPageComponent
   },
   { path: 'teacher/supervisors',
     component: TeacherMainPageComponent
