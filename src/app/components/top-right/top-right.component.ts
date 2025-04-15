@@ -46,15 +46,11 @@ export class TopRightComponent {
     alert('Your mobile device cannot load the files. Please use a desktop device to access the documents')
   }
 
-  // toPdf() {
-  //   this.router.navigate(['/pdf'])
-  // }
-
   toPdf() {
     const pdfPath = this.pagesService.docPath();
     if (pdfPath) {
       window.open(`/assets/${pdfPath}`, '_blank');
-      this.router.navigate(['/pdf-viewer']);
+      // this.router.navigate(['/pdf-viewer']);
     } else {
       alert('No hay PDF disponible');
     }

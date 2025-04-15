@@ -4,7 +4,6 @@ import { TeacherMainPageComponent } from '@pages/teacher-main-page/teacher-main-
 import { LoginComponent } from '@components/auth/login/login.component';
 import { ChatComponent } from '@components/chat/chat.component';
 import { LeftMenuComponent } from '@components/left-menu/left-menu.component';
-import { EthicSupervisorsComponent } from '@components/pdfs/ethic-supervisors/ethic-supervisors.component';
 import { PdfviewerComponent } from '@components/pdfviewer/pdfviewer.component'
 
 
@@ -34,9 +33,5 @@ export const routes: Routes = [
   {
     path:'leftmenu',
     component: LeftMenuComponent
-  },
-  {
-    path:'pdf',
-    component: EthicSupervisorsComponent
   }
 ];
