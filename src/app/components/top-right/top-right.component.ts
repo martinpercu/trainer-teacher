@@ -54,7 +54,7 @@ export class TopRightComponent {
     const pdfPath = this.pagesService.docPath();
     if (pdfPath) {
       window.open(`/assets/${pdfPath}`, '_blank');
-      this.router.navigate(['/pdf-viewer']);
+      // this.router.navigate(['/pdf-viewer']);
     } else {
       alert('No hay PDF disponible');
     }

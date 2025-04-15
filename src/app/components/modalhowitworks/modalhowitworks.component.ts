@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 
 import { VisualStatesService } from '@services/visual-states.service';
+import { PagesService } from '@services/pages.service';
 
 import { MatIconModule } from '@angular/material/icon';
 
@@ -13,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 export class ModalhowitworksComponent {
 
   visualStatesService = inject(VisualStatesService);
+  pagesService = inject(PagesService);
 
   closeModal() {
     this.visualStatesService.showModalInfo.set(false)
