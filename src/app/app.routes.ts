@@ -7,10 +7,6 @@ import { ChatComponent } from '@teacher/chat/chat.component';
 // import { EthicSupervisorsComponent } from '@components/pdfs/ethic-supervisors/ethic-supervisors.component';
 import { PdfviewerComponent } from '@components/pdfviewer/pdfviewer.component';
 import { MainselectorPageComponent } from '@pages/mainselector-page/mainselector-page.component';
-<<<<<<< land-to-select-teacher
-=======
-
->>>>>>> master
 
 
 export const routes: Routes = [
@@ -34,14 +30,11 @@ export const routes: Routes = [
   {
     path:'chat',
     component: ChatComponent
-<<<<<<< HEAD
   },
-  {
-    path:'leftmenu',
-    component: LeftMenuComponent
-=======
->>>>>>> 267752e... big refactoring
-  }
+  // {
+  //   path:'leftmenu',
+  //   component: LeftMenuComponent
+  // }
   // {
   //   path:'leftmenu',
   //   component: LeftMenuComponent

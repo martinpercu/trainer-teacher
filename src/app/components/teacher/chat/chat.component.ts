@@ -143,8 +143,8 @@ export class ChatComponent {
     const formData = {
       message: this.userMessage,
       // session_id: this.authService.currentUserSig()?.email + '-' + this.assistSelector.assistant_name(),
-      // session_id: this.combinedUserEmailAndAssistant(),
       // system_prompt_text: this.assistSelector.assistant_description()
+      // session_id: this.combinedUserEmailAndAssistant(),
       // system_prompt_text: 'Eres un asistente que responde unicamente usando la informacion de los PDFs que tienes en las vectorstore',
       pages: this.pagesService.pagesSelected(),
       doc_path: this.pagesService.docPath()
@@ -293,13 +293,8 @@ export class ChatComponent {
       this.loadingResponse = false;
     }, 10000); // 10 segundos de timeout
 
-<<<<<<< HEAD:src/app/components/chat/chat.component.ts
     // this.http.post("https://assistant-chat-backend-production.up.railway.app/stream_chat_test", formData, {
     this.http.post("http://127.0.0.1:8000/stream_chat_test", formData, {
-=======
-    this.http.post("https://assistant-chat-backend-production.up.railway.app/stream_chat_test", formData, {
-    // this.http.post("http://127.0.0.1:8000/stream_chat_test", formData, {
->>>>>>> 267752e... big refactoring:src/app/components/teacher/chat/chat.component.ts
       responseType: 'text',
       observe: 'events',
       reportProgress: true,
