@@ -8,8 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-modalhowitworks',
   imports: [MatIconModule],
-  templateUrl: './modalhowitworks.component.html',
-  styleUrl: './modalhowitworks.component.css'
+  templateUrl: './modalhowitworks.component.html'
 })
 export class ModalhowitworksComponent {
 

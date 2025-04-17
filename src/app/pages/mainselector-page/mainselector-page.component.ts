@@ -6,8 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-mainselector-page',
   imports: [MatIconModule],
-  templateUrl: './mainselector-page.component.html',
-  styleUrl: './mainselector-page.component.css'
+  templateUrl: './mainselector-page.component.html'
 })
 export class MainselectorPageComponent {
 

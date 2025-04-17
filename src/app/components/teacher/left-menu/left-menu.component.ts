@@ -7,8 +7,7 @@ import { PagesService } from '@services/pages.service';
   selector: 'app-left-menu',
   standalone: true,
   imports: [CommonModule, KeyValuePipe],
-  templateUrl: './left-menu.component.html',
-  styleUrl: './left-menu.component.css'
+  templateUrl: './left-menu.component.html'
 })
 export class LeftMenuComponent {
   pagesService = inject(PagesService);
