@@ -7,11 +7,16 @@ import { ChatComponent } from '@teacher/chat/chat.component';
 // import { EthicSupervisorsComponent } from '@components/pdfs/ethic-supervisors/ethic-supervisors.component';
 import { PdfviewerComponent } from '@components/pdfviewer/pdfviewer.component';
 import { MainselectorPageComponent } from '@pages/mainselector-page/mainselector-page.component';
+import { SchoolMainPageComponent } from '@pages/school-main-page/school-main-page.component';
 
 
 export const routes: Routes = [
   {
     path:'',
+    component: SchoolMainPageComponent
+  },
+  {
+    path:'main',
     component: MainselectorPageComponent
   },
   { path: 'teacher/supervisors',
@@ -19,6 +24,9 @@ export const routes: Routes = [
   },
   { path: 'teacher/employee',
     component: TeacherMainPageComponent
+  },
+  { path: 'school',
+    component: SchoolMainPageComponent
   },
   { path: 'pdf-viewer',
     component: PdfviewerComponent
