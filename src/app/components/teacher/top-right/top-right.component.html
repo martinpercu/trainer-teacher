@@ -17,6 +17,16 @@
         <!-- "How it works" -->
         <div class="flex flex-row px-2 py-1 mt-1">
           <div class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
+            (click)="returnMain()">
+            <!-- <mat-icon fontIcon="info" class="self-center"></mat-icon> -->
+            <mat-icon>home</mat-icon>
+            <div class="pl-3">Return Main</div>
+          </div>
+        </div>
+
+        <!-- "How it works" -->
+        <div class="flex flex-row px-2 py-1 mt-1">
+          <div class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
             (click)="showModalInfo()">
             <!-- <mat-icon fontIcon="info" class="self-center"></mat-icon> -->
             <mat-icon>info</mat-icon>

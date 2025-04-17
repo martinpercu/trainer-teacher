@@ -91,5 +91,8 @@ export class TopRightComponent {
     this.switchShowList();
   }
 
+  returnMain() {
+    this.router.navigate(['/'])
+  }
 
 }
