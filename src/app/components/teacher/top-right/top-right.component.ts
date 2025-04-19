@@ -91,7 +91,7 @@ export class TopRightComponent {
   }
 
   returnMain() {
-    this.router.navigate(['/'])
+    this.router.navigate(['/main'])
   }
 
 }
