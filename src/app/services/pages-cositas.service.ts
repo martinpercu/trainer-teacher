@@ -26,7 +26,9 @@ export class PagesService {
   private currentConfig: string | null = null;
   private isLoadingDefault = false; // Evitar bucles
 
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) {
+    // No llamamos loadTeacherData aquí para evitar problemas de contexto
+  }
 
   // Método para inicializar el servicio
   async initialize() {
@@ -51,7 +53,7 @@ export class PagesService {
       const docSnap = await getDoc(teacherDoc);
 
       if (docSnap.exists()) {
-        this.currentTeacher = { id: teacherId, ...docSnap.data() } as Teacher;
+        this.currentTeacher = docSnap.data() as Teacher;
         this.updateSignals();
       } else {
         console.warn(`Teacher ${teacherId} no encontrado.`);
@@ -62,10 +64,6 @@ export class PagesService {
           this.currentConfig = null;
           this.updateSignals();
           this.isLoadingDefault = false;
-        } else {
-          this.currentTeacher = null;
-          this.currentConfig = null;
-          this.updateSignals();
         }
       }
     } catch (error) {
@@ -73,7 +71,6 @@ export class PagesService {
       this.currentTeacher = null;
       this.currentConfig = null;
       this.updateSignals();
-      throw error; // Propagar error para el componente
     }
   }
 
@@ -85,9 +82,6 @@ export class PagesService {
       this.titleSelected.set(title);
     } else {
       console.warn(`Sección ${section} no encontrada en teacher ${this.currentConfig}.`);
-      this.pagesSelected.set([]);
-      this.sectionSelected.set('');
-      this.titleSelected.set('');
     }
   }
 
@@ -96,7 +90,7 @@ export class PagesService {
       const allPages = Object.values(this.currentTeacher.pageMap).flat();
       this.pagesSelected.set([...new Set(allPages)].sort((a, b) => a - b));
       this.sectionSelected.set('All');
-      this.titleSelected.set(this.currentTeacher.defaultTitle || '');
+      this.titleSelected.set(this.currentTeacher.defaultTitle);
     } else {
       console.warn(`No hay pageMap disponible para el teacher ${this.currentConfig}.`);
       this.pagesSelected.set([]);

@@ -12,7 +12,8 @@
 
       <div class="pb-6 w-11/12 text-left">
         <div class="pb-4">
-          This teacher helps you understand the selected course. You can chat with them or use the available <strong>"Chat interaction tools"</strong>.
+          This teacher helps you understand the selected course. You can chat with them or use the available
+          <strong>"Chat interaction tools"</strong>.
           <!-- <mat-icon class="pt-1">speaker_notes</mat-icon> -->
         </div>
         <div class="pb-2">
@@ -22,12 +23,17 @@
 
 
       <div class="flex flex-row gap-2 sm:gap-8 py-2 sm:pt-2 pt-0 sm:pb-8 pb-4 mx-2">
+        <div (click)="goToLink('cJyEssafUE8yfYPjrczo')"
+          class="flex items-center p-2 sm:p-3 sm:gap-2 text-sm font-semibold bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 rounded-lg cursor-pointer border shadow-md">
+          <mat-icon class="!hidden sm:!block">rocket_launch</mat-icon>
+          Profe for NATY
+        </div>
 
-        <div (click)="goToLink('employee')"
+        <!-- <div (click)="goToLink('employee')"
           class="flex items-center p-2 sm:p-3 sm:gap-2 text-sm font-semibold bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 rounded-lg cursor-pointer border shadow-md">
           <mat-icon class="!hidden sm:!block">rocket_launch</mat-icon>
           Ethics for Employees
-        </div>
+        </div> -->
 
         <div (click)="goToLink('supervisors')"
           class="flex items-center p-2 sm:p-3 sm:gap-2 text-sm font-semibold bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 rounded-lg cursor-pointer border shadow-md">
@@ -61,7 +67,8 @@
             <div class="w-7">
               <mat-icon class="text-2xl !w-7 !h-7">quiz</mat-icon>
             </div>
-            <span class="ml-4">The teacher will test you with more targeted and difficult questions based on the selected section.</span>
+            <span class="ml-4">The teacher will test you with more targeted and difficult questions based on the
+              selected section.</span>
           </div>
         </div>
       </div>
