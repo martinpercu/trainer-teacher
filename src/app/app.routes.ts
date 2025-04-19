@@ -8,9 +8,14 @@ import { ChatComponent } from '@teacher/chat/chat.component';
 import { PdfviewerComponent } from '@components/pdfviewer/pdfviewer.component';
 import { MainselectorPageComponent } from '@pages/mainselector-page/mainselector-page.component';
 import { SchoolMainPageComponent } from '@pages/school-main-page/school-main-page.component';
+import { TeachersCRUDComponent } from '@superadmin/teachers-crud/teachers-crud.component';
 
 
 export const routes: Routes = [
+  {
+    path:'crud',
+    component: TeachersCRUDComponent
+  },
   {
     path:'',
     component: SchoolMainPageComponent
@@ -19,10 +24,13 @@ export const routes: Routes = [
     path:'main',
     component: MainselectorPageComponent
   },
-  { path: 'teacher/supervisors',
-    component: TeacherMainPageComponent
-  },
-  { path: 'teacher/employee',
+  // { path: 'teacher/supervisors',
+  //   component: TeacherMainPageComponent
+  // },
+  // { path: 'teacher/employee',
+  //   component: TeacherMainPageComponent
+  // },
+  { path: 'teacher/:id',
     component: TeacherMainPageComponent
   },
   { path: 'school',

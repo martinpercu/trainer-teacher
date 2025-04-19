@@ -23,6 +23,7 @@
       "@pages/*": ["./src/app/pages/*"],
       "@components/*": ["./src/app/components/*"],
       "@teacher/*": ["./src/app/components/teacher/*"],
+      "@superadmin/*": ["./src/app/components/superadmin/*"],
       "@env/*": ["./src/environments/*"],
       "@pipes/*": ["./src/app/pipes/*"],
     }
