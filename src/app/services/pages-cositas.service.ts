@@ -1,14 +1,16 @@
 import { Injectable, signal } from '@angular/core';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 
-interface Teacher {
-  id: string;
-  name: string;
-  pageMap: { [key: string]: number[] };
-  indexSubtext: { [key: string]: string };
-  defaultTitle: string;
-  doc_path: string;
-}
+import { Teacher } from '@models/teacher';
+
+// interface Teacher {
+//   id: string;
+//   name: string;
+//   pageMap: { [key: string]: number[] };
+//   indexSubtext: { [key: string]: string };
+//   defaultTitle: string;
+//   doc_path: string;
+// }
 
 @Injectable({
   providedIn: 'root'

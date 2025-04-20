@@ -5,22 +5,25 @@ import { PagesService } from '@services/pages.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+import { Teacher } from '@models/teacher';
+import { Section } from '@models/section';
 
 
-interface Teacher {
-  id: string;
-  name: string;
-  pageMap: { [key: string]: number[] };
-  indexSubtext: { [key: string]: string };
-  defaultTitle: string;
-  doc_path: string;
-}
 
-interface Section {
-  name: string;
-  pages: string; // Input como string, se convierte a number[]
-  subtext: string;
-}
+// interface Teacher {
+//   id: string;
+//   name: string;
+//   pageMap: { [key: string]: number[] };
+//   indexSubtext: { [key: string]: string };
+//   defaultTitle: string;
+//   doc_path: string;
+// }
+
+// interface Section {
+//   name: string;
+//   pages: string; // Input como string, se convierte a number[]
+//   subtext: string;
+// }
 
 @Component({
   selector: 'app-teachers-crud',

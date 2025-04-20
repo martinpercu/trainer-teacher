@@ -13,15 +13,17 @@ import { PagesService } from '@services/pages.service';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
+import { Teacher } from '@models/teacher';
 
-interface Teacher {
-  id: string;
-  name: string;
-  pageMap: { [key: string]: number[] };
-  indexSubtext: { [key: string]: string };
-  defaultTitle: string;
-  doc_path: string;
-}
+
+// interface Teacher {
+//   id: string;
+//   name: string;
+//   pageMap: { [key: string]: number[] };
+//   indexSubtext: { [key: string]: string };
+//   defaultTitle: string;
+//   doc_path: string;
+// }
 
 @Component({
   selector: 'app-teacher-main-page',
