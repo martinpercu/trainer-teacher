@@ -1,0 +1,112 @@
+<p>course-crud works!</p>
+<div class="courses-crud mx-auto mt-8 max-w-3xl bg-neutral-400 p-8">
+  <h2 class="text-2xl font-bold mb-4">Cargar Curso</h2>
+  <select
+    [ngModel]="selectedCourseId"
+    (change)="loadCourse($event)"
+    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+    <option value="">Selecciona un curso</option>
+    @for (course of courses$ | async; track course.id) {
+      <option [value]="course.id">{{ course.title }}</option>
+    }
+  </select>
+
+  <h3 class="text-xl font-semibold mt-6 mb-4">{{ editingCourseId ? 'Editar Curso' : 'Crear Nuevo Curso' }}</h3>
+  <form (ngSubmit)="saveCourse()" class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Nombre (opcional):</label>
+      <input
+        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+        type="text"
+        [(ngModel)]="newCourse.name"
+        name="name"
+      >
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Título:</label>
+      <input
+        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+        type="text"
+        [(ngModel)]="newCourse.title"
+        name="title"
+        required
+      >
+      @if (errorMessage) {
+        <p class="text-red-500 text-sm mt-1">{{ errorMessage }}</p>
+      }
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Profesor:</label>
+      <select
+        [(ngModel)]="newCourse.teacherId"
+        (change)="updateTeacherName($event)"
+        name="teacherId"
+        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+        <option value="">Selecciona un profesor</option>
+        @for (teacher of teachers$ | async; track teacher.id) {
+          <option [value]="teacher.id">{{ teacher.name }}</option>
+        }
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">
+        <input
+          type="checkbox"
+          [(ngModel)]="newCourse.enabled"
+          name="enabled"
+          class="mr-2"
+        >
+        Habilitado
+      </label>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Fecha de inicio:</label>
+      <input
+        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+        type="date"
+        [(ngModel)]="newCourse.startDate"
+        name="startDate"
+      >
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Fecha de fin:</label>
+      <input
+        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+        type="date"
+        [(ngModel)]="newCourse.endDate"
+        name="endDate"
+      >
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Descripción (opcional):</label>
+      <textarea
+        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+        [(ngModel)]="newCourse.description"
+        name="description"
+        rows="4"
+      ></textarea>
+    </div>
+
+    <div class="flex space-x-2">
+      <button
+        type="submit"
+        class="bg-green-500 text-white px-4 py-2 rounded-md">
+        {{ editingCourseId ? 'Actualizar Curso' : 'Crear Curso' }}
+      </button>
+      @if (editingCourseId) {
+        <button
+          type="button"
+          (click)="resetForm()"
+          class="bg-gray-500 text-white px-4 py-2 rounded-md">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          (click)="deleteCourse()"
+          class="bg-red-500 text-white px-4 py-2 rounded-md">
+          Eliminar Curso
+        </button>
+      }
+    </div>
+  </form>
+</div>

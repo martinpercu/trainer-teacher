@@ -5,12 +5,15 @@ import { Router } from '@angular/router';
 
 import { LightdarkthemeService } from '@services/lightdarktheme.service';
 import { AuthService } from '@services/auth.service';
+import { UserService } from '@services/user.service';
 import { ModalinfoService } from '@services/modalinfo.service';
 import { VisualStatesService } from '@services/visual-states.service';
 import { PagesService } from '@services/pages.service';
 
 import { RegisterComponent } from '@components/auth/register/register.component';
 import { LoginComponent } from '@components/auth/login/login.component';
+
+
 
 @Component({
   selector: 'app-top-right',
@@ -23,6 +26,8 @@ export class TopRightComponent {
   authService = inject(AuthService);
   modalinfoService = inject(ModalinfoService);
   visualStatesService = inject(VisualStatesService);
+
+  userService = inject(UserService);
 
   pagesService = inject(PagesService);
 

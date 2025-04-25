@@ -19,7 +19,18 @@ export class AuthService {
 
   user!: User;
 
-  constructor() { }
+  constructor() {
+    this.user$.subscribe(async (firebaseUser) => {
+      if (firebaseUser) {
+        const user = await this.userService.getOneUser(firebaseUser.uid);
+        this.userService.setUserSig(user);
+        // this.currentUserSig.set(user); // Opcional
+      } else {
+        this.userService.setUserSig(null);
+        // this.currentUserSig.set(null); // Opcional
+      }
+    });
+  }
 
   register(
     email: string,
@@ -48,16 +59,29 @@ export class AuthService {
     this.userService.setUserSig(this.user);
   }
 
-  login(email: string, password: string) {
-    const promise = signInWithEmailAndPassword(
-      this.firebaseAuth,
-      email,
-      password
-    ).then(() => {
+  // login(email: string, password: string) {
+  //   const promise = signInWithEmailAndPassword(
+  //     this.firebaseAuth,
+  //     email,
+  //     password
+  //   ).then(() => {
 
-    });
+  //   });
 
-    return from(promise)
+  //   return from(promise)
+  // }
+  login(email: string, password: string): Observable<void> {
+    const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password)
+      .then(async (response) => {
+        const user = await this.userService.getOneUser(response.user.uid);
+        this.userService.setUserSig(user); // Actualiza el signal en UserService
+        // this.currentUserSig.set(user); // Opcional, si querés mantenerlo aquí también
+      })
+      .catch((error) => {
+        console.error('Error en login:', error);
+        throw error; // Propaga el error al observable
+      });
+    return from(promise);
   }
 
   logout(): Observable<void> {

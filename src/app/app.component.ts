@@ -26,6 +26,8 @@ export class AppComponent {
   ngOnInit(): void {
     this.authService.user$.subscribe((user) => {
       if (user) {
+        console.log(user);
+
         this.authService.currentUserSig.set({
           email: user.email!,
           username: user.displayName!
@@ -34,6 +36,8 @@ export class AppComponent {
         this.authService.currentUserSig.set(null);
       }
       console.log(this.authService.currentUserSig());
+      console.log(user);
+
     });
 
     const savedTheme = localStorage.getItem('theme');

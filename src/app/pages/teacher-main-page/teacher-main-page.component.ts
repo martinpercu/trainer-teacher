@@ -15,15 +15,8 @@ import { Observable } from 'rxjs';
 
 import { Teacher } from '@models/teacher';
 
+import { UserService } from '@services/user.service';
 
-// interface Teacher {
-//   id: string;
-//   name: string;
-//   pageMap: { [key: string]: number[] };
-//   indexSubtext: { [key: string]: string };
-//   defaultTitle: string;
-//   doc_path: string;
-// }
 
 @Component({
   selector: 'app-teacher-main-page',
@@ -40,9 +33,13 @@ export class TeacherMainPageComponent {
   private route = inject(ActivatedRoute);
 
 
+  userService = inject(UserService);
+
+
   private firestore = inject(Firestore);
 
-  currentUser = this.authService.currentUserSig();
+  // currentUser = this.authService.currentUserSig();
+  currentUser = this.userService.userSig();
 
   async ngOnInit() {
     // Extraer el teacherId de la URL

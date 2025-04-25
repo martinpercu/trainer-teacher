@@ -1,6 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData, getDoc, deleteDoc, doc, setDoc, updateDoc, DocumentSnapshot, DocumentData } from '@angular/fire/firestore';
-import { Observable, from } from 'rxjs';
+import { Firestore, collection, getDoc, deleteDoc, doc, setDoc, updateDoc } from '@angular/fire/firestore';
 import { User } from '@models/user';
 
 @Injectable({
@@ -13,17 +12,27 @@ export class UserService {
 
   userSig = signal<User | null>(null);
 
-  user!: User;
-  userID!: string;
+  // user!: User;
+  // userID!: string;
 
   constructor() {
    }
 
-  addUserWithId(user: User, userId: any) {
+  // addUserWithId(user: User, userId: any) {
+  //   console.log(user);
+  //   const usersRef = collection(this.firestore, 'users');
+  //   return setDoc(doc(usersRef, userId), user);
+  // };
+
+  addUserWithId(user: User, userId: string): Promise<void> {
     console.log(user);
     const usersRef = collection(this.firestore, 'users');
-    return setDoc(doc(usersRef, userId), user);
-  };
+    return setDoc(doc(usersRef, userId), user)
+      .catch((error) => {
+        console.error('Error al agregar usuario:', error);
+        throw error;
+      });
+  }
 
   setUserSig(user: User | null){
     this.userSig.set(user)
@@ -33,14 +42,25 @@ export class UserService {
     this.userSig.set(null)
   }
 
-  async getOneUser(userId: string) {
-    // const clientDocRef = doc(this.firestore, `clientsjoinedlist/${clientId}`);
+  // async getOneUser(userId: string) {
+  //   // const clientDocRef = doc(this.firestore, `clientsjoinedlist/${clientId}`);
+  //   const usersRef = doc(this.firestore, 'users', userId);
+  //   console.log(usersRef);
+  //   const user = (await getDoc(usersRef)).data();
+  //   console.log(user);
+  //   return user as User
+  // };
+
+  async getOneUser(userId: string): Promise<User | null> {
     const usersRef = doc(this.firestore, 'users', userId);
-    console.log(usersRef);
-    const user = (await getDoc(usersRef)).data();
-    console.log(user);
-    return user as User
-  };
+    try {
+      const user = (await getDoc(usersRef)).data();
+      return user as User | null;
+    } catch (error) {
+      console.error('Error al obtener usuario:', error);
+      return null;
+    }
+  }
 
   deleteUser(user: User) {
     const userDocRef = doc(this.firestore, `users/${user.userUID}`);
