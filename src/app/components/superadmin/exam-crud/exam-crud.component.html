@@ -1,0 +1,122 @@
+<div class="mx-auto max-w-3xl bg-neutral-200 p-8">
+  <h2 class="text-2xl font-bold mb-4">Cargar Examen</h2>
+  <select
+    [ngModel]="selectedExamId"
+    (change)="loadExam($event)"
+    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+    <option value="">Selecciona un examen</option>
+    @for (exam of exams$ | async; track exam.id) {
+      <option [value]="exam.id">{{ exam.title }}</option>
+    }
+  </select>
+
+  <h3 class="text-xl font-semibold mt-6 mb-4">{{ editingExamId ? 'Editar Examen' : 'Crear Nuevo Examen' }}</h3>
+  <form (ngSubmit)="saveExam()" class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Título:</label>
+      <input
+        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+        type="text"
+        [(ngModel)]="newExam.title"
+        name="title"
+        required
+      >
+      @if (errorMessage) {
+        <p class="text-red-500 text-sm mt-1">{{ errorMessage }}</p>
+      }
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Profesor:</label>
+      <select
+        [(ngModel)]="newExam.teacherId"
+        (change)="updateTeacherName($event)"
+        name="teacherId"
+        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+        required>
+        <option value="">Selecciona un profesor</option>
+        @for (teacher of teachers$ | async; track teacher.id) {
+          <option [value]="teacher.id">{{ teacher.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="mt-6">
+      <h4 class="text-lg font-medium mb-2">Preguntas</h4>
+      @if (!newExam.questions?.length) {
+        <p class="text-gray-500">No hay preguntas. Agrega una para comenzar.</p>
+      }
+      @for (question of newExam.questions; track $index; let qIndex = $index) {
+        <div class="border border-gray-200 rounded-md p-4 mb-4">
+          <div class="flex justify-between items-center mb-2">
+            <label class="block text-sm font-medium text-gray-700">Pregunta {{ qIndex + 1 }}:</label>
+            <button
+              type="button"
+              (click)="removeQuestion(qIndex)"
+              class="text-red-500 hover:text-red-700">
+              Eliminar
+            </button>
+          </div>
+          <input
+            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            type="text"
+            [(ngModel)]="question.text"
+            [name]="'questionText' + qIndex"
+            placeholder="Escribe la pregunta"
+            required
+          >
+          <div class="mt-2">
+            <label class="block text-sm font-medium text-gray-700">Opciones:</label>
+            @for (option of question.options; track $index; let oIndex = $index) {
+              <div class="flex items-center mt-1">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="option.isCorrect"
+                  (change)="updateOptionCorrectness(qIndex, oIndex)"
+                  [name]="'optionCorrect' + qIndex + '_' + oIndex"
+                  class="mr-2"
+                  [checked]="option.isCorrect"
+                >
+                <input
+                  class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  type="text"
+                  [(ngModel)]="option.text"
+                  [name]="'optionText' + qIndex + '_' + oIndex"
+                  placeholder="Opción {{ oIndex + 1 }}"
+                  required
+                >
+              </div>
+            }
+          </div>
+        </div>
+      }
+      <button
+        type="button"
+        (click)="addQuestion()"
+        class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+        Agregar Pregunta
+      </button>
+    </div>
+
+    <div class="flex space-x-2 mt-6">
+      <button
+        type="submit"
+        class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+        {{ editingExamId ? 'Actualizar Examen' : 'Crear Examen' }}
+      </button>
+      @if (editingExamId) {
+        <button
+          type="button"
+          (click)="resetForm()"
+          class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          (click)="deleteExam()"
+          class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700">
+          Eliminar Examen
+        </button>
+      }
+    </div>
+  </form>
+</div>
