@@ -1,5 +1,12 @@
+// import { Injectable, inject, signal } from '@angular/core';
+// import { Firestore, collection, getDoc, deleteDoc, doc, setDoc, updateDoc } from '@angular/fire/firestore';
+// import { User } from '@models/user';
+
+
 import { Injectable, inject, signal } from '@angular/core';
-import { Firestore, collection, getDoc, deleteDoc, doc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, getDoc, deleteDoc, doc, setDoc, updateDoc, orderBy, query  } from '@angular/fire/firestore';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { User } from '@models/user';
 
 @Injectable({
@@ -7,52 +14,79 @@ import { User } from '@models/user';
 })
 export class UserService {
 
-  firestore = inject(Firestore);
-  usersCollection = collection(this.firestore, 'users');
+  private firestore = inject(Firestore);
+  private usersCollection = collection(this.firestore, 'users');
 
   userSig = signal<User | null>(null);
 
-  // user!: User;
-  // userID!: string;
+  /**
+   * Obtiene todos los usuarios de la colección 'users'
+   * @returns Observable con un arreglo de usuarios
+   */
+  // getAllUsers(): Observable<User[]> {
+  //   return collectionData(this.usersCollection, { idField: 'userUID' }).pipe(
+  //     map(users => users as User[]),
+  //     catchError(error => {
+  //       console.error('Error al obtener usuarios:', error);
+  //       return of([]);
+  //     })
+  //   );
+  // }
 
-  constructor() {
-   }
-
-  // addUserWithId(user: User, userId: any) {
-  //   console.log(user);
-  //   const usersRef = collection(this.firestore, 'users');
-  //   return setDoc(doc(usersRef, userId), user);
+  // getAllUsers(): Observable<User[]> {
+  //   const clientsRef = collection(this.firestore, 'users');
+  //   const clientsQuery = query(clientsRef, orderBy('email')); // Order by email attribute
+  //   return collectionData(clientsQuery, { idField: 'userUID' }) as Observable<User[]>;
   // };
 
+  getAllUsers(): Observable<User[]> {
+    const usersRef = collection(this.firestore, 'users');
+    const usersQuery = query(usersRef, orderBy('email'));
+    return collectionData(usersQuery, { idField: 'userUID' }).pipe(
+      map(users => users as User[]),
+      catchError(error => {
+        console.error('Error al obtener usuarios:', error);
+        return of([]);
+      })
+    ) as Observable<User[]>;
+  }
+
+  /**
+   * Agrega un usuario con un ID específico
+   * @param user Datos del usuario
+   * @param userId ID del usuario (generalmente el UID de Firebase Auth)
+   */
   addUserWithId(user: User, userId: string): Promise<void> {
     console.log(user);
-    const usersRef = collection(this.firestore, 'users');
-    return setDoc(doc(usersRef, userId), user)
-      .catch((error) => {
-        console.error('Error al agregar usuario:', error);
-        throw error;
-      });
+    return setDoc(doc(this.usersCollection, userId), user).catch(error => {
+      console.error('Error al agregar usuario:', error);
+      throw error;
+    });
   }
 
-  setUserSig(user: User | null){
-    this.userSig.set(user)
+  /**
+   * Establece el usuario actual en la señal
+   * @param user Usuario o null
+   */
+  setUserSig(user: User | null) {
+    this.userSig.set(user);
     console.log(this.userSig());
-  };
-  setUserSigNull(){
-    this.userSig.set(null)
   }
 
-  // async getOneUser(userId: string) {
-  //   // const clientDocRef = doc(this.firestore, `clientsjoinedlist/${clientId}`);
-  //   const usersRef = doc(this.firestore, 'users', userId);
-  //   console.log(usersRef);
-  //   const user = (await getDoc(usersRef)).data();
-  //   console.log(user);
-  //   return user as User
-  // };
+  /**
+   * Establece la señal del usuario como null
+   */
+  setUserSigNull() {
+    this.userSig.set(null);
+  }
 
+  /**
+   * Obtiene un usuario por su ID
+   * @param userId ID del usuario
+   * @returns Promesa con el usuario o null si no existe
+   */
   async getOneUser(userId: string): Promise<User | null> {
-    const usersRef = doc(this.firestore, 'users', userId);
+    const usersRef = doc(this.usersCollection, userId);
     try {
       const user = (await getDoc(usersRef)).data();
       return user as User | null;
@@ -62,21 +96,111 @@ export class UserService {
     }
   }
 
+  /**
+   * Elimina un usuario por su ID
+   * @param user Usuario a eliminar
+   */
   deleteUser(user: User) {
-    const userDocRef = doc(this.firestore, `users/${user.userUID}`);
-    return deleteDoc(userDocRef)
-  };
+    const userDocRef = doc(this.usersCollection, user.userUID);
+    return deleteDoc(userDocRef);
+  }
 
-  updateOneUser(user: any, userId: string) {
-    const userDocRef = doc(this.firestore, 'users', userId);
-    updateDoc(userDocRef, user)
+  /**
+   * Actualiza un usuario por su ID
+   * @param user Datos parciales del usuario
+   * @param userId ID del usuario
+   */
+  updateOneUser(user: Partial<User>, userId: string) {
+    const userDocRef = doc(this.usersCollection, userId);
+    return updateDoc(userDocRef, user)
       .then(() => {
         console.log('User updated');
-        // alert('User Updated');
       })
-      .catch((error) => {
-        console.log(error);
-      })
-  };
+      .catch(error => {
+        console.error('Error al actualizar usuario:', error);
+        throw error;
+      });
+  }
+
+
+
+
+
+
+
+
+
+
+  // firestore = inject(Firestore);
+  // usersCollection = collection(this.firestore, 'users');
+
+  // userSig = signal<User | null>(null);
+
+  // // user!: User;
+  // // userID!: string;
+
+  // constructor() {
+  //  }
+
+  // // addUserWithId(user: User, userId: any) {
+  // //   console.log(user);
+  // //   const usersRef = collection(this.firestore, 'users');
+  // //   return setDoc(doc(usersRef, userId), user);
+  // // };
+
+  // addUserWithId(user: User, userId: string): Promise<void> {
+  //   console.log(user);
+  //   const usersRef = collection(this.firestore, 'users');
+  //   return setDoc(doc(usersRef, userId), user)
+  //     .catch((error) => {
+  //       console.error('Error al agregar usuario:', error);
+  //       throw error;
+  //     });
+  // }
+
+  // setUserSig(user: User | null){
+  //   this.userSig.set(user)
+  //   console.log(this.userSig());
+  // };
+  // setUserSigNull(){
+  //   this.userSig.set(null)
+  // }
+
+  // // async getOneUser(userId: string) {
+  // //   // const clientDocRef = doc(this.firestore, `clientsjoinedlist/${clientId}`);
+  // //   const usersRef = doc(this.firestore, 'users', userId);
+  // //   console.log(usersRef);
+  // //   const user = (await getDoc(usersRef)).data();
+  // //   console.log(user);
+  // //   return user as User
+  // // };
+
+  // async getOneUser(userId: string): Promise<User | null> {
+  //   const usersRef = doc(this.firestore, 'users', userId);
+  //   try {
+  //     const user = (await getDoc(usersRef)).data();
+  //     return user as User | null;
+  //   } catch (error) {
+  //     console.error('Error al obtener usuario:', error);
+  //     return null;
+  //   }
+  // }
+
+  // deleteUser(user: User) {
+  //   const userDocRef = doc(this.firestore, `users/${user.userUID}`);
+  //   return deleteDoc(userDocRef)
+  // };
+
+  // updateOneUser(user: any, userId: string) {
+  //   const userDocRef = doc(this.firestore, 'users', userId);
+  //   updateDoc(userDocRef, user)
+  //     .then(() => {
+  //       console.log('User updated');
+  //       // alert('User Updated');
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     })
+  // };
 
 }
