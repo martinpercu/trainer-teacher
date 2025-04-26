@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Firestore, doc, docData } from '@angular/fire/firestore';
+import { Injectable, inject } from '@angular/core';
+import { Firestore, collection, collectionData, doc, docData, query, where, limit } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Exam } from '@models/exam';
@@ -9,7 +9,7 @@ import { Exam } from '@models/exam';
 })
 
 export class ExamService {
-  constructor(private firestore: Firestore) {}
+  private firestore = inject(Firestore);
 
   getExamById(examId: string): Observable<Exam | null> {
     const examRef = doc(this.firestore, `exams/${examId}`);
@@ -23,6 +23,44 @@ export class ExamService {
       catchError(error => {
         console.error('Error al cargar el examen:', error);
         return of(null);
+      })
+    );
+  }
+
+
+  /**
+   * Obtiene el primer examen asociado con un teacherId
+   */
+  getTheFirstExamByTeacherId(teacherId: string): Observable<Exam | null> {
+    const examsCollection = collection(this.firestore, 'exams');
+    const examsQuery = query(examsCollection, where('teacherId', '==', teacherId), limit(1));
+    return collectionData(examsQuery, { idField: 'id' }).pipe(
+      map(exams => {
+        const exam = exams[0];
+        if (exam && this.isValidExam(exam)) {
+          return exam as Exam;
+        }
+        return null;
+      }),
+      catchError(error => {
+        console.error('Error al cargar el primer examen por teacherId:', error);
+        return of(null);
+      })
+    );
+  }
+
+
+  /**
+   * Obtiene todos los exámenes asociados con un teacherId
+   */
+  getExamsByTeacherId(teacherId: string): Observable<Exam[]> {
+    const examsCollection = collection(this.firestore, 'exams');
+    const examsQuery = query(examsCollection, where('teacherId', '==', teacherId));
+    return collectionData(examsQuery, { idField: 'id' }).pipe(
+      map(exams => exams.filter(exam => this.isValidExam(exam)) as Exam[]),
+      catchError(error => {
+        console.error('Error al cargar los exámenes por teacherId:', error);
+        return of([]);
       })
     );
   }

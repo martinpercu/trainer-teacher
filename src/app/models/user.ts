@@ -6,6 +6,6 @@ export interface User {
   lastname?: string;
   token?: string;
   id?: string;
-  userUID?: string;
+  userUID: string;
   roleAdmin?: boolean;
 }

@@ -1,6 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { Course } from '@models/course';
+import { Component, Input, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+
+import { Course } from '@models/course';
+import { CourseCrudService } from '@services/course-crud.service';
 
 
 @Component({
@@ -11,4 +13,15 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class CourseCardComponent {
   @Input() course!: Course;
+  // courseCrudService = inject(CourseCrudService);
+
+  courses: Course[] = [];
+
+  // ngOnInit() {
+  //   this.courseCrudService.getCourses().subscribe(courses => {
+  //     this.courses = courses;
+  //     console.log(this.courses);
+  //   })
+  // }
+
 }

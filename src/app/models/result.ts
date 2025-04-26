@@ -14,6 +14,7 @@ export interface Result {
   totalQuestions: number; // La cantidad total de preguntas que es lo mismo que QuestionAndAnswer Lenght
   correctAnswers: number; // Cantidad respuestas correctas.
   examTitle: string; // Título del examen, requerido
+  examId: string; // Is the exame id.
   teacherId: string; // ID del profesor, requerido
   questions: QuestionAndAnswer[]; // Lista de preguntas
   difficulty: number; // Number 1 to 5 in relation how many false choices

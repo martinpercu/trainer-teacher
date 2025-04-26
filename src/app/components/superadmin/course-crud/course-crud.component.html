@@ -1,4 +1,5 @@
 <p>course-crud works!</p>
+
 <div class="courses-crud mx-auto mt-8 max-w-3xl bg-neutral-400 p-8">
   <h2 class="text-2xl font-bold mb-4">Cargar Curso</h2>
   <select
@@ -36,7 +37,7 @@
       }
     </div>
     <div>
-      <label class="block text-sm font-medium text-gray-700">Profesor:</label>
+      <label class="block text-sm font-medium text-gray-700">Profesor (opcional):</label>
       <select
         [(ngModel)]="newCourse.teacherId"
         (change)="updateTeacherName($event)"
@@ -59,23 +60,47 @@
         Habilitado
       </label>
     </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Fecha de inicio:</label>
-      <input
-        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-        type="date"
-        [(ngModel)]="newCourse.startDate"
-        name="startDate"
-      >
+    <div class="flex items-center space-x-2">
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-gray-700">Fecha de inicio (opcional):</label>
+        <input
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+          type="date"
+          [(ngModel)]="newCourse.startDate"
+          name="startDate"
+        >
+        <p class="text-sm text-gray-600 mt-1">Dejar en blanco si no aplica</p>
+      </div>
+      <button
+        type="button"
+        (click)="clearStartDate()"
+        class="mt-1 p-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+        title="Borrar fecha de inicio">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
     </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Fecha de fin:</label>
-      <input
-        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-        type="date"
-        [(ngModel)]="newCourse.endDate"
-        name="endDate"
-      >
+    <div class="flex items-center space-x-2">
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-gray-700">Fecha de fin (opcional):</label>
+        <input
+          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+          type="date"
+          [(ngModel)]="newCourse.endDate"
+          name="endDate"
+        >
+        <p class="text-sm text-gray-600 mt-1">Dejar en blanco si no aplica</p>
+      </div>
+      <button
+        type="button"
+        (click)="clearEndDate()"
+        class="mt-1 p-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+        title="Borrar fecha de fin">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
     </div>
     <div>
       <label class="block text-sm font-medium text-gray-700">Descripción (opcional):</label>
@@ -85,6 +110,21 @@
         name="description"
         rows="4"
       ></textarea>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Dificultad:</label>
+      <input
+        type="range"
+        min="1"
+        max="5"
+        step="1"
+        [(ngModel)]="newCourse.difficulty"
+        name="difficulty"
+        class="mt-1 block w-full"
+      >
+      <p class="text-sm text-gray-600 mt-1">
+        Nivel: {{ getDifficultyLabel(newCourse.difficulty) }}
+      </p>
     </div>
 
     <div class="flex space-x-2">
