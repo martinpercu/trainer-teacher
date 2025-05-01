@@ -23,6 +23,7 @@ export class PagesService {
   indexSubtext = signal<Record<string, string>>({});
   defaultTitle = signal<string>('');
   docPath = signal<string>('');
+  courseId = signal<string>('');
 
   private currentTeacher: Teacher | null = null;
   private currentConfig: string | null = null;
@@ -35,6 +36,10 @@ export class PagesService {
     if (!this.currentConfig) {
       await this.setConfiguration('supervisors');
     }
+  }
+
+  async setExamPath(courseId: string) {
+    this.courseId.set(courseId);
   }
 
   async setConfiguration(type: string) {

@@ -41,7 +41,7 @@ export class UserService {
 
   getAllUsers(): Observable<User[]> {
     const usersRef = collection(this.firestore, 'users');
-    const usersQuery = query(usersRef, orderBy('email'));
+    const usersQuery = query(usersRef, orderBy('username'));
     return collectionData(usersQuery, { idField: 'userUID' }).pipe(
       map(users => users as User[]),
       catchError(error => {
