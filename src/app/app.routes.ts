@@ -41,11 +41,11 @@ export const routes: Routes = [
   //   component: ExamComponent
   // },
   {
-    path:'',
+    path:'main',
     component: SchoolMainPageComponent
   },
   {
-    path:'main',
+    path:'',
     component: MainselectorPageComponent
   },
   // { path: 'teacher/supervisors',
