@@ -82,57 +82,74 @@
       <div
         class="flex flex-col w-11/12 sm:w-11/12 md:w-11/12 lg:w-[640px] xl:w-[768px] p-3 mt-4 mb-6 gap-2 m-auto bg-white dark:bg-neutral-750 rounded-3xl shadow-sm sm:shadow-lg dark:shadow-none! border border-neutral-200 dark:border-none">
 
-        <textarea #chatInput [(ngModel)]="userMessage"
-          class="w-full text-gray-800 dark:text-gray-200 py-1 px-3 ring-0 bg-transparent resize-none overflow-hidden focus:outline-none focus:ring-0 focus:border-none appearance-none dark:placeholder-neutral-400"
-          rows="1" placeholder="Ask me here — I’ll help you out" aria-label="Ask me here — I’ll help you out" (input)="adjustHeight()"
-          (keydown)="handleKeydown($event)">
-          </textarea>
+        <div class="flex flex-row">
+
+          <div class="grow">
+            <textarea #chatInput [(ngModel)]="userMessage"
+              class="w-full text-gray-800 dark:text-gray-200 py-1 px-3 ring-0 bg-transparent resize-none overflow-hidden focus:outline-none focus:ring-0 focus:border-none appearance-none dark:placeholder-neutral-400"
+              rows="1" placeholder="Ask me here — I’ll help you out" aria-label="Ask me here — I’ll help you out"
+              (input)="adjustHeight()" (keydown)="handleKeydown($event)">
+            </textarea>
+          </div>
+
+          <div class="flex h-9 p-1.5 bg-neutral-800 dark:bg-white rounded-full cursor-pointer"
+            (click)="toggleSpeak()">
+            @if(speakIsEnabled) {
+            <mat-icon class="text-white dark:text-neutral-800">spatial_audio_off</mat-icon>
+            }@else {
+            <mat-icon class="text-white dark:text-neutral-800">volume_off</mat-icon>
+            }
+          </div>
+
+        </div>
 
         <div class="flex text-sm text-neutral-600 dark:text-neutral-350 gap-3 pl-2">
 
-            @if (this.pagesService.sectionSelected() === 'All') {
-              <div
-              class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
-              (click)="sendMessage_stream_without_text(startLessonFull)">
-                <mat-icon>speaker_notes</mat-icon>
-                <div class="hidden grow xs:block pl-2 truncate xs:max-w-32 sm:max-w-52 md:max-w-72 lg:max-w-60 xl:max-w-80">
-                  {{this.pagesService.titleSelected()}}
-              </div>
+          @if (this.pagesService.sectionSelected() === 'All') {
+          <div
+            class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
+            (click)="sendMessage_stream_without_text(startLessonFull)">
+            <mat-icon>speaker_notes</mat-icon>
+            <div class="hidden grow xs:block pl-2 truncate xs:max-w-32 sm:max-w-52 md:max-w-72 lg:max-w-60 xl:max-w-80">
+              {{this.pagesService.titleSelected()}}
             </div>
-            }
-            @if (this.pagesService.sectionSelected() !== 'All') {
-              <div
-              class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
-              (click)="sendMessage_stream_without_text(startLesson)">
-                <mat-icon>chat_info</mat-icon>
-                <div class="hidden grow xs:block pl-2 truncate xs:max-w-32 sm:max-w-52 md:max-w-72 lg:max-w-60 xl:max-w-80">
-                  {{this.pagesService.titleSelected()}}
-              </div>
+          </div>
+          }
+          @if (this.pagesService.sectionSelected() !== 'All') {
+          <div
+            class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
+            (click)="sendMessage_stream_without_text(startLesson)">
+            <mat-icon>chat_info</mat-icon>
+            <div class="hidden grow xs:block pl-2 truncate xs:max-w-32 sm:max-w-52 md:max-w-72 lg:max-w-60 xl:max-w-80">
+              {{this.pagesService.titleSelected()}}
             </div>
-            }
+          </div>
+          }
 
-            <div class="grow"></div>
+          <div class="grow"></div>
 
-            <div
-              class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
-              (click)="sendMessage_stream_without_text(shortTest)">
-              <mat-icon>person_raised_hand</mat-icon>
-              <div class="pl-2 hidden lg:block">easy</div>
-            </div>
+          <div
+            class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
+            (click)="sendMessage_stream_without_text(shortTest)">
+            <mat-icon>person_raised_hand</mat-icon>
+            <div class="pl-2 hidden lg:block">easy</div>
+          </div>
 
-            <div
-              class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
-              (click)="sendMessage_stream_without_text(hardTest)">
-              <mat-icon>quiz</mat-icon>
-              <div class="pl-2 hidden lg:block">hard</div>
-            </div>
+          <div
+            class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
+            (click)="sendMessage_stream_without_text(hardTest)">
+            <mat-icon>quiz</mat-icon>
+            <div class="pl-2 hidden lg:block">hard</div>
+          </div>
 
 
-            <div role="button" aria-label="Enviar mensaje" tabindex="0"
-              class="flex w-max p-1.5 bg-neutral-800 dark:bg-white rounded-full cursor-pointer"
-              (click)="sendMessage_stream()">
-              <mat-icon class="text-white dark:text-neutral-800">arrow_upward</mat-icon>
-            </div>
+
+
+          <div role="button" aria-label="Enviar mensaje" tabindex="0"
+            class="flex w-max p-1.5 bg-neutral-800 dark:bg-white rounded-full cursor-pointer"
+            (click)="sendMessage_stream()">
+            <mat-icon class="text-white dark:text-neutral-800">arrow_upward</mat-icon>
+          </div>
 
 
           <!-- </div> -->

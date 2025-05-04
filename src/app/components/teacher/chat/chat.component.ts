@@ -55,6 +55,22 @@ export class ChatComponent {
   startLessonFull: string = `Can you explain "${this.pagesService.defaultTitle()}" to me using the documents you have? Please give me a general overview of what the course is about, starting with no more than 110 words. After that, just ask me if I’d like to continue the lesson or if I want you to repeat the same explanation. Try to teach me in the most helpful way.`
 
 
+  // start Voice
+  speakIsEnabled: boolean = true; // Controla si TTS está activado
+
+  // End Voice
+
+
+  // start Voice
+  ngOnInit(): void {
+    // Cargar voces disponibles al iniciar el componente
+    this.loadVoices();
+  }
+  // End Voice
+
+
+
+
   ngAfterViewInit(): void {
     // Escuchar el evento de scroll en el contenedor de los mensajes
     this.messagesContainer.nativeElement.addEventListener('scroll', this.onScroll.bind(this));
@@ -64,6 +80,52 @@ export class ChatComponent {
     // Este hook se asegura de que el scroll se mueva solo después de que el DOM se haya actualizado.
     this.scrollToBottom();
   }
+
+
+
+  // Start Voice
+  // Nueva función para cargar voces disponibles
+  private loadVoices(): void {
+    window.speechSynthesis.onvoiceschanged = () => {
+      const voices = window.speechSynthesis.getVoices();
+    };
+  }
+
+
+  toggleSpeak(): void {
+    this.speakIsEnabled = !this.speakIsEnabled;
+  }
+
+
+  // Nueva función para reproducir texto como voz
+
+  speakText(text: string): void {
+    // VERY IMPORTANT ===> Clean the tail ==>  LIMPIAR LA COLA DE SPEECH!!!
+    window.speechSynthesis.cancel(); // clean the reproduction queu
+
+    if (!this.speakIsEnabled) return; // No reproducir si TTS está desactivado
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US'; // Idioma Inglés (puedes cambiar a 'es-US' u otros)
+    utterance.volume = 1; // Volumen (0 a 1)
+    utterance.rate = 1; // Velocidad (0.1 a 10)
+    utterance.pitch = 1; // Tono (0 a 2)
+
+    // Opcional: Seleccionar una voz específica
+    // List of en-US inChrome: 'Samantha', 'Victoria', 'Alex', 'Fred' and 'Google US English'
+    const voices = window.speechSynthesis.getVoices();
+    console.log('Voces disponibles en speakText:', voices.map(v => v.name)); // Depuración
+    const selectedVoice = voices.find(voice => voice.name === 'Samantha'); // Seleccionar Samantha
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+      console.log('Voz seleccionada:', selectedVoice.name, selectedVoice.voiceURI);
+    } else {
+      console.log('the selected voice not found , use en-US by default');
+    }
+
+    window.speechSynthesis.speak(utterance);
+  }
+  // End Voice
+
 
   onScroll(): void {
     const container = this.messagesContainer.nativeElement;
@@ -109,6 +171,10 @@ export class ChatComponent {
         clearInterval(typingInterval);
         this.loadingResponse = false;
         this.startingResponse = false;
+        // Start Voice
+        // Reproducir la respuesta completa como voz
+        this.speakText(completeResponse);
+        // End Voice
       }
     };
 
@@ -246,6 +312,10 @@ export class ChatComponent {
         clearInterval(typingInterval);
         this.loadingResponse = false;
         this.startingResponse = false;
+        // Start Voice
+        // Reproducir la respuesta completa como voz
+        this.speakText(completeResponse);
+        // End Voice
       }
     };
 
