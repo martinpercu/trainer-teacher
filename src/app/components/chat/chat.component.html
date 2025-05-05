@@ -108,7 +108,7 @@
           @if (this.pagesService.sectionSelected() === 'All') {
           <div
             class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
-            (click)="sendMessage_stream_without_text(startLessonFull)">
+            (click)="sendMessage(startLessonFull, false)">
             <mat-icon>speaker_notes</mat-icon>
             <div class="hidden grow xs:block pl-2 truncate xs:max-w-32 sm:max-w-52 md:max-w-72 lg:max-w-60 xl:max-w-80">
               {{this.pagesService.titleSelected()}}
@@ -118,7 +118,7 @@
           @if (this.pagesService.sectionSelected() !== 'All') {
           <div
             class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
-            (click)="sendMessage_stream_without_text(startLesson)">
+            (click)="sendMessage(startLesson, false)">
             <mat-icon>chat_info</mat-icon>
             <div class="hidden grow xs:block pl-2 truncate xs:max-w-32 sm:max-w-52 md:max-w-72 lg:max-w-60 xl:max-w-80">
               {{this.pagesService.titleSelected()}}
@@ -130,14 +130,14 @@
 
           <div
             class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
-            (click)="sendMessage_stream_without_text(shortTest)">
+            (click)="sendMessage(shortTest, false)">
             <mat-icon>person_raised_hand</mat-icon>
             <div class="pl-2 hidden lg:block">easy</div>
           </div>
 
           <div
             class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
-            (click)="sendMessage_stream_without_text(hardTest)">
+            (click)="sendMessage(hardTest, false)">
             <mat-icon>quiz</mat-icon>
             <div class="pl-2 hidden lg:block">hard</div>
           </div>
@@ -147,7 +147,7 @@
 
           <div role="button" aria-label="Enviar mensaje" tabindex="0"
             class="flex w-max p-1.5 bg-neutral-800 dark:bg-white rounded-full cursor-pointer"
-            (click)="sendMessage_stream()">
+            (click)="sendMessage(userMessage)">
             <mat-icon class="text-white dark:text-neutral-800">arrow_upward</mat-icon>
           </div>
 
