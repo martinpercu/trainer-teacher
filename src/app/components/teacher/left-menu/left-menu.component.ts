@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule, KeyValuePipe } from '@angular/common';
 
 import { PagesService } from '@services/pages.service';
+import { VisualStatesService } from '@services/visual-states.service';
 
 @Component({
   selector: 'app-left-menu',
@@ -11,6 +12,7 @@ import { PagesService } from '@services/pages.service';
 })
 export class LeftMenuComponent {
   pagesService = inject(PagesService);
+  visualStatesService = inject(VisualStatesService);
 
   // bookIndex = this.pagesService.getIndexSubtext();
   // Usar la señal indexSubtext para reactividad
@@ -28,5 +30,11 @@ export class LeftMenuComponent {
     console.log(this.pagesService.pagesSelected());
     this.boldKey = null;
   }
+
+
+  toggleShowLeftMenuHeader() {
+    this.visualStatesService.togleShowLeftMenu()
+  }
+
 
 }
