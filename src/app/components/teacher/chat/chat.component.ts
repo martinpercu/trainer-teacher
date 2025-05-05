@@ -54,7 +54,6 @@ export class ChatComponent {
   // startLessonFull: string = 'Can you explain "Ethics Management for Supervisors" to me using the documents you have? Please give me a general overview of what the course is about, starting with no more than 110 words. After that, just ask me if I’d like to continue the lesson or if I want you to repeat the same explanation. Try to teach me in the most helpful way.'
   startLessonFull: string = `Can you explain "${this.pagesService.defaultTitle()}" to me using the documents you have? Please give me a general overview of what the course is about, starting with no more than 110 words. After that, just ask me if I’d like to continue the lesson or if I want you to repeat the same explanation. Try to teach me in the most helpful way.`
 
-
   // start Voice
   speakIsEnabled: boolean = true; // Controla si TTS está activado
 
@@ -154,6 +153,7 @@ export class ChatComponent {
     let completeResponse = "";
     let displayedChars = 0;
     let typingInterval: any = null;
+    let responseReceived = false; // Bandera para saber si la respuesta completa está lista
 
     // Velocidad dinámica basada en la longitud
     const charsPerTick = Math.max(3, Math.floor(completeResponse.length / 80));
@@ -169,12 +169,13 @@ export class ChatComponent {
       }
       if (displayedChars >= completeResponse.length) {
         clearInterval(typingInterval);
+        responseMessage.message = completeResponse; // Asegurar que el texto completo se muestre
         this.loadingResponse = false;
         this.startingResponse = false;
-        // Start Voice
-        // Reproducir la respuesta completa como voz
-        this.speakText(completeResponse);
-        // End Voice
+        // // Start Voice
+        // // Reproducir la respuesta completa como voz
+        // this.speakText(completeResponse);
+        // // End Voice
       }
     };
 
@@ -215,6 +216,14 @@ export class ChatComponent {
           else if (event.type === HttpEventType.Response) {
             // Guarda el texto completo pero **NO lo muestra directamente**
             completeResponse = (event.body as string)?.trim() || completeResponse;
+
+            responseReceived = true; // Marcar que la respuesta completa está recibida
+            responseMessage.message = completeResponse; // Mostrar el texto completo en la UI
+
+            // Start Voice
+            // Reproducir la respuesta completa como voz
+            this.speakText(completeResponse);
+            // End Voice
 
             // Si el simulador sigue activo, permite que termine naturalmente
           }
@@ -295,6 +304,7 @@ export class ChatComponent {
     let completeResponse = "";
     let displayedChars = 0;
     let typingInterval: any = null;
+    let responseReceived = false; // Bandera para saber si la respuesta completa está lista
 
     // Velocidad dinámica basada en la longitud
     const charsPerTick = Math.max(3, Math.floor(completeResponse.length / 80));
@@ -310,12 +320,9 @@ export class ChatComponent {
       }
       if (displayedChars >= completeResponse.length) {
         clearInterval(typingInterval);
+        responseMessage.message = completeResponse; // Asegurar que el texto completo se muestre
         this.loadingResponse = false;
         this.startingResponse = false;
-        // Start Voice
-        // Reproducir la respuesta completa como voz
-        this.speakText(completeResponse);
-        // End Voice
       }
     };
 
@@ -356,6 +363,13 @@ export class ChatComponent {
           else if (event.type === HttpEventType.Response) {
             // Guarda el texto completo pero **NO lo muestra directamente**
             completeResponse = (event.body as string)?.trim() || completeResponse;
+            responseReceived = true; // Marcar que la respuesta completa está recibida
+            responseMessage.message = completeResponse; // Mostrar el texto completo en la UI
+
+            // Start Voice
+            // Reproducir la respuesta completa como voz
+            this.speakText(completeResponse);
+            // End Voice
 
             // Si el simulador sigue activo, permite que termine naturalmente
           }
