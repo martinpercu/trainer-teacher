@@ -3,16 +3,18 @@ import { CommonModule, KeyValuePipe } from '@angular/common';
 
 import { PagesService } from '@services/pages.service';
 import { VisualStatesService } from '@services/visual-states.service';
+import { SwipeLeftCloseDirective } from '@directives/swipe-left-close.directive'; // Nueva importación
 
 @Component({
   selector: 'app-left-menu',
   standalone: true,
-  imports: [CommonModule, KeyValuePipe],
-  templateUrl: './left-menu.component.html'
+  imports: [CommonModule, KeyValuePipe, SwipeLeftCloseDirective],
+  templateUrl: './left-menu.component.html',
+  styleUrl: './left-menu.component.css'
 })
 export class LeftMenuComponent {
   pagesService = inject(PagesService);
-  visualStatesService = inject(VisualStatesService);
+  // visualStatesService = inject(VisualStatesService);
 
   // bookIndex = this.pagesService.getIndexSubtext();
   // Usar la señal indexSubtext para reactividad
@@ -32,9 +34,9 @@ export class LeftMenuComponent {
   }
 
 
-  toggleShowLeftMenuHeader() {
-    this.visualStatesService.togleShowLeftMenu()
-  }
+  // toggleShowLeftMenuHeader() {
+  //   this.visualStatesService.togleShowLeftMenu()
+  // }
 
 
 }

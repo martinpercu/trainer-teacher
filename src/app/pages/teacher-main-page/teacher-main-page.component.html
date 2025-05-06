@@ -10,12 +10,12 @@
 
 <div class="flex flex-row">
 
-  <div class="flex lg:hidden flex-row absolute z-30 w-screen h-screen"
+  <div class="flex lg:hidden flex-row absolute z-20 w-screen h-screen"
   [ngClass]="{'font-bold hidden': this.visualStatesService.leftMenuCondition() === false}">
     <div class="flex" >
       <app-left-menu></app-left-menu>
     </div>
-    <div class="grow bg-neutral-300 opacity-20" (click)="toggleShowLeftMenuHeader()">
+    <div class="grow " (click)="toggleShowLeftMenuHeader()">
     </div>
   </div>
 
