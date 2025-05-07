@@ -8,21 +8,18 @@
         class="fixed cursor-pointer scale-125 left-4 top-3 flex items-center text-neutral-600 dark:text-neutral-200 z-50 rounded-lg p-1">
 
         @if(this.visualStatesService.leftMenuCondition()) {
-        <div class="sm:hidden h-6">
-          <!-- <mat-icon>left_panel_open</mat-icon> -->
-          <mat-icon class="material-symbols-outlined">left_panel_close</mat-icon>
+        <div class="md:hidden h-6">
+          <mat-icon>left_panel_close</mat-icon>
         </div>
-        <div class="hidden sm:block h-6">
+        <div class="hidden md:block h-6">
           <mat-icon>left_panel_open</mat-icon>
-          <!-- <mat-icon fontIcon="left_panel_open"
-            class="scale-125 text-neutral-800 dark:text-white cursor-pointer"></mat-icon> -->
         </div>
         }
         @if(!this.visualStatesService.leftMenuCondition()) {
-        <div class="sm:hidden h-6">
+        <div class="md:hidden h-6">
           <mat-icon>left_panel_open</mat-icon>
         </div>
-        <div class="hidden sm:block h-6">
+        <div class="hidden md:block h-6">
           <mat-icon>left_panel_close</mat-icon>
           <!-- <mat-icon fontIcon="menu" class="scale-125 text-neutral-800 dark:text-white cursor-pointer"></mat-icon> -->
         </div>
@@ -110,7 +107,7 @@
             class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
             (click)="sendMessage(startLessonFull, false)">
             <mat-icon>speaker_notes</mat-icon>
-            <div class="hidden grow xs:block pl-2 truncate xs:max-w-32 sm:max-w-52 md:max-w-72 lg:max-w-60 xl:max-w-80">
+            <div class="hidden grow xs:block pl-2 truncate xs:max-w-32 sm:max-w-52 md:max-w-44 lg:max-w-60 xl:max-w-80">
               {{this.pagesService.titleSelected()}}
             </div>
           </div>
@@ -120,7 +117,7 @@
             class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
             (click)="sendMessage(startLesson, false)">
             <mat-icon>chat_info</mat-icon>
-            <div class="hidden grow xs:block pl-2 truncate xs:max-w-32 sm:max-w-52 md:max-w-72 lg:max-w-60 xl:max-w-80">
+            <div class="hidden grow xs:block pl-2 truncate xs:max-w-32 sm:max-w-52 md:max-w-44 lg:max-w-60 xl:max-w-80">
               {{this.pagesService.titleSelected()}}
             </div>
           </div>
