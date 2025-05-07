@@ -10,7 +10,7 @@
 
 <div class="flex flex-row">
 
-  <div class="flex lg:hidden flex-row absolute z-20 w-screen h-screen"
+  <div class="flex md:hidden flex-row absolute z-20 w-screen h-screen"
   [ngClass]="{'font-bold hidden': this.visualStatesService.leftMenuCondition() === false}">
     <div class="flex" >
       <app-left-menu></app-left-menu>
@@ -19,8 +19,8 @@
     </div>
   </div>
 
-  <div class="hidden lg:flex">
-    <div [ngClass]="{'sm:hidden': this.visualStatesService.leftMenuCondition() === true}">
+  <div class="hidden md:flex">
+    <div [ngClass]="{'md:hidden': this.visualStatesService.leftMenuCondition() === true}">
       <app-left-menu></app-left-menu>
     </div>
   </div>
