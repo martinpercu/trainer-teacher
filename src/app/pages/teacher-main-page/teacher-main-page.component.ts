@@ -17,8 +17,10 @@ import { catchError } from 'rxjs/operators';
 
 import { Teacher } from '@models/teacher';
 import { Course } from '@models/course';
+import { Exam } from '@models/exam';
 
 import { UserService } from '@services/user.service';
+import { ExamCrudService } from '@services/exam-crud.service';
 
 
 
@@ -38,43 +40,45 @@ export class TeacherMainPageComponent {
 
   userService = inject(UserService);
   courseCrudService = inject(CourseCrudService);
+  examCrudService = inject(ExamCrudService);
 
   private firestore = inject(Firestore);
 
   currentUser = this.userService.userSig();
 
   course!: Course;
+  exam!: Exam;
 
   async ngOnInit() {
-    // Extraer el courseId de la URL.. OJO esta en /teacher/:id
-    const courseId = this.route.snapshot.paramMap.get('id'); // Ruta /teacher/:id
+    // Extraer el examId de la URL.. OJO esta en /teacher/:id
+    const examId = this.route.snapshot.paramMap.get('id'); // Ruta /teacher/:id
 
-    if (courseId) {
+    if (examId) {
 
-      this.pagesService.setExamPath(courseId);
+      this.pagesService.setExamPath(examId);
 
-      this.courseCrudService.getCourseById(courseId).pipe(
+      this.examCrudService.getExamById(examId).pipe(
         catchError(error => {
           console.error('Error fetching course:', error);
           return of(null);
         })
-      ).subscribe(course => {
-        if (course) {
-          this.course = course;
+      ).subscribe(exam => {
+        if (exam) {
+          this.exam = exam;
           // Usar teacherId del curso para PagesService
-          if (course.teacherId) {
-            this.pagesService.setConfiguration(course.teacherId).catch(error => {
+          if (exam.teacherId) {
+            this.pagesService.setConfiguration(exam.teacherId).catch(error => {
               console.error('Error setting configuration:', error);
             });
           } else {
-            console.error('No teacherId found for course:', courseId);
+            console.error('No teacherId found for exam:', examId);
           }
         } else {
-          console.error('Course not found for ID:', courseId);
+          console.error('Exam not found for ID:', examId);
         }
       });
     } else {
-      console.error('No course ID provided in URL');
+      console.error('No exam ID provided in URL');
     }
   }
 
