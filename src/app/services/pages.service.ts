@@ -3,15 +3,6 @@ import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 
 import { Teacher } from '@models/teacher';
 
-// interface Teacher {
-//   id: string;
-//   name: string;
-//   pageMap: { [key: string]: number[] };
-//   indexSubtext: { [key: string]: string };
-//   defaultTitle: string;
-//   doc_path: string;
-// }
-
 @Injectable({
   providedIn: 'root'
 })
@@ -23,7 +14,7 @@ export class PagesService {
   indexSubtext = signal<Record<string, string>>({});
   defaultTitle = signal<string>('');
   docPath = signal<string>('');
-  courseId = signal<string>('');
+  examId = signal<string>('');
 
   private currentTeacher: Teacher | null = null;
   private currentConfig: string | null = null;
@@ -38,8 +29,8 @@ export class PagesService {
     }
   }
 
-  async setExamPath(courseId: string) {
-    this.courseId.set(courseId);
+  async setExamPath(examId: string) {
+    this.examId.set(examId);
   }
 
   async setConfiguration(type: string) {

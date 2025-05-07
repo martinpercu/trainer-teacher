@@ -96,7 +96,7 @@ export class TopRightComponent {
   }
 
   takeExam() {
-    const coursePath = this.pagesService.courseId();
+    const coursePath = this.pagesService.examId();
     this.router.navigate([`/exam/${coursePath}`])
   }
 

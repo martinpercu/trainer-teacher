@@ -6,8 +6,6 @@ import { QuestionAndAnswer, Result } from '@models/result';
 import { ExamService } from '@services/exam.service';
 import { ResultService } from '@services/result.service';
 import { AuthService } from '@services/auth.service';
-import { UserService } from '@services/user.service';
-import { CourseCrudService } from '@services/course-crud.service';
 
 
 
@@ -20,17 +18,15 @@ import { CourseCrudService } from '@services/course-crud.service';
 export class ExamComponent implements OnInit {
 
   authService = inject(AuthService);
-  // userService = inject(UserService);
   examService = inject(ExamService);
   route = inject(ActivatedRoute);
   resultService = inject(ResultService);
-  courseCrudService = inject(CourseCrudService);
   router = inject(Router);
 
   exam: Exam | null = null;
   preparedQuestions: { question: Question, options: Option[] }[] = [];
   userAnswers: { [questionIndex: number]: string } = {};
-  questions_limit = 4;
+  questions_limit = 12;
   false_options_count = 5;
 
   course!: Course;
@@ -38,69 +34,15 @@ export class ExamComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // const examId = this.route.snapshot.paramMap.get('id');
-    // if (examId) {
-    //   this.loadExam(examId);
-    // }
-    // const examTeacherId = this.route.snapshot.paramMap.get('id');
-    // if (examTeacherId) {
-    //   console.log(examTeacherId);
-
-    //   this.loadExamTeacherId(examTeacherId);
-    // }
-    const courseId = this.route.snapshot.paramMap.get('id');
-    if (courseId) {
-      console.log(courseId);
-      this.loadTheCourse(courseId);
+    const examId = this.route.snapshot.paramMap.get('id');
+    if (examId) {
+      this.loadExam(examId);
     }
   }
 
-  loadTheCourse(courseId: string): void {
-    this.courseCrudService.getCourseById(courseId).subscribe({
-      next: (course) => {
-        if (course) {
-          this.course = course;
-          console.log(this.course);
-          this.checkIfCourseAvailable()
-        } else {
-          console.error('Examen no encontrado');
-        }
-      },
-      error: (error) => {
-        console.error('Error al cargar el examen:', error);
-      }
-    });
-  }
 
-  checkIfCourseAvailable() {
-    console.log(this.course);
-    if(this.course.enabled) {
-      console.log('JOYAAA ENABLE');
-      this.loadExamTeacherId(this.course.teacherId)
-    } else {
-      alert('This Course is not availble')
-      // this.router.navigate(['/main'])
-    }
-  }
-
-  // loadExam(examId: string): void {
-  //   this.examService.getExamById(examId).subscribe({
-  //     next: (exam) => {
-  //       if (exam) {
-  //         this.exam = exam;
-  //         this.prepareExam();
-  //       } else {
-  //         console.error('Examen no encontrado');
-  //       }
-  //     },
-  //     error: (error) => {
-  //       console.error('Error al cargar el examen:', error);
-  //     }
-  //   });
-  // }
-
-  loadExamTeacherId(examTeacherId: string): void {
-    this.examService.getTheFirstExamByTeacherId(examTeacherId).subscribe({
+  loadExam(examId: string): void {
+    this.examService.getExamById(examId).subscribe({
       next: (exam) => {
         if (exam) {
           this.exam = exam;
@@ -118,7 +60,8 @@ export class ExamComponent implements OnInit {
   prepareExam(): void {
     if (!this.exam || !this.exam.questions) return;
     console.log(this.exam);
-    this.false_options_count = this.course.difficulty;
+    // IMPORTANT ==> This will control de difficulty.
+    // this.false_options_count = this.course.difficulty;
 
     const shuffledQuestions = this.shuffleArray([...this.exam.questions]);
     const selectedQuestions = shuffledQuestions.slice(0, Math.min(this.questions_limit, this.exam.questions.length));
