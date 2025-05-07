@@ -2,17 +2,23 @@
   <!-- Sidebar -->
   <div
     class="w-64 bg-neutral-50 dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-700 p-4 flex flex-col gap-2">
-    <button (click)="setView('courses')"
+    <button (click)="setView('teachers')"
+      class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+      [ngClass]="{'bg-neutral-100 dark:bg-neutral-800': currentView === 'teachers'}">
+      <mat-icon>book_5</mat-icon>
+      <span>Teachers</span>
+    </button>
+    <!-- <button (click)="setView('courses')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
       [ngClass]="{'bg-neutral-100 dark:bg-neutral-800': currentView === 'courses'}">
-      <mat-icon>book_5</mat-icon>
+      <mat-icon>school</mat-icon>
       <span>Courses</span>
-    </button>
+    </button> -->
     <button (click)="setView('exams')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
       [ngClass]="{'bg-neutral-100 dark:bg-neutral-800': currentView === 'exams'}">
       <mat-icon>school</mat-icon>
-      <span>Tests</span>
+      <span>Exams</span>
     </button>
     <button (click)="setView('students')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
@@ -36,16 +42,22 @@
 
   <!-- Main Content -->
   <div class="flex-1 p-4 overflow-auto">
-    @if (currentView === 'courses') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Courses</h1>
+    @if (currentView === 'teachers') {
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Teachers</h1>
       @for (teacher of teachers; track teacher.id) {
       <app-teacher-list [teacher]="teacher"></app-teacher-list>
       }
     }
-    @if (currentView === 'exams') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Tests</h1>
+    <!-- @if (currentView === 'courses') {
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Courses</h1>
     @for (course of courses; track course.id) {
       <app-course-card [course]="course"></app-course-card>
+      }
+    } -->
+    @if (currentView === 'exams') {
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Exams</h1>
+    @for (exam of exams; track exam.id) {
+      <app-exams-list [exam]="exam"></app-exams-list>
       }
     }
     @if (currentView === 'students') {
