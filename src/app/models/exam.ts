@@ -16,4 +16,5 @@ export interface Exam {
   questions: Question[]; // Lista de preguntas
   courseId?: string; // Es al course que está linkeado el examen.
   passingPercentage: number // Is the percentage need to aprove the exam. e.g., 70 para 70%
+  timeToWait: number // Is the time need to try again in minutes e.g. 120 is 2 hours.
 }

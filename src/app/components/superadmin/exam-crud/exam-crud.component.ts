@@ -19,13 +19,17 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './exam-crud.component.css'
 })
 export class ExamCrudComponent implements OnInit {
+
   exams$!: Observable<Exam[]>;
   teachers$!: Observable<Teacher[]>;
   newExam: Partial<Exam> = {
     title: '',
     teacherId: '',
     teacherName: '',
-    questions: []
+    questions: [],
+    // courseId: '',
+    passingPercentage: 70,
+    timeToWait: 48
   };
   errorMessage: string = '';
   editingExamId: string | undefined = undefined;
@@ -64,7 +68,10 @@ export class ExamCrudComponent implements OnInit {
               questions: exam.questions.map(q => ({
                 text: q.text,
                 options: q.options.map(o => ({ text: o.text, isCorrect: o.isCorrect }))
-              }))
+              })),
+              // courseId: exam.courseId,
+              passingPercentage: exam.passingPercentage ?? 70,
+              timeToWait: exam.timeToWait ?? 48
             };
             this.editingExamId = examId;
             this.errorMessage = '';
@@ -94,23 +101,6 @@ export class ExamCrudComponent implements OnInit {
       this.isSaving = false;
       return;
     }
-    if (!this.newExam.teacherId) {
-      this.errorMessage = 'Teacher is mandatory';
-      this.isSaving = false;
-      return;
-    }
-    if (!this.newExam.questions?.length) {
-      this.errorMessage = 'At least one question';
-      this.isSaving = false;
-      return;
-    }
-
-    const invalidQuestion = this.newExam.questions.find(q => !this.isValidQuestion(q));
-    if (invalidQuestion) {
-      this.errorMessage = 'At least one question is invalid. (Shoud have text and at least 2 options: 1 correct)';
-      this.isSaving = false;
-      return;
-    }
 
     this.examCrudService.checkExamTitleExists(this.newExam.title, this.editingExamId).subscribe({
       next: (titleExists) => {
@@ -124,7 +114,10 @@ export class ExamCrudComponent implements OnInit {
           title: this.newExam.title!.trim(),
           teacherId: this.newExam.teacherId,
           teacherName: this.newExam.teacherName?.trim() || undefined,
-          questions: this.newExam.questions
+          questions: this.newExam.questions,
+          // courseId: this.newExam.courseId,
+          passingPercentage: this.newExam.passingPercentage,
+          timeToWait: this.newExam.timeToWait
         };
 
         if (this.editingExamId) {
@@ -267,7 +260,10 @@ export class ExamCrudComponent implements OnInit {
       title: '',
       teacherId: '',
       teacherName: '',
-      questions: []
+      questions: [],
+      // courseId: '',
+      passingPercentage: 70,
+      timeToWait: 48
     };
     this.editingExamId = undefined;
     this.selectedExamId = '';
@@ -289,6 +285,7 @@ export class ExamCrudComponent implements OnInit {
   }
 
 
+
   // exams$!: Observable<Exam[]>;
   // teachers$!: Observable<Teacher[]>;
   // newExam: Partial<Exam> = {
@@ -300,6 +297,7 @@ export class ExamCrudComponent implements OnInit {
   // errorMessage: string = '';
   // editingExamId: string | undefined = undefined;
   // selectedExamId: string = '';
+  // isSaving: boolean = false;
 
   // constructor(
   //   private examCrudService: ExamCrudService,
@@ -311,6 +309,7 @@ export class ExamCrudComponent implements OnInit {
   //   this.teachers$ = this.teacherCrudService.getTeachers().pipe(
   //     catchError(error => {
   //       console.error('Error al cargar profesores:', error);
+  //       this.errorMessage = 'No se pudieron cargar los profesores';
   //       return of([]);
   //     })
   //   );
@@ -343,7 +342,7 @@ export class ExamCrudComponent implements OnInit {
   //       },
   //       error: (error) => {
   //         console.error('Error al cargar el examen:', error);
-  //         this.errorMessage = 'Error al cargar el examen';
+  //         this.errorMessage = error.message || 'Error al cargar el examen';
   //         this.resetForm();
   //       }
   //     });
@@ -353,109 +352,114 @@ export class ExamCrudComponent implements OnInit {
   // }
 
   // saveExam() {
+  //   if (this.isSaving) return;
+  //   this.isSaving = true;
+  //   this.errorMessage = '';
+
   //   if (!this.newExam.title?.trim()) {
-  //     this.errorMessage = 'El título es requerido';
+  //     this.errorMessage = 'Exam title mandatory';
+  //     this.isSaving = false;
   //     return;
   //   }
   //   if (!this.newExam.teacherId) {
-  //     this.errorMessage = 'El profesor es requerido';
+  //     this.errorMessage = 'Teacher is mandatory';
+  //     this.isSaving = false;
   //     return;
   //   }
   //   if (!this.newExam.questions?.length) {
-  //     this.errorMessage = 'Se requiere al menos una pregunta';
+  //     this.errorMessage = 'At least one question';
+  //     this.isSaving = false;
   //     return;
   //   }
 
-  //   // Validar preguntas
   //   const invalidQuestion = this.newExam.questions.find(q => !this.isValidQuestion(q));
   //   if (invalidQuestion) {
-  //     this.errorMessage = 'Una o más preguntas son inválidas (Una o más preguntas son inválidas (deben tener texto y entre 3-6 opciones: 1 correcta)';
+  //     this.errorMessage = 'At least one question is invalid. (Shoud have text and at least 2 options: 1 correct)';
+  //     this.isSaving = false;
   //     return;
   //   }
 
-  //   // Verificar título duplicado y examen existente para el teacherId
   //   this.examCrudService.checkExamTitleExists(this.newExam.title, this.editingExamId).subscribe({
   //     next: (titleExists) => {
   //       if (titleExists) {
   //         this.errorMessage = 'Ya existe un examen con este título';
+  //         this.isSaving = false;
   //         return;
   //       }
 
-  //       this.examCrudService.checkExamExistsByTeacherId(this.newExam.teacherId!, this.editingExamId).subscribe({
-  //         next: (teacherExamExists) => {
-  //           if (teacherExamExists) {
-  //             this.errorMessage = 'Este profesor ya tiene un examen asignado';
-  //             return;
-  //           }
+  //       const examData: Partial<Exam> = {
+  //         title: this.newExam.title!.trim(),
+  //         teacherId: this.newExam.teacherId,
+  //         teacherName: this.newExam.teacherName?.trim() || undefined,
+  //         questions: this.newExam.questions
+  //       };
 
-  //           const examData: Partial<Exam> = {
-  //             title: this.newExam.title!.trim(),
-  //             teacherId: this.newExam.teacherId,
-  //             teacherName: this.newExam.teacherName?.trim() || undefined,
-  //             questions: this.newExam.questions
-  //           };
-
-  //           if (this.editingExamId) {
-  //             this.examCrudService.updateExam(this.editingExamId, examData).subscribe({
-  //               next: (success) => {
-  //                 if (success) {
-  //                   this.resetForm();
-  //                 } else {
-  //                   this.errorMessage = 'Error al actualizar el examen';
-  //                 }
-  //               },
-  //               error: (error) => {
-  //                 console.error('Error al actualizar el examen:', error);
-  //                 this.errorMessage = 'Error al actualizar el examen';
-  //               }
-  //             });
-  //           } else {
-  //             this.examCrudService.createExam(examData).subscribe({
-  //               next: (id) => {
-  //                 if (id) {
-  //                   this.resetForm();
-  //                 } else {
-  //                   this.errorMessage = 'Error al crear el examen';
-  //                 }
-  //               },
-  //               error: (error) => {
-  //                 console.error('Error al crear el examen:', error);
-  //                 this.errorMessage = 'Error al crear el examen';
-  //               }
-  //             });
+  //       if (this.editingExamId) {
+  //         this.examCrudService.updateExam(this.editingExamId, examData).subscribe({
+  //           next: (success) => {
+  //             this.isSaving = false;
+  //             if (success) {
+  //               this.resetForm();
+  //             } else {
+  //               this.errorMessage = 'Error al actualizar el examen';
+  //             }
+  //           },
+  //           error: (error) => {
+  //             this.isSaving = false;
+  //             console.error('Error al actualizar el examen:', error);
+  //             this.errorMessage = error.message || 'Error al actualizar el examen';
   //           }
-  //         },
-  //         error: (error) => {
-  //           console.error('Error al verificar el examen por teacherId:', error);
-  //           this.errorMessage = 'Error al verificar el examen para el profesor';
-  //         }
-  //       });
+  //         });
+  //       } else {
+  //         this.examCrudService.createExam(examData).subscribe({
+  //           next: (id) => {
+  //             this.isSaving = false;
+  //             if (id) {
+  //               this.resetForm();
+  //             } else {
+  //               this.errorMessage = 'Error al crear el examen';
+  //             }
+  //           },
+  //           error: (error) => {
+  //             this.isSaving = false;
+  //             console.error('Error al crear el examen:', error);
+  //             this.errorMessage = error.message || 'Error al crear el examen';
+  //           }
+  //         });
+  //       }
   //     },
   //     error: (error) => {
+  //       this.isSaving = false;
   //       console.error('Error al verificar el título:', error);
-  //       this.errorMessage = 'Error al verificar el título del examen';
+  //       this.errorMessage = error.message || 'Error al verificar el título del examen';
   //     }
   //   });
   // }
 
   // deleteExam() {
-  //   if (this.editingExamId) {
-  //     const confirmDelete = confirm('¿Estás seguro de que quieres eliminar este examen?');
-  //     if (confirmDelete) {
-  //       this.examCrudService.deleteExam(this.editingExamId).subscribe({
-  //         next: (success) => {
-  //           if (success) {
-  //             this.resetForm();
-  //           } else {
-  //             this.errorMessage = 'Error al eliminar el examen';
-  //           }
-  //         },
-  //         error: (error) => {
-  //           console.error('Error al eliminar el examen:', error);
+  //   if (this.isSaving || !this.editingExamId) return;
+  //   this.isSaving = true;
+  //   this.errorMessage = '';
+
+  //   const confirmDelete = confirm('Are you sure to delete this exam?');
+  //   if (confirmDelete) {
+  //     this.examCrudService.deleteExam(this.editingExamId).subscribe({
+  //       next: (success) => {
+  //         this.isSaving = false;
+  //         if (success) {
+  //           this.resetForm();
+  //         } else {
   //           this.errorMessage = 'Error al eliminar el examen';
   //         }
-  //       });
-  //     }
+  //       },
+  //       error: (error) => {
+  //         this.isSaving = false;
+  //         console.error('Error al eliminar el examen:', error);
+  //         this.errorMessage = error.message || 'Error al eliminar el examen';
+  //       }
+  //     });
+  //   } else {
+  //     this.isSaving = false;
   //   }
   // }
 
@@ -468,48 +472,18 @@ export class ExamCrudComponent implements OnInit {
   //     this.teacherCrudService.getTeacherById(teacherId).subscribe({
   //       next: (teacher) => {
   //         this.newExam.teacherName = teacher ? teacher.name : '';
-  //         // Cargar el examen asociado al teacherId
-  //         this.examCrudService.getExamByTeacherId(teacherId).subscribe({
-  //           next: (exam) => {
-  //             if (exam) {
-  //               this.newExam = {
-  //                 title: exam.title,
-  //                 teacherId: exam.teacherId,
-  //                 teacherName: exam.teacherName || '',
-  //                 questions: exam.questions.map(q => ({
-  //                   text: q.text,
-  //                   options: q.options.map(o => ({ text: o.text, isCorrect: o.isCorrect }))
-  //                 }))
-  //               };
-  //               this.editingExamId = exam.id;
-  //               this.selectedExamId = exam.id;
-  //               this.errorMessage = '';
-  //             } else {
-  //               this.newExam = {
-  //                 title: '',
-  //                 teacherId: teacherId,
-  //                 teacherName: this.newExam.teacherName,
-  //                 questions: []
-  //               };
-  //               this.editingExamId = undefined;
-  //               this.selectedExamId = '';
-  //               this.errorMessage = '';
-  //             }
-  //           },
-  //           error: (error) => {
-  //             console.error('Error al cargar el examen por teacherId:', error);
-  //             this.errorMessage = 'Error al cargar el examen';
-  //           }
-  //         });
+  //         this.errorMessage = '';
   //       },
   //       error: (error) => {
   //         console.error('Error al obtener el profesor:', error);
   //         this.newExam.teacherName = '';
+  //         this.errorMessage = error.message || 'Error al cargar el profesor';
   //       }
   //     });
   //   } else {
   //     this.newExam.teacherName = '';
-  //     this.resetForm();
+  //     this.newExam.teacherId = '';
+  //     this.errorMessage = '';
   //   }
   // }
 
@@ -519,7 +493,6 @@ export class ExamCrudComponent implements OnInit {
   //     text: '',
   //     options: [
   //       { text: '', isCorrect: true },
-  //       { text: '', isCorrect: false },
   //       { text: '', isCorrect: false }
   //     ]
   //   });
@@ -527,6 +500,25 @@ export class ExamCrudComponent implements OnInit {
 
   // removeQuestion(index: number) {
   //   this.newExam.questions = this.newExam.questions?.filter((_, i) => i !== index) || [];
+  // }
+
+  // addOption(questionIndex: number) {
+  //   this.newExam.questions = this.newExam.questions || [];
+  //   const question = this.newExam.questions[questionIndex];
+  //   if (question.options.length < 6) {
+  //     question.options.push({ text: '', isCorrect: false });
+  //   }
+  // }
+
+  // removeOption(questionIndex: number, optionIndex: number) {
+  //   this.newExam.questions = this.newExam.questions || [];
+  //   const question = this.newExam.questions[questionIndex];
+  //   if (question.options.length > 2) {
+  //     question.options = question.options.filter((_, i) => i !== optionIndex);
+  //     if (!question.options.some(opt => opt.isCorrect)) {
+  //       question.options[0].isCorrect = true;
+  //     }
+  //   }
   // }
 
   // updateOptionCorrectness(questionIndex: number, optionIndex: number) {
@@ -549,24 +541,11 @@ export class ExamCrudComponent implements OnInit {
   //   this.errorMessage = '';
   // }
 
-  // // private isValidQuestion(question: Question): boolean {
-  // //   if (!question.text?.trim()) {
-  // //     return false;
-  // //   }
-  // //   if (!Array.isArray(question.options) || question.options.length !== 6) {
-  // //     return false;
-  // //   }
-  // //   const correctCount = question.options.filter(opt => opt.isCorrect).length;
-  // //   if (correctCount !== 1) {
-  // //     return false;
-  // //   }
-  // //   return question.options.every(opt => opt.text?.trim() && typeof opt.isCorrect === 'boolean');
-  // // }
   // private isValidQuestion(question: Question): boolean {
   //   if (!question.text?.trim()) {
   //     return false;
   //   }
-  //   if (!Array.isArray(question.options) || question.options.length < 3 || question.options.length > 6) {
+  //   if (!Array.isArray(question.options) || question.options.length < 2 || question.options.length > 6) {
   //     return false;
   //   }
   //   const correctCount = question.options.filter(opt => opt.isCorrect).length;
@@ -576,31 +555,4 @@ export class ExamCrudComponent implements OnInit {
   //   return question.options.every(opt => opt.text?.trim() && typeof opt.isCorrect === 'boolean');
   // }
 
-  // addOption(questionIndex: number) {
-  //   this.newExam.questions = this.newExam.questions || [];
-  //   const question = this.newExam.questions[questionIndex];
-  //   if (question.options.length < 6) {
-  //     question.options.push({ text: '', isCorrect: false });
-  //   }
-  // }
-
-  // removeOption(questionIndex: number, optionIndex: number) {
-  //   this.newExam.questions = this.newExam.questions || [];
-  //   const question = this.newExam.questions[questionIndex];
-  //   if (question.options.length > 4) {
-  //     question.options = question.options.filter((_, i) => i !== optionIndex);
-  //     // Asegurar que haya una opción correcta
-  //     if (!question.options.some(opt => opt.isCorrect)) {
-  //       question.options[0].isCorrect = true;
-  //     }
-  //   }
-  // }
-
-  // // updateOptionCorrectness(questionIndex: number, optionIndex: number) {
-  // //   const question = this.newExam.questions![questionIndex];
-  // //   question.options = question.options.map((opt, i) => ({
-  // //     ...opt,
-  // //     isCorrect: i === optionIndex
-  // //   }));
-  // // }
 }
