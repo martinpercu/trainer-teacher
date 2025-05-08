@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Exam, Question, Option } from '@models/exam';
-import { Course } from '@models/course';
 import { QuestionAndAnswer, Result } from '@models/result';
 import { ExamService } from '@services/exam.service';
 import { ResultService } from '@services/result.service';
@@ -29,7 +28,6 @@ export class ExamComponent implements OnInit {
   questions_limit = 12;
   false_options_count = 5;
 
-  course!: Course;
 
   constructor() {}
 
@@ -112,6 +110,7 @@ export class ExamComponent implements OnInit {
 
     const correctAnswers = questionsAndAnswers.filter(q => q.correct).length;
     const questionsAnswered = questionsAndAnswers.filter(q => q.answer !== '').length;
+    // const exam_passed_sucees = 'this is the logic we need and return a boolea if correct answer are bigger than percentage'
     const result: Omit<Result, 'id'> = {
       userUID: currentUser.userUID,
       time: new Date().toUTCString(),
