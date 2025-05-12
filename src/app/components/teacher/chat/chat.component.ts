@@ -176,7 +176,7 @@ export class ChatComponent {
 
     const formData = {
       message,
-      session_id: 'gagaga',
+      session_id: 'gagagolasdfgdfgs',
       pages: this.pagesService.pagesSelected(),
       doc_path: this.pagesService.docPath()
     };
