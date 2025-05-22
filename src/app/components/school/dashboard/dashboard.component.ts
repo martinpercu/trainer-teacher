@@ -1,6 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule} from '@angular/common';
 
+import { environment } from '@env/environment';
+
 import { MatIconModule } from '@angular/material/icon';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -55,7 +57,7 @@ export class DashboardComponent implements OnInit {
   exams: Exam[] = [];
 
 
-  currentView: 'teachers' | 'courses' | 'students' | 'results' | 'config' | 'exams' = 'students'; // Default to courses
+  currentView: 'teachers' | 'courses' | 'students' | 'results' | 'config' | 'exams' = 'teachers'; // Default to courses
 
   ngOnInit() {
     // this.userService.getAllUsers().subscribe(users => {
@@ -100,5 +102,12 @@ export class DashboardComponent implements OnInit {
   setView(view: 'teachers' | 'courses' | 'exams' | 'students' | 'results'  | 'config') {
     this.currentView = view;
   }
+
+  goToMain() {
+    // window.open("https://trainer-teacher.web.app", '_blank');
+    window.open(`${environment.BASEURL}`, '_blank');
+    // this.router.navigate(['/main']);
+  }
+
 }
 
