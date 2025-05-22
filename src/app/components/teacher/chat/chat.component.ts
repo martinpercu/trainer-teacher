@@ -1,5 +1,7 @@
 import { Component, signal, inject, ViewChild, ElementRef } from '@angular/core';
 
+import { environment } from '@env/environment';
+
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpDownloadProgressEvent, HttpEvent, HttpEventType } from '@angular/common/http';
 
@@ -14,6 +16,7 @@ import { ChatMessage } from '@models/chatMessage';
 
 import { VisualStatesService } from '@services/visual-states.service';
 import { PagesService } from '@services/pages.service';
+import { UserService } from '@services/user.service';
 
 
 @Component({
@@ -28,11 +31,10 @@ export class ChatComponent {
 
   @ViewChild('chatInput') chatInput!: ElementRef<HTMLTextAreaElement>;
 
-
   private http = inject(HttpClient);
   visualStatesService = inject(VisualStatesService);
   pagesService = inject(PagesService);
-
+  userService = inject(UserService);
 
   userMessage: string = '';
 
@@ -47,18 +49,9 @@ export class ChatComponent {
   showArrowDown: boolean = false;
   userScrolled: boolean = false; // Nueva bandera para controlar el scroll manual
 
-
-  hardTest: string = 'Just ask me 2 serious questions. Try to force me to answer this questions very precise if I do not well; please help me and let me know about the answers';
-  shortTest: string = 'Please, just ask me 1 easy question to test my knowledge';
-  startLesson: string = 'In the docs you will find one starting with "Section " this is the subject of this lesson. Please order the others docs and find the best way to teach me this info. Please start with no more than 110 words to explain me and then just ask me if I want to continue the lesson or if I need you to explain me again the same.'
-  // startLessonFull: string = 'Can you explain "Ethics Management for Supervisors" to me using the documents you have? Please give me a general overview of what the course is about, starting with no more than 110 words. After that, just ask me if I’d like to continue the lesson or if I want you to repeat the same explanation. Try to teach me in the most helpful way.'
-  startLessonFull: string = `Can you explain "${this.pagesService.defaultTitle()}" to me using the documents you have? Please give me a general overview of what the course is about, starting with no more than 110 words. After that, just ask me if I’d like to continue the lesson or if I want you to repeat the same explanation. Try to teach me in the most helpful way.`
-
   // start Voice
   speakIsEnabled: boolean = false; // Controla si TTS está activado
-
   // End Voice
-
 
   // start Voice
   ngOnInit(): void {
@@ -66,9 +59,6 @@ export class ChatComponent {
     this.loadVoices();
   }
   // End Voice
-
-
-
 
   ngAfterViewInit(): void {
     // Escuchar el evento de scroll en el contenedor de los mensajes
@@ -80,7 +70,19 @@ export class ChatComponent {
     this.scrollToBottom();
   }
 
+  startLesson() {
+    const textStart = `In the docs you will find one starting with ${this.pagesService.titleSelected()} this is the subject of this lesson. Please order the others docs and find the best way to teach me this info. Please start with no more than 110 words to explain me and then just ask me if I want to continue the lesson or if I need you to explain me again the same.`
+    return textStart
+  }
 
+  testButton() {
+    // console.log(this.pagesService.startLessonFull());
+    // console.log(this.pagesService.startLesson());
+    // console.log(this.pagesService.hardTest());
+    // console.log(this.pagesService.shortTest());
+    console.log(this.userService.userSig()?.email);
+
+  }
 
   // Start Voice
   // Nueva función para cargar voces disponibles
@@ -90,14 +92,11 @@ export class ChatComponent {
     };
   }
 
-
   toggleSpeak(): void {
     this.speakIsEnabled = !this.speakIsEnabled;
   }
 
-
   // Nueva función para reproducir texto como voz
-
   speakText(text: string): void {
     // VERY IMPORTANT ===> Clean the tail ==>  LIMPIAR LA COLA DE SPEECH!!!
     window.speechSynthesis.cancel(); // clean the reproduction queu
@@ -138,8 +137,6 @@ export class ChatComponent {
     }
   }
 
-
-
   sendMessage(message: string, showUserMessage: boolean = true): void {
     if (message.trim() === "") return;
 
@@ -154,19 +151,17 @@ export class ChatComponent {
     let completeResponse = "";
     let displayedChars = 0;
     let typingInterval: any = null;
-    let responseReceived = false;
 
-    const charsPerTick = Math.max(3, Math.floor(completeResponse.length / 80));
+    const charsPerTick = 3; // Puedes ajustarlo o hacerlo dinámico más adelante
 
     const simulateTyping = () => {
-      if (displayedChars < completeResponse.length && !responseReceived) {
+      if (displayedChars < completeResponse.length) {
         const nextChunk = Math.min(displayedChars + charsPerTick, completeResponse.length);
         responseMessage.message = completeResponse.substring(0, nextChunk);
         displayedChars = nextChunk;
         this.loadingResponse = false;
         setTimeout(() => this.scrollToBottom(), 10);
-      }
-      if (displayedChars >= completeResponse.length || responseReceived) {
+      } else {
         clearInterval(typingInterval);
         responseMessage.message = completeResponse;
         this.loadingResponse = false;
@@ -176,7 +171,7 @@ export class ChatComponent {
 
     const formData = {
       message,
-      session_id: 'gagagolasdfgdfgs',
+      session_id: this.userService.userSig()?.email,
       pages: this.pagesService.pagesSelected(),
       doc_path: this.pagesService.docPath()
     };
@@ -188,7 +183,8 @@ export class ChatComponent {
     }, 10000);
 
     // this.http.post("https://assistant-chat-backend-production.up.railway.app/stream_chat_test", formData, {
-    this.http.post("http://127.0.0.1:8000/stream_chat_test", formData, {
+    // this.http.post("http://127.0.0.1:8000/stream_chat_test", formData, {
+    this.http.post(`${environment.BACK_CHAT_URL}/stream_chat_test`, formData, {
       responseType: 'text',
       observe: 'events',
       reportProgress: true,
@@ -203,16 +199,14 @@ export class ChatComponent {
             }
           } else if (event.type === HttpEventType.Response) {
             completeResponse = (event.body as string)?.trim() || completeResponse;
-            responseReceived = true;
-            responseMessage.message = completeResponse;
-            this.speakText(completeResponse);
+            this.speakText(completeResponse); // Solo reproducimos el texto, no lo mostramos
           }
         },
         error: (err) => {
           console.error('Error:', err);
           clearInterval(typingInterval);
           clearTimeout(timeout);
-          responseMessage.message = "Error al obtener la respuesta. Intenta de nuevo.";
+          responseMessage.message = "Error getting response. Please try again.";
           this.loadingResponse = false;
         },
         complete: () => {
@@ -232,6 +226,99 @@ export class ChatComponent {
       this.scrollToBottomFromArrow();
     }, 100);
   }
+
+  // sendMessage(message: string, showUserMessage: boolean = true): void {
+  //   if (message.trim() === "") return;
+
+  //   this.loadingResponse = true;
+  //   if (showUserMessage) {
+  //     this.chatMessages.push({ role: "user", message });
+  //   }
+
+  //   const responseMessage = { role: "assistant", message: "" };
+  //   this.chatMessages.push(responseMessage);
+
+  //   let completeResponse = "";
+  //   let displayedChars = 0;
+  //   let typingInterval: any = null;
+  //   let responseReceived = false;
+
+  //   const charsPerTick = Math.max(3, Math.floor(completeResponse.length / 80));
+
+  //   const simulateTyping = () => {
+  //     if (displayedChars < completeResponse.length && !responseReceived) {
+  //       const nextChunk = Math.min(displayedChars + charsPerTick, completeResponse.length);
+  //       responseMessage.message = completeResponse.substring(0, nextChunk);
+  //       displayedChars = nextChunk;
+  //       this.loadingResponse = false;
+  //       setTimeout(() => this.scrollToBottom(), 10);
+  //     }
+  //     if (displayedChars >= completeResponse.length || responseReceived) {
+  //       clearInterval(typingInterval);
+  //       responseMessage.message = completeResponse;
+  //       this.loadingResponse = false;
+  //       this.startingResponse = false;
+  //     }
+  //   };
+
+  //   const formData = {
+  //     message,
+  //     session_id: this.userService.userSig()?.email,
+  //     pages: this.pagesService.pagesSelected(),
+  //     doc_path: this.pagesService.docPath()
+  //   };
+
+  //   const timeout = setTimeout(() => {
+  //     clearInterval(typingInterval);
+  //     responseMessage.message = completeResponse;
+  //     this.loadingResponse = false;
+  //   }, 10000);
+
+  //   // this.http.post("https://assistant-chat-backend-production.up.railway.app/stream_chat_test", formData, {
+  //   this.http.post("http://127.0.0.1:8000/stream_chat_test", formData, {
+  //     responseType: 'text',
+  //     observe: 'events',
+  //     reportProgress: true,
+  //   })
+  //     .subscribe({
+  //       next: (event: HttpEvent<string>) => {
+  //         if (event.type === HttpEventType.DownloadProgress) {
+  //           const rawText = (event as HttpDownloadProgressEvent).partialText ?? "";
+  //           completeResponse = rawText.trim();
+  //           if (!typingInterval) {
+  //             typingInterval = setInterval(simulateTyping, 80);
+  //           }
+  //         } else if (event.type === HttpEventType.Response) {
+  //           completeResponse = (event.body as string)?.trim() || completeResponse;
+  //           responseReceived = true;
+  //           responseMessage.message = completeResponse;
+  //           this.speakText(completeResponse);
+  //         }
+  //       },
+  //       error: (err) => {
+  //         console.error('Error:', err);
+  //         clearInterval(typingInterval);
+  //         clearTimeout(timeout);
+  //         responseMessage.message = "Error getting response. Please try again.";
+  //         this.loadingResponse = false;
+  //       },
+  //       complete: () => {
+  //         clearTimeout(timeout);
+  //       }
+  //     });
+
+  //   this.userMessage = "";
+  //   if (showUserMessage) {
+  //     setTimeout(() => {
+  //       this.userMessage = "";
+  //       this.adjustHeight();
+  //     }, 100);
+  //   }
+
+  //   setTimeout(() => {
+  //     this.scrollToBottomFromArrow();
+  //   }, 100);
+  // }
 
 
 

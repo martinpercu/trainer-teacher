@@ -23,30 +23,41 @@
     <button (click)="setView('students')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
       [ngClass]="{'bg-neutral-100 dark:bg-neutral-800': currentView === 'students'}">
-      <mat-icon class="material-symbols-outlined">group</mat-icon>
+      <mat-icon>group</mat-icon>
       <span>Students</span>
     </button>
     <button (click)="setView('results')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
       [ngClass]="{'bg-neutral-100 dark:bg-neutral-800': currentView === 'results'}">
-      <mat-icon class="material-symbols-outlined">checklist</mat-icon>
+      <mat-icon>checklist</mat-icon>
       <span>Exams Results</span>
     </button>
     <button (click)="setView('config')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
       [ngClass]="{'bg-neutral-100 dark:bg-neutral-800': currentView === 'config'}">
-      <mat-icon class="material-symbols-outlined">settings</mat-icon>
+      <mat-icon>settings</mat-icon>
       <span>Config</span>
     </button>
+
+    <div class="mt-8">
+      <button (click)="goToMain()"
+        class="flex items-center gap-2 px-4 py-2 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 bg-white dark:bg-neutral-700 shadow-md rounded-md">
+        <mat-icon class="">home</mat-icon>
+        <span>Main teacher chat</span>
+      </button>
+    </div>
+
+
   </div>
+
 
   <!-- Main Content -->
   <div class="flex-1 p-4 overflow-auto">
     @if (currentView === 'teachers') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Teachers</h1>
-      @for (teacher of teachers; track teacher.id) {
-      <app-teacher-list [teacher]="teacher"></app-teacher-list>
-      }
+    @for (teacher of teachers; track teacher.id) {
+    <app-teacher-list [teacher]="teacher"></app-teacher-list>
+    }
     }
     <!-- @if (currentView === 'courses') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Courses</h1>
@@ -57,20 +68,20 @@
     @if (currentView === 'exams') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Exams</h1>
     @for (exam of exams; track exam.id) {
-      <app-exams-list [exam]="exam"></app-exams-list>
-      }
+    <app-exams-list [exam]="exam"></app-exams-list>
+    }
     }
     @if (currentView === 'students') {
-      <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Students</h1>
-      @for (userWithResults of usersWithResults; track userWithResults.user.userUID) {
-        <app-student-list [user]="userWithResults.user" [results]="userWithResults.results"></app-student-list>
-      }
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Students</h1>
+    @for (userWithResults of usersWithResults; track userWithResults.user.userUID) {
+    <app-student-list [user]="userWithResults.user" [results]="userWithResults.results"></app-student-list>
+    }
     }
     @if (currentView === 'results') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Exams Results</h1>
-      @for (result of results; track result.id) {
-      <app-exam-result-list [result]="result"></app-exam-result-list>
-      }
+    @for (result of results; track result.id) {
+    <app-exam-result-list [result]="result"></app-exam-result-list>
+    }
     }
     @if (currentView === 'config') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Configuration</h1>

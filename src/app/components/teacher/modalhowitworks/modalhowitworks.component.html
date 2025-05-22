@@ -13,7 +13,7 @@
           <mat-icon class="pt-1">speaker_notes</mat-icon>
         </div>
         <div class="pb-4">
-          The content is split into <span class="font-medium">Sections</span>. Select one (e.g., <em>"{{this.pagesService.getFirstSection()}}"</em>) and the assistant will focus only on that topic.
+          The content is split into <span class="font-medium">Sections</span>. Select one and the assistant will focus only on that topic.
         </div>
         <div class="pb-2">
           💬 You can ask questions or let the assistant guide you through the section.
@@ -28,21 +28,30 @@
         <div class="text-left flex flex-col gap-2">
           <div class="flex items-start mb-2">
             <div class="w-8">
-              <mat-icon class="text-4xl !w-10 !h-10">chat_info</mat-icon>
+              <mat-icon class="sm:text-3xl !w-10 !h-10">chat_info</mat-icon>
             </div>
             <span class="ml-4">Teacher Explains – The teacher will start explaining the content of the selected section, ensuring you learn the specific theme in depth.</span>
           </div>
           <div class="flex items-start mb-2">
             <div class="w-8">
-              <mat-icon class="text-4xl !w-10 !h-10">person_raised_hand</mat-icon>
+              <mat-icon class="sm:text-3xl !w-10 !h-10">person_raised_hand</mat-icon>
             </div>
             <span class="ml-4">Simple Question – The teacher will ask you a basic question related to the chosen topic to reinforce your understanding.</span>
           </div>
           <div class="flex items-start mb-2">
             <div class="w-8">
-              <mat-icon class="text-4xl !w-10 !h-10">quiz</mat-icon>
+              <mat-icon class="sm:text-3xl !w-10 !h-10">quiz</mat-icon>
             </div>
             <span class="ml-4">Challenging Quiz – The teacher will test you with more targeted and difficult questions based on the selected section.</span>
+          </div>
+          <div class="flex items-start mb-2 ">
+            <div class="h-9 p-1.5 bg-neutral-800 dark:bg-white rounded-full">
+              <mat-icon class="text-white dark:text-neutral-800">volume_off</mat-icon>
+            </div>
+            <div class="h-9 p-1.5 bg-neutral-800 dark:bg-white rounded-full">
+              <mat-icon class="text-white dark:text-neutral-800">spatial_audio_off</mat-icon>
+            </div>
+            <span class="ml-4">Voice Mode – The teacher will also speak it out loud. (Only in Chrome).</span>
           </div>
         </div>
       </div>

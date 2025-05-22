@@ -94,7 +94,7 @@
             (click)="logout()">
             <!-- <mat-icon fontIcon="logout" class="self-center"></mat-icon> -->
             <mat-icon>logout</mat-icon>
-            <div class="pl-3">Logout</div>
+            <div class="pl-3 font-semibold">Logout</div>
           </div>
         </div>
         }
@@ -115,7 +115,7 @@
             <mat-icon>login</mat-icon>
             }
             <!-- <mat-icon fontIcon="login" class="self-center"></mat-icon> -->
-            <div class="pl-3">
+            <div class="pl-3 font-semibold">
               @if(this.showRegisterOrLogin() == undefined) {Login or SignUp}
               @if(this.showRegisterOrLogin() == true) { to SignUp}
               @if(this.showRegisterOrLogin() == false) { to Login}

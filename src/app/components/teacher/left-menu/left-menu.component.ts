@@ -25,6 +25,7 @@ export class LeftMenuComponent {
     this.boldKey = this.boldKey === key ? null : key;
     console.log(key);
     this.pagesService.definePages(key, value);
+    console.log(this.pagesService.titleSelected());
   }
 
   selectAll() {
