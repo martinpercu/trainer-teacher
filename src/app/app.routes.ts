@@ -37,6 +37,14 @@ export const routes: Routes = [
     component: ExamComponent
   },
   // {
+  //   path: 'exam/:id',
+  //   component: ExamComponent,
+  //   children: [
+  //     { path: 'question/:index', component: QuestionComponent },
+  //     { path: 'summary', component: SummaryComponent }
+  //   ]
+  // },
+  // {
   //   path:'',
   //   component: ExamComponent
   // },
