@@ -14,6 +14,73 @@
         </div>
       </div>
     }
+    @if (examViewMode === 'introInfoExam' && exam) {
+    <div class="m-auto flex flex-col sm:flex-row sm:items-center">
+      <div class="flex flex-col sm:w-1/2 gap-4">
+        <div class="flex text-2xl font-semibold">
+          {{ exam.title }}
+        </div>
+        <div class="flex text-base">
+          You're about to validate everything you've learned. To get certified, you can take the exam as many times as
+          you want.
+        </div>
+        <div class="flex">
+          <div (click)="startExam()"
+            class="flex items-center p-2 sm:p-3 sm:gap-2 text-sm font-semibold bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 rounded-lg cursor-pointer border shadow-md">
+            <!-- <mat-icon class="!hidden sm:!block">rocket_launch</mat-icon> -->
+            START EXAM
+            <mat-icon class="!hidden sm:!block">arrow_right_alt</mat-icon>
+          </div>
+          <div (click)="changeViewTo('results')">PASAR A RESULT</div>
+        </div>
+      </div>
+      <div class="flex sm:w-1/2 ">
+        <div
+          class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-lg mb-2 p-6 border border-neutral-200 dark:border-neutral-700">
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center space-x-2">
+              <mat-icon class="text-neutral-600 dark:text-neutral-300">quiz</mat-icon>
+              <h2 class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">Taking the exam</h2>
+            </div>
+          </div>
+
+          <!-- Details Section -->
+          <div class="grid grid-cols-1 gap-4">
+
+            <!-- Default Title -->
+            <div class="flex items-center space-x-3">
+              <mat-icon class="text-neutral-600 dark:text-neutral-300">fiber_manual_record</mat-icon>
+              <div class="text-sm text-neutral-600 dark:text-neutral-400">You can take the exam as many times as you
+                want.</div>
+            </div>
+            <!-- Default Title -->
+            <div class="flex items-center space-x-3">
+              <mat-icon class="text-neutral-600 dark:text-neutral-300">fiber_manual_record</mat-icon>
+              <div class="text-sm text-neutral-600 dark:text-neutral-400">The exam consists of {{ exam.questions.length
+                }} questions.</div>
+            </div>
+            <!-- Default Title -->
+            <div class="flex items-center space-x-3">
+              <mat-icon class="text-neutral-600 dark:text-neutral-300">fiber_manual_record</mat-icon>
+              <div class="text-sm text-neutral-600 dark:text-neutral-400">You have {{ exam.timeToDoTheExam }} minutes to
+                complete it.</div>
+            </div>
+            <!-- Default Title -->
+            <div class="flex items-center space-x-3">
+              <mat-icon class="text-neutral-600 dark:text-neutral-300">fiber_manual_record</mat-icon>
+              <div class="text-sm text-neutral-600 dark:text-neutral-400">You need {{ exam.passingPercentage }}% of
+                correct answers to pass.</div>
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+    </div>
+    }
     @if (examViewMode === 'loading') {
     <div class="text-center py-10">
       <p class="text-xl text-neutral-600 dark:text-neutral-300">Cargando examen...</p>

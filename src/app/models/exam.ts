@@ -17,6 +17,6 @@ export interface Exam {
   courseId?: string; // Es al course que está linkeado el examen.
   passingPercentage: number; // Is the percentage need to aprove the exam. e.g., 70 para 70%
   timeToWait: number; // Is the time need to try again in minutes e.g. 120 is 2 hours.
-  enable: boolean; // if is enamble or not to do the exam
+  enable: boolean; // if is enable or not to do the exam
   timeToDoTheExam: number; // this is minute to do the exam.
 }
