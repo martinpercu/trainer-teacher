@@ -19,5 +19,7 @@ export interface Result {
   questions: QuestionAndAnswer[]; // Lista de preguntas
   difficulty?: number; // Number 1 to 5 in relation how many false choices
   questions_answered: number; // Cantidad de preguntas con una respuesta seleccionada (answer no vacío)
-  examPassed?: boolean // If Exam was passed succes!.
+  examPassed?: boolean | null; // If Exam was passed succes!.
+  momentStartExam: string; // UTC DateStamp
+  doingTheExamNow: boolean; // This is to know if the user is doing the exam.
 }
