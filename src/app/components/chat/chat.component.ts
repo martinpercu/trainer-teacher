@@ -8,9 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 
 import { MessageWaitingComponent } from '@components/message-waiting/message-waiting.component';
+import { TopRightComponent } from '@components/top-right/top-right.component';
 
 import { ChatMessage } from '@models/chatMessage';
-
 
 import { AuthService } from '@services/auth.service';
 import { VisualStatesService } from '@services/visual-states.service';
@@ -20,7 +20,7 @@ import { PagesService } from '@services/pages.service';
 @Component({
   selector: 'app-chat',
   // imports: [CommonModule, FormsModule, HttpClientModule, HeaderComponent, DropdowntitleComponent, TopRightComponent, TopLeftComponent, MatIconModule, MessageWaitingComponent, ModalInfoComponent],
-  imports: [CommonModule, FormsModule, MatIconModule, MessageWaitingComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, MessageWaitingComponent, TopRightComponent],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
 })
@@ -34,8 +34,8 @@ export class ChatComponent {
   private http = inject(HttpClient);
   // private assistSelector = inject(AssistantselectorService);
   private authService = inject(AuthService);
-  private visualStatesService = inject(VisualStatesService);
-  private pagesService = inject(PagesService);
+  visualStatesService = inject(VisualStatesService);
+  pagesService = inject(PagesService);
 
 
   userMessage: string = '';
@@ -49,19 +49,27 @@ export class ChatComponent {
   chatMessages: ChatMessage[] = [
     {
         "role": "user",
-        "message": "How to apply ethicla in the work How to apply ethicla in the work plHow to apply ethicla in the work placHow to apply ethicla in the work placeeaceplace?"
+        "message": "How to app ethicla in the wola in the work placHow to apply ethicla in the work placeeaceplace?"
     },
     {
         "role": "assistant",
-        "message": "Para aplicar la ética en el lugar de trabajo, se pueden seguir estos pasos:\n\n1. **Definir los valores éticos**: Establecer y comunicar claramente los valores y principios éticos de la organización.\n\n2. **Capacitación continua**: Proporcionar formación regular sobre ética a todos los empleados, incluyendo temas como integridad, confidencialidad y manejo de conflictos.\n\n3. **Promover la transparencia**: Fomentar una comunicación abierta y honesta en todos los niveles de la organización.\n\n4. **Fomentar un ambiente de respeto**: Crear un entorno libre de acoso y discriminación, donde todos los empleados se sientan valorados y seguros.\n\n5. **Modelar el comportamiento ético**: Los líderes deben actuar como modelos a seguir, demostrando conducta ética en sus decisiones y acciones.\n\n6. **Implementar políticas claras**: Establecer y hacer"
+        "message": "Para aplicar la ética eno, se pueden seguir estos pasos:\n\n1 **Fomentar un ambiente de respeto**: Crear un entorno libre de acoso y discriminación, donde todos los empleados se sientan valorados y seguros.\n\n5. **Modelar el comportamiento ético**: Los líderes deben actuar como modelos a seguir, demostrando conducta ética en sus decisiones y acciones.\n\n6. **Implementar políticas claras**: Establecer y hacer"
     },
     {
         "role": "user",
-        "message": "And how thisHow to apply ethicla in the work placHow to apply ethicla in the work placee will apllyt for a kid ?"
+        "message": "And how thisHoacHow to apply ethicla in the work placee will apllyt for a kid ?"
     },
     {
         "role": "assistant",
-        "message": "Para aplicar la ética en la vida de un niño, se pueden seguir estos principios adaptados a su contexto:\n\n1. **Enseñar valores**: Hablar sobre la importancia de la honestidad, el respeto y la responsabilidad en su vida diaria.\n\n2. **Modelar el comportamiento**: Los adultos deben actuar de manera ética, mostrando ejemplos de honestidad y respeto en su propia conducta.\n\n3. **Fomentar la comunicación**: Animar a los niños a expresar sus pensamientos y sentimientos de manera abierta y respetuosa.\n\n4. **Crear un ambiente seguro**: Asegurarse de que los niños se sientan seguros y valorados en casa y en la escuela, promoviendo un entorno libre de acoso.\n\n5. **Reconocer el buen comportamiento**: Elogiar y reforzar las acciones éticas, como ayudar a otros o decir la verdad.\n\n6. **Establecer límites claros**: Definir reglas sobre el comportamiento esperado, como no mentir o ser amable con los demás.\n\n7. **Hablar sobre consecuencias**: Explicar las consecuencias de acciones poco éticas y la importancia de asumir la responsabilidad"
+        "message": "Para aplicar la en seguir estos principios adaptados a su contexto:\n\n1. ar de manera ética, mostrando ejemplos de honestidad y respeto en su propia conducta.\n\n3. **Fomentar la comunicación**: Animar a los niños a expresar sus pensamientos y sentimientos de manera abierta y respetuosa.\n\n4. **Crear un ambiente seguro**: Asegurarse de que los niños se sientan seguros y valorados en casa y en la escuela, promoviendo un entorno libre de acoso.\n\n5. **Reconocer el buen comportamiento**: Elogiar y reforzar las acciones éticas, como ayudar a otros o decir la verdad.\n\n6. **Establecer límites claros**: Definir reglas sobre el comportamiento esperado, como no mentir o ser amable con onsabilidad"
+    },
+    {
+        "role": "user",
+        "message": "AQeu onda para arregla las cagadas\nDecime algo apllyt for a kid ?"
+    },
+    {
+        "role": "assistant",
+        "message": 'En el contexto de un anuncio de trabajo, "compensation: TBD" significa que el salario o la compensación para el puesto aún no está definido o establecido. \nEsto suele suceder cuando la empresa aún no ha decidido una cantidad exacta o está abierta a discutirla con los candidatos, dependiendo de la experiencia y las habilidades que ofrezcan'
     }
 ];
 
@@ -73,11 +81,13 @@ export class ChatComponent {
 
   showHeader = signal(false);
 
-  // assistant_id = this.assistSelector.assistant_id;
-
-
   showStayTune: boolean = true;
 
+
+  hardTest: string = 'Just ask me 2 serious questions. Try to force me to answer this questions very precise if I do not well; please help me and let me know about the answers';
+  shortTest: string = 'Please, just ask me 1 easy question to test my knowledge';
+  startLesson: string = 'In the docs you will find one starting with "Section " this is the subject of this lesson. Please order the others docs and find the best way to teach me this info. Please start with no more than 110 words to explain me and then just ask me if I want to continue the lesson or if I need you to explain me again the same.'
+  startLessonFull: string = 'Can you explain "Ethics Management for Supervisors" to me using the documents you have? Please give me a general overview of what the course is about, starting with no more than 110 words. After that, just ask me if I’d like to continue the lesson or if I want you to repeat the same explanation. Try to teach me in the most helpful way.'
 
   // combinedUserEmailAndAssistant = computed(() => {
   //   const currentUser = this.authService.currentUserSig();
@@ -155,7 +165,7 @@ export class ChatComponent {
       // session_id: this.authService.currentUserSig()?.email + '-' + this.assistSelector.assistant_name(),
       // session_id: this.combinedUserEmailAndAssistant(),
       // system_prompt_text: this.assistSelector.assistant_description()
-      system_prompt_text: 'Eres un asistente que responde unicamente usando la informacion de los PDFs que tienes en las vectorstore',
+      // system_prompt_text: 'Eres un asistente que responde unicamente usando la informacion de los PDFs que tienes en las vectorstore',
       pages: this.pagesService.pagesSelected()
     };
 
@@ -207,6 +217,11 @@ export class ChatComponent {
       this.userMessage = "";
       this.adjustHeight()
     }, 100);
+
+    setTimeout(() => {
+      this.scrollToBottomFromArrow();
+    }, 100);
+
   }
 
 
@@ -224,9 +239,9 @@ export class ChatComponent {
     container.scrollTop = container.scrollHeight;
   }
 
-  toggleShowHeader() {
-    this.showHeader.update(prevState => !prevState)
-  }
+  // toggleShowHeader() {
+  //   this.showHeader.update(prevState => !prevState)
+  // }
 
   // adjustHeight(textarea: HTMLTextAreaElement) {
   //   textarea.style.height = 'auto'; // Reinicia la altura para reducir si es necesario
@@ -257,14 +272,14 @@ export class ChatComponent {
   }
 
 
-  sendMessage_stream_without_text() {
+  sendMessage_stream_without_text(sendingMessage: string) {
     // if (this.userMessage.trim() === "") return;
     console.log('esot aqui<s');
 
     console.log(this.pagesService.pagesSelected());
 
 
-    this.userMessage = "Hazme 2 preguntas para evaluar mi conocimiento."
+    this.userMessage = sendingMessage
 
     this.loadingResponse = true;
     // this.chatMessages.push({ role: "user", message: this.userMessage });
@@ -300,9 +315,11 @@ export class ChatComponent {
       // session_id: this.authService.currentUserSig()?.email + '-' + this.assistSelector.assistant_name(),
       // session_id: this.combinedUserEmailAndAssistant(),
       // system_prompt_text: this.assistSelector.assistant_description()
-      system_prompt_text: 'Eres un profesor que analiza y entiende los documentos recibidos. Puedes hacer preguntas en relacion a los PDF y testear el conocimiento del user. Importante solamente puedes usar la informacion de los PDFs que tienes en las vectorstore',
+      // system_prompt_text: 'Eres un profesor que analiza y entiende los documentos recibidos. Puedes hacer preguntas en relacion a los PDF y testear el conocimiento del user. Importante solamente puedes usar la informacion de los PDFs que tienes en las vectorstore',
       pages: this.pagesService.pagesSelected()
     };
+
+    console.log(formData);
 
     const timeout = setTimeout(() => {
       clearInterval(typingInterval);
@@ -346,10 +363,15 @@ export class ChatComponent {
         }
       });
 
+
     // Clear input
     this.userMessage = "";
     setTimeout(() => {
       this.userMessage = "";
+    }, 100);
+
+    setTimeout(() => {
+      this.scrollToBottomFromArrow();
     }, 100);
   }
 

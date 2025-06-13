@@ -4,9 +4,11 @@ import { RouterOutlet } from '@angular/router';
 import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
 
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, MatIconModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -14,6 +16,11 @@ export class AppComponent {
   title = 'front-teacher';
 
   authService = inject(AuthService);
+
+  constructor() {
+    const matIconRegistry = inject(MatIconRegistry);
+    matIconRegistry.setDefaultFontSetClass('material-symbols-rounded');
+  }
 
 
   ngOnInit(): void {

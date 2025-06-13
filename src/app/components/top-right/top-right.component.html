@@ -1,0 +1,130 @@
+<div (click)="switchShowList()" class="z-20 absolute right-0 top-0 p-4">
+
+  <div (click)="$event.stopPropagation()" class="flex flex-col">
+
+    <div (click)="switchShowList()" class="cursor-pointer text-right pr-4">
+      <!-- <mat-icon fontIcon="insert_emoticon" class="scale-150 text-black dark:text-neutral-200"></mat-icon> -->
+      <mat-icon class="scale-150 text-neutral-600 dark:text-neutral-200">mood</mat-icon>
+    </div>
+
+    @if(showlist) {
+    <div (click)="switchShowList()" class="flex bg-transparent w-[100vw] h-[90vh]">
+
+      <div class="grow"></div>
+
+      <div (click)="$event.stopPropagation()"class="flex flex-col w-80 h-fit text-sm text-neutral-800 dark:text-gray-200 bg26 bg-white dark:bg-neutral-750 rounded-2xl shadow-lg border border-gray-200 dark:border-neutral-700">
+
+        <!-- "How it works" -->
+        <div class="flex flex-row px-2 py-1 mt-1">
+          <div class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
+            (click)="showModalInfo()">
+            <!-- <mat-icon fontIcon="info" class="self-center"></mat-icon> -->
+            <mat-icon>info</mat-icon>
+            <div class="pl-3">How it works</div>
+          </div>
+        </div>
+
+        <!-- "See Docs" (visible en pantallas pequeñas) -->
+        <div class="sm:hidden flex flex-row px-2 py-1 mt-1">
+          <div class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
+            (click)="pdfNotAcces()">
+            <!-- <mat-icon fontIcon="picture_as_pdf" class="self-center"></mat-icon> -->
+            <mat-icon>picture_as_pdf</mat-icon>
+            <div class="pl-3">See Docs</div>
+          </div>
+        </div>
+
+        <!-- "See Docs" (visible en pantallas grandes) -->
+        <div class="hidden sm:flex flex-row px-2 py-1 mt-1">
+          <div class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
+            (click)="goToLink('https://super-assistants.web.app/docs')">
+            <!-- <mat-icon fontIcon="picture_as_pdf" class="self-center"></mat-icon> -->
+            <mat-icon>picture_as_pdf</mat-icon>
+            <div class="pl-3">See Docs</div>
+          </div>
+        </div>
+
+        <!-- <div class="flex flex-row px-2 py-1">
+          <div class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700">
+            <mat-icon fontIcon="settings" class=""></mat-icon>
+            <div class="pl-3">Settings</div>
+          </div>
+        </div> -->
+        @if(!themeService.isDarkModeSig()) {
+        <div class="flex flex-row px-2 py-1 border-b border-gray-200 dark:border-gray-600">
+          <div class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
+            (click)="changeTheme()">
+            <!-- <mat-icon fontIcon="dark_mode" class="self-center"></mat-icon> -->
+            <mat-icon>dark_mode</mat-icon>
+            <div class="pl-3">Dark</div>
+          </div>
+        </div>
+        }
+        @if(themeService.isDarkModeSig()) {
+        <div class="flex flex-row px-2 py-1 border-b border-gray-200 dark:border-gray-600">
+          <div class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
+            (click)="changeTheme()">
+            <!-- <mat-icon fontIcon="light_mode" class="self-center"></mat-icon> -->
+            <mat-icon>light_mode</mat-icon>
+            <div class="pl-3">Light</div>
+          </div>
+        </div>
+        }
+        @if(authService.currentUserSig()) {
+        <div class="flex flex-row px-2 py-1 border-gray-200 dark:border-gray-600">
+          <div
+            class="flex flex-row px-2 py-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
+            (click)="logout()">
+            <!-- <mat-icon fontIcon="logout" class="self-center"></mat-icon> -->
+            <mat-icon>logout</mat-icon>
+            <div class="pl-3">Logout</div>
+          </div>
+        </div>
+        }
+        @if(authService.currentUserSig() == null) {
+        <div class="flex flex-col px-2 py-1 border-t border-neutral-100 dark:border-neutral-600">
+          <div class="flex flex-row px-2 py-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
+            (click)="setShowLoginAndSwitch()">
+            @if(this.showRegisterOrLogin() == undefined) {
+            <!-- <mat-icon fontIcon="login" class="self-center"></mat-icon> -->
+            <mat-icon>login</mat-icon>
+            }
+            @if(this.showRegisterOrLogin() == true) {
+            <!-- <mat-icon fontIcon="person_add" class="self-center"></mat-icon> -->
+            <mat-icon>person_add</mat-icon>
+            }
+            @if(this.showRegisterOrLogin() == false) {
+            <!-- <mat-icon fontIcon="login" class="self-center"></mat-icon> -->
+            <mat-icon>login</mat-icon>
+            }
+            <!-- <mat-icon fontIcon="login" class="self-center"></mat-icon> -->
+            <div class="pl-3">
+              @if(this.showRegisterOrLogin() == undefined) {Login or SignUp}
+              @if(this.showRegisterOrLogin() == true) { to SignUp}
+              @if(this.showRegisterOrLogin() == false) { to Login}
+            </div>
+          </div>
+          <div class="flex flex-row">
+            @if(this.showRegisterOrLogin() == true) {
+            <div class="m-auto mt-4">
+              <app-login></app-login>
+            </div>
+            }
+            @if(this.showRegisterOrLogin() == false) {
+            <div class="m-auto mt-4">
+              <app-register></app-register>
+            </div>
+            }
+          </div>
+        </div>
+        }
+        <!-- <div class="px-4 py-4 rounded-b-lg">Download</div> -->
+      </div>
+
+    </div>
+    }
+
+
+  </div>
+
+</div>

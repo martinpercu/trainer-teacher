@@ -4,18 +4,23 @@
 <app-logout></app-logout>
 <app-register></app-register> -->
 
+@if(this.visualStatesService.showModalInfo() == true) {
+    <app-modalhowitworks></app-modalhowitworks>
+  }
+
+
 <div class="flex flex-row">
 
-  <div class="flex sm:hidden flex-row absolute z-30 w-screen h-screen"
+  <div class="flex lg:hidden flex-row absolute z-30 w-screen h-screen"
   [ngClass]="{'font-bold hidden': this.visualStatesService.leftMenuCondition() === false}">
     <div class="flex" >
       <app-left-menu></app-left-menu>
     </div>
-    <div class="grow bg-neutral-300 opacity-40" (click)="toggleShowLeftMenuHeader()">
+    <div class="grow bg-neutral-300 opacity-20" (click)="toggleShowLeftMenuHeader()">
     </div>
   </div>
 
-  <div class="hidden sm:flex">
+  <div class="hidden lg:flex">
     <div [ngClass]="{'sm:hidden': this.visualStatesService.leftMenuCondition() === true}">
       <app-left-menu></app-left-menu>
     </div>
