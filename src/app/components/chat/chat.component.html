@@ -1,12 +1,5 @@
 <div class="bg-white dark:bg-neutral-850 relative h-[100dvh] w-full overflow-auto transition-width">
 
-  <!--
-    @if(showStayTune == true) {
-      <app-modal-info (showStayTuned)="fromModalInfo($event)"> </app-modal-info>
-      } -->
-
-
-
   <div class="flex h-full w-full flex-col focus-visible:outline-0">
 
     <div class="w-full flex flex-row h-[60px] shadow-sm pb-1 dark:border-b border-neutral-700">
@@ -42,7 +35,8 @@
       </div>
 
       <div class="">
-        <app-top-right (showModalHandler)="fromTopRight($event)"></app-top-right>
+        <!-- <app-top-right (showModalHandler)="fromTopRight($event)"></app-top-right> -->
+        <app-top-right></app-top-right>
       </div>
     </div>
 
@@ -52,12 +46,6 @@
       <div #messagesContainer class="grow h-60 m-auto w-full overflow-y-auto px-3 scroll-smooth">
         <div class="flex flex-col sm:w-12/12 md:w-11/12 lg:w-[640px] xl:w-[768px] m-auto"
           *ngFor="let message of chatMessages">
-
-          <!-- <div class="max-w-[80%] rounded-3xl mt-3 mb-4 py-2 px-4 break-words whitespace-pre-wrap"
-              [ngClass]="{ 'assistant-message': message.role === 'assistant', 'user-message': message.role === 'user' }">
-              <div class="text-gray-800 dark:text-gray-200">{{ message.message }}</div>
-              <div>{{ message.content }}</div>
-            </div> -->
 
           <div
             class="self-end max-w-[80%] rounded-3xl rounded-br-md text-neutral-800 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-750 mt-3 mb-4 py-2 px-4 break-words whitespace-pre-wrap"
@@ -79,7 +67,6 @@
 
 
       <div [ngClass]="showArrowDown ? 'arrow-show' : 'arrow-not-show'" class="relative">
-        <!-- <div class="arrow-show bg-red-100 relative"> -->
         <div (click)="scrollToBottomFromArrow()"
           class="cursor-pointer absolute bottom-1.5 right-1/2 rounded-full bg-amber-100 border w-8 h-8 flex items-center justify-center">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +81,6 @@
 
       <div
         class="flex flex-col w-11/12 sm:w-11/12 md:w-11/12 lg:w-[640px] xl:w-[768px] p-3 mt-4 mb-6 gap-2 m-auto bg-white dark:bg-neutral-750 rounded-3xl shadow-sm sm:shadow-lg dark:shadow-none! border border-neutral-200 dark:border-none">
-        <!-- <div class="flex flex-col p-3 mt-4 mb-8 gap-2 w-full sm:w-9/12 max-w-96 sm:max-w-none md:w-8/12 lg:w-7/12 2xl:w-1/2 m-auto bg-white dark:bg-neutral-700 rounded-3xl shadow-lg border border-neutral-200"> -->
 
         <textarea #chatInput [(ngModel)]="userMessage"
           class="w-full text-gray-800 dark:text-gray-200 py-1 px-3 ring-0 bg-transparent resize-none overflow-hidden focus:outline-none focus:ring-0 focus:border-none appearance-none dark:placeholder-neutral-400"
@@ -104,7 +90,6 @@
 
         <div class="flex text-sm text-neutral-600 dark:text-neutral-350 gap-3 pl-2">
 
-          <!-- <div class="flex gap-3 pr-2"> -->
             @if (this.pagesService.sectionSelected() === 'All') {
               <div
               class="flex cursor-pointer h-9 items-center px-4 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-500 rounded-3xl border border-neutral-300 dark:border-neutral-600"
@@ -146,7 +131,6 @@
             <div role="button" aria-label="Enviar mensaje" tabindex="0"
               class="flex w-max p-1.5 bg-neutral-800 dark:bg-white rounded-full cursor-pointer"
               (click)="sendMessage_stream()">
-              <!-- <mat-icon fontIcon="arrow_upward" class="text-white dark:text-gray-800"></mat-icon> -->
               <mat-icon class="text-white dark:text-neutral-800">arrow_upward</mat-icon>
             </div>
 
@@ -156,50 +140,6 @@
         </div>
       </div>
 
-
-
-
-
-      <!-- <div
-          class="flex flex-row p-4 mt-4 gap-4 w-full sm:w-9/12 max-w-96 sm:max-w-none md:w-8/12 lg:w-7/12 2xl:w-1/2 m-auto bg-gray-50 dark:bg-neutral-700 rounded-md shadow-md mb-4 border">
-
-          <textarea
-            #chatInput
-            [(ngModel)]="userMessage"
-            class="grow text-gray-800 dark:text-gray-200 py-1 px-3 ring-0 bg-transparent resize-none overflow-hidden focus:outline-none focus:ring-0 focus:border-none appearance-none"
-            rows="1"
-            placeholder="Escribe un mensaje..."
-            aria-label="Escribe un mensaje"
-            (input)="adjustHeight()"
-            (keydown)="handleKeydown($event)">
-          </textarea>
-
-          <div
-            role="button"
-            aria-label="Enviar mensaje"
-            tabindex="0"
-            class="w-8 h-8 text-center bg-black dark:bg-white rounded-full cursor-pointer"
-            (click)="sendMessage_stream()">
-            <mat-icon fontIcon="arrow_upward" class="mt-1 scale-125 text-white dark:text-gray-800"></mat-icon>
-          </div>
-        </div> -->
-
-
-
-      <!-- El de abajo es el antiguo -->
-      <!-- <div
-          class="flex flex-row p-4 mt-4 gap-4 w-full sm:w-9/12 max-w-96 sm:max-w-none md:w-8/12 lg:w-7/12 2xl:w-1/2 m-auto bg-gray-50 dark:bg-neutral-700 rounded-md shadow-md mb-4 border">
-          <textarea #chatInput [(ngModel)]="userMessage"
-            class="grow text-gray-800 dark:text-gray-200 py-1 px-3 ring-0 bg-transparent resize-none overflow-hidden focus:outline-none focus:ring-0 focus:border-none appearance-none"
-            rows="1" placeholder="Type a message..." (input)="adjustHeight()"
-            (keydown.enter)="sendMessage_stream()">
-          </textarea>
-
-          <div class="w-8 h-8 text-center bg-black dark:bg-white rounded-full"
-            (click)="sendMessage_stream()">
-            <mat-icon fontIcon="arrow_upward" class="mt-1 scale-125 text-white dark:text-gray-800"></mat-icon>
-          </div>
-        </div> -->
 
     </div>
 
