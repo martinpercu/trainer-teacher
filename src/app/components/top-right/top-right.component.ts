@@ -1,5 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
+
 
 import { LightdarkthemeService } from '@services/lightdarktheme.service';
 import { AuthService } from '@services/auth.service';
@@ -22,6 +24,8 @@ export class TopRightComponent {
   modalinfoService = inject(ModalinfoService);
   visualStatesService = inject(VisualStatesService);
 
+  router = inject(Router);
+
   showlist: boolean = false;
   // showRegisterOrLogin: boolean = false;
   showRegisterOrLogin = signal<boolean | undefined>(undefined);
@@ -37,6 +41,10 @@ export class TopRightComponent {
 
   pdfNotAcces() {
     alert('Your mobile device cannot load the files. Please use a desktop device to access the documents')
+  }
+
+  toPdf() {
+    this.router.navigate(['/pdf'])
   }
 
   changeTheme() {
