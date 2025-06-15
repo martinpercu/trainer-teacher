@@ -4,12 +4,11 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root'
 })
 export class PagesService {
-  pagesSelected = signal<number[]>([0, 1]);
+  pagesSelected = signal<number[]>([]);
   sectionSelected = signal<string>('');
   titleSelected = signal<string>('');
   indexSubtext = signal<Record<string, string>>({});
   defaultTitle = signal<string>('');
-  // Nueva señal para doc_path
   docPath = signal<string>('');
 
   private configurations: {
@@ -118,4 +117,7 @@ export class PagesService {
     this.docPath.set(config.doc_path);
   }
 
+  getSecondSection() {
+    return this.configurations[this.currentConfig].indexSubtext["Section 0"] || 'Sin subtítulo';
+  }
 }
