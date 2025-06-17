@@ -34,9 +34,5 @@ export const routes: Routes = [
   {
     path:'leftmenu',
     component: LeftMenuComponent
-  },
-  {
-    path:'pdf',
-    component: EthicSupervisorsComponent
   }
 ];
