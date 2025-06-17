@@ -5,9 +5,12 @@ import { AuthService } from '@services/auth.service';
 import { UserService } from '@services/user.service';
 
 import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { TranslocoDirective, TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+
 
 @Component({
   selector: 'app-root',
+  // standalone: true, // Indica que es un standalone component
   imports: [RouterOutlet, MatIconModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
@@ -16,6 +19,7 @@ export class AppComponent {
   title = 'front-teacher';
 
   authService = inject(AuthService);
+  translocoService = inject(TranslocoService);
 
   constructor() {
     const matIconRegistry = inject(MatIconRegistry);
@@ -45,5 +49,10 @@ export class AppComponent {
     if (savedTheme === 'dark') {
       document.documentElement.classList.add('dark');
     }
+  }
+
+  // This is to change language ==> en,es,fr
+  changeLanguage(lang: string) {
+    this.translocoService.setActiveLang(lang);
   }
 }

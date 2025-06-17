@@ -1,0 +1,14 @@
+{
+  "hey": "Hola",
+  "go_admin": "Ir Area Administrador",
+  "main": {
+    "go_admin": "Ir Area Administrador",
+    "welcome": "Bienvenido!",
+    "this_teacher_help": "Este profesor te ayuda a entender el curso seleccionado. Puedes chatear con él o usar los ",
+    "chat_tools": "Botones de interacción",
+    "each_course": "Cada curso está dividido en \"secciones,\" las cuales puedes seleccionar para enfocar tu aprendizaje.",
+    "teacher_start": "El profesor comenzará a explicar el contenido de la sección seleccionada.",
+    "teacher_ask_1_question": "El profesor te hará una pregunta básica relacionada con el tema elegido.",
+    "teacher_test_you": "El profesor te evaluará con preguntas más específicas y difíciles basadas en la sección seleccionada."
+  }
+}
