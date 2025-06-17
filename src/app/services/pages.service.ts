@@ -117,7 +117,7 @@ export class PagesService {
     this.docPath.set(config.doc_path);
   }
 
-  getSecondSection() {
+  getFirstSection(): string {
     return this.configurations[this.currentConfig].indexSubtext["Section 0"] || 'Sin subtítulo';
   }
 }
