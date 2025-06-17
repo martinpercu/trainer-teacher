@@ -1,4 +1,5 @@
 {
+  "lang": "fr",
   "hey": "Bonjour",
   "go_admin": "Aller vers Admin",
   "main": {
@@ -10,5 +11,19 @@
     "teacher_start": "The teacher will start explaining the content of the selected section.",
     "teacher_ask_1_question": "The teacher will ask you a basic question related to the chosen topic.",
     "teacher_test_you": "The teacher will test you with more targeted and difficult questions based on the selected section."
+  },
+  "top_right": {
+    "return" : "Retourner",
+    "how_works": "Comment function",
+    "see_docs": "Voir Docs",
+    "take_exam": "Faire le test",
+    "language": "Français",
+    "change": "Changer",
+    "dark": "Sombre",
+    "light": "Claire",
+    "logout": "Logout",
+    "to_login": "aller Login",
+    "to_signup": "aller SignUp",
+    "login_or_signup": "Login ou SignUp"
   }
 }

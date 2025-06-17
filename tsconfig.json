@@ -28,6 +28,7 @@
       "@evaluation/*": ["./src/app/components/evaluation/*"],
       "@env/*": ["./src/environments/*"],
       "@pipes/*": ["./src/app/pipes/*"],
+      "@shared/*": ["./src/app/shared/*"],
     }
   },
   "angularCompilerOptions": {
