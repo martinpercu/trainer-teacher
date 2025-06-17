@@ -13,11 +13,15 @@ import { PagesService } from '@services/pages.service';
 import { RegisterComponent } from '@components/auth/register/register.component';
 import { LoginComponent } from '@components/auth/login/login.component';
 
+import { LangSwitcherComponent } from '@shared/lang-switcher/lang-switcher.component';
+
+import { TranslocoPipe } from '@jsverse/transloco';
+
 
 
 @Component({
   selector: 'app-top-right',
-  imports: [MatIconModule, RegisterComponent, LoginComponent],
+  imports: [MatIconModule, RegisterComponent, LoginComponent, LangSwitcherComponent, TranslocoPipe],
   templateUrl: './top-right.component.html'
 })
 export class TopRightComponent {
@@ -36,6 +40,8 @@ export class TopRightComponent {
   showlist: boolean = false;
   // showRegisterOrLogin: boolean = false;
   showRegisterOrLogin = signal<boolean | undefined>(undefined);
+
+  showChangeLang: boolean = false;
 
   switchShowList() {
     this.showlist = !this.showlist
@@ -102,6 +108,10 @@ export class TopRightComponent {
   takeExam() {
     const coursePath = this.pagesService.examId();
     this.router.navigate([`/exam/${coursePath}`])
+  }
+
+  showChangeList() {
+    this.showChangeLang = !this.showChangeLang
   }
 
 }
