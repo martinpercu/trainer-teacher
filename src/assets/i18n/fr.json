@@ -1,0 +1,14 @@
+{
+  "hey": "Bonjour",
+  "go_admin": "Aller vers Admin",
+  "main": {
+    "go_admin": "Aller vers Admin",
+    "welcome": "Welcome!",
+    "this_teacher_help": "This teacher helps you understand the selected course. You can chat with them or use the available ",
+    "chat_tools": "Chat interaction tools",
+    "each_course": "Each course is divided into \"sections,\" which you can select to focus your learning.",
+    "teacher_start": "The teacher will start explaining the content of the selected section.",
+    "teacher_ask_1_question": "The teacher will ask you a basic question related to the chosen topic.",
+    "teacher_test_you": "The teacher will test you with more targeted and difficult questions based on the selected section."
+  }
+}

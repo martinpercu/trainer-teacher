@@ -15,8 +15,12 @@ import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { provideAnimations } from '@angular/platform-browser/animations'; // Necesario para Angular Material
 import { HttpClient } from '@angular/common/http'; // Necesario para MatIconRegistry
 import { DomSanitizer } from '@angular/platform-browser';
-import { ErrorHandler } from '@angular/core'; // Importa ErrorHandler
+import { ErrorHandler, isDevMode } from '@angular/core'; // Importa ErrorHandler
 import { DOCUMENT } from '@angular/common'; // Importa DOCUMENT
+
+import { TranslocoHttpLoader } from './transloco-loader';
+import { provideTransloco } from '@jsverse/transloco';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,5 +32,26 @@ export const appConfig: ApplicationConfig = {
     provideFirestore(() => getFirestore()),
     provideAnimations(), // Requerido por Angular Material
     importProvidersFrom(MatIconModule), // Importa el módulo de íconos
+    provideTransloco({
+      config: {
+        availableLangs: ['en', 'es'],
+        defaultLang: 'en',
+        // Remove this option if your application doesn't support changing language in runtime.
+        reRenderOnLangChange: true,
+        prodMode: !isDevMode(),
+      },
+      loader: TranslocoHttpLoader,
+    }), provideHttpClient(), provideTransloco({
+        config: {
+          availableLangs: ['en', 'es', 'fr'],
+          defaultLang: 'en',
+          // Remove this option if your application doesn't support changing language in runtime.
+          reRenderOnLangChange: true,
+          prodMode: !isDevMode(),
+        },
+        loader: TranslocoHttpLoader
+      }),
   ]
 };
+
+
