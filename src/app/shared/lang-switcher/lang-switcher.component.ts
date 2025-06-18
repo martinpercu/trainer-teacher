@@ -4,8 +4,7 @@ import { LangService } from '@services/lang.service';
 @Component({
   selector: 'app-lang-switcher',
   imports: [],
-  templateUrl: './lang-switcher.component.html',
-  styleUrl: './lang-switcher.component.css',
+  templateUrl: './lang-switcher.component.html'
 })
 export class LangSwitcherComponent {
   langService = inject(LangService);
