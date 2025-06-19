@@ -15,9 +15,15 @@ import { ExamCrudComponent } from '@superadmin/exam-crud/exam-crud.component';
 
 import { ExamComponent } from '@evaluation/exam/exam.component';
 
-import { LangSwitcherComponent } from '@shared/lang-switcher/lang-switcher.component'
+import { LangSwitcherComponent } from '@shared/lang-switcher/lang-switcher.component';
+
+import { CandidatePageComponent } from '@pages/candidate-page/candidate-page.component';
 
 export const routes: Routes = [
+  {
+    path:'candidate/:jobId',
+    component: CandidatePageComponent
+  },
   {
     path:'lang',
     component: LangSwitcherComponent
