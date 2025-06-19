@@ -1,19 +1,27 @@
 import { Injectable, inject, signal } from '@angular/core';
 
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, user } from '@angular/fire/auth';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
+  user,
+} from '@angular/fire/auth';
 import { Observable, from } from 'rxjs';
 
 import { User } from '@models/user';
 import { UserService } from '@services/user.service';
-
+import { CandidateService } from '@services/candidate.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   firebaseAuth = inject(Auth);
-  userService = inject(UserService)
+  userService = inject(UserService);
+  candidateService = inject(CandidateService);
+
   user$ = user(this.firebaseAuth);
   currentUserSig = signal<User | null | undefined>(undefined);
 
@@ -25,7 +33,16 @@ export class AuthService {
         const user = await this.userService.getOneUser(firebaseUser.uid);
         this.userService.setUserSig(user);
         // this.currentUserSig.set(user); // Opcional
+        console.log(user);
+        if (!user) {
+          console.log('no hay user');
+          const user = await this.candidateService.getOneCandidate(firebaseUser.uid);
+          this.candidateService.setUserSig(user);
+          // this.currentUserSig.set(user); // Opcional
+          console.log(user);
+        }
       } else {
+        console.log('There is none authenticated');
         this.userService.setUserSig(null);
         // this.currentUserSig.set(null); // Opcional
       }
@@ -35,26 +52,25 @@ export class AuthService {
   register(
     email: string,
     username: string,
-    password: string,
+    password: string
   ): Observable<void> {
     const promise = createUserWithEmailAndPassword(
       this.firebaseAuth,
       email,
-      password,
+      password
     ).then((response) => {
-      updateProfile(response.user, { displayName: username })
-      this.addRegisterUsed(email, username, response.user.uid)
-    }
-    );
+      updateProfile(response.user, { displayName: username });
+      this.addRegisterUsed(email, username, response.user.uid);
+    });
     return from(promise);
-  };
+  }
 
-  addRegisterUsed(email: string, username: string, userUid:any) {
+  addRegisterUsed(email: string, username: string, userUid: any) {
     this.user = {
       email: email,
       username: username,
-      userUID: userUid
-    }
+      userUID: userUid,
+    };
     this.userService.addUserWithId(this.user, userUid);
     this.userService.setUserSig(this.user);
   }
@@ -70,8 +86,13 @@ export class AuthService {
 
   //   return from(promise)
   // }
+
   login(email: string, password: string): Observable<void> {
-    const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password)
+    const promise = signInWithEmailAndPassword(
+      this.firebaseAuth,
+      email,
+      password
+    )
       .then(async (response) => {
         const user = await this.userService.getOneUser(response.user.uid);
         this.userService.setUserSig(user); // Actualiza el signal en UserService
@@ -87,7 +108,6 @@ export class AuthService {
   logout(): Observable<void> {
     this.userService.setUserSigNull();
     const promise = signOut(this.firebaseAuth);
-    return from(promise)
+    return from(promise);
   }
-
 }
