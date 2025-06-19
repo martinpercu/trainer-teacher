@@ -2,32 +2,32 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Firestore, collection, collectionData, getDoc, deleteDoc, doc, setDoc, updateDoc, orderBy, query  } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Candidate } from '@models/candidate';
+import { Recruiter } from '@models/recruiter';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CandidateService {
+export class RecruiterService {
 
   private firestore = inject(Firestore);
-  private candidatesCollection = collection(this.firestore, 'candidates');
+  private recruitersCollection = collection(this.firestore, 'recruiters');
 
-  candidateSig = signal<Candidate | null>(null);
+  recruiterSig = signal<Recruiter | null>(null);
 
   /**
-   * Obtiene todos los usuarios de la colección 'candidates'
+   * Obtiene todos los usuarios de la colección 'recruiters'
    * @returns Observable con un arreglo de usuarios
    */
-  getAllUsers(): Observable<Candidate[]> {
-    const usersRef = collection(this.firestore, 'candidates');
+  getAllUsers(): Observable<Recruiter[]> {
+    const usersRef = collection(this.firestore, 'recruiters');
     const usersQuery = query(usersRef, orderBy('username'));
     return collectionData(usersQuery, { idField: 'userUID' }).pipe(
-      map(candidates => candidates as Candidate[]),
+      map(recruiters => recruiters as Recruiter[]),
       catchError(error => {
         console.error('Error al obtener usuarios:', error);
         return of([]);
       })
-    ) as Observable<Candidate[]>;
+    ) as Observable<Recruiter[]>;
   }
 
   /**
@@ -35,9 +35,9 @@ export class CandidateService {
    * @param user Datos del usuario
    * @param userId ID del usuario (generalmente el UID de Firebase Auth)
    */
-  addUserWithId(user: Candidate, userId: string): Promise<void> {
+  addUserWithId(user: Recruiter, userId: string): Promise<void> {
     console.log(user);
-    return setDoc(doc(this.candidatesCollection, userId), user).catch(error => {
+    return setDoc(doc(this.recruitersCollection, userId), user).catch(error => {
       console.error('Error al agregar usuario:', error);
       throw error;
     });
@@ -47,16 +47,16 @@ export class CandidateService {
    * Establece el usuario actual en la señal
    * @param user Usuario o null
    */
-  setUserSig(user: Candidate | null) {
-    this.candidateSig.set(user);
-    console.log(this.candidateSig());
+  setUserSig(user: Recruiter | null) {
+    this.recruiterSig.set(user);
+    console.log(this.recruiterSig());
   }
 
   /**
    * Establece la señal del usuario como null
    */
   setUserSigNull() {
-    this.candidateSig.set(null);
+    this.recruiterSig.set(null);
   }
 
   /**
@@ -64,11 +64,11 @@ export class CandidateService {
    * @param userId ID del usuario
    * @returns Promesa con el usuario o null si no existe
    */
-  async getOneCandidate(userId: string): Promise<Candidate | null> {
-    const usersRef = doc(this.candidatesCollection, userId);
+  async getOneRecruiter(userId: string): Promise<Recruiter | null> {
+    const usersRef = doc(this.recruitersCollection, userId);
     try {
       const user = (await getDoc(usersRef)).data();
-      return user as Candidate | null;
+      return user as Recruiter | null;
     } catch (error) {
       console.error('Error al obtener usuario:', error);
       return null;
@@ -77,10 +77,10 @@ export class CandidateService {
 
   /**
    * Elimina un usuario por su ID
-   * @param user Candidate a eliminar
+   * @param user Recruiter a eliminar
    */
-  deleteCandidate(user: Candidate) {
-    const userDocRef = doc(this.candidatesCollection, user.candidateUID);
+  deleteRecruiter(user: Recruiter) {
+    const userDocRef = doc(this.recruitersCollection, user.recruiterUID);
     return deleteDoc(userDocRef);
   }
 
@@ -89,11 +89,11 @@ export class CandidateService {
    * @param user Datos parciales del usuario
    * @param userId ID del usuario
    */
-  updateOneUser(user: Partial<Candidate>, userId: string) {
-    const userDocRef = doc(this.candidatesCollection, userId);
+  updateOneRecruiter(user: Partial<Recruiter>, userId: string) {
+    const userDocRef = doc(this.recruitersCollection, userId);
     return updateDoc(userDocRef, user)
       .then(() => {
-        console.log('Candidate updated');
+        console.log('Recruiter updated');
       })
       .catch(error => {
         console.error('Error al actualizar usuario:', error);
