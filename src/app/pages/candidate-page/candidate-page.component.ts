@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CandidateLoginComponent } from '@components/auth/candidate-login/candidate-login.component';
 import { CandidateLogoutComponent } from '@components/auth/candidate-logout/candidate-logout.component';
 import { CandidateRegisterComponent } from '@components/auth/candidate-register/candidate-register.component';
-import { UserService } from '@services/user.service'
 import { CandidateService } from '@services/candidate.service'
 
 
@@ -20,8 +19,6 @@ export class CandidatePageComponent {
   candidateService = inject(CandidateService);
 
   alreadyAccount: boolean = false;
-
-
 
   async ngOnInit() {
     // Extraer el examId de la URL.. OJO esta en /teacher/:id
