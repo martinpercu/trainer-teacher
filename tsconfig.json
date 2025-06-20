@@ -29,6 +29,7 @@
       "@env/*": ["./src/environments/*"],
       "@pipes/*": ["./src/app/pipes/*"],
       "@shared/*": ["./src/app/shared/*"],
+      "@recruiter/*": ["./src/app/components/recruiter/*"],
     }
   },
   "angularCompilerOptions": {

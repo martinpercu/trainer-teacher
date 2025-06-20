@@ -15,7 +15,7 @@ export class RecruiterAuthService {
   firebaseAuth = inject(Auth);
   recruiterService = inject(RecruiterService)
   recruiter$ = user(this.firebaseAuth);
-  currentCandidateSig = signal<Recruiter | null | undefined>(undefined);
+  currentRecruiterSig = signal<Recruiter | null | undefined>(undefined);
 
   recruiter!: Recruiter;
 
@@ -23,10 +23,10 @@ export class RecruiterAuthService {
     this.recruiter$.subscribe(async (firebaseUser) => {
       if (firebaseUser) {
         const recruiter = await this.recruiterService.getOneRecruiter(firebaseUser.uid);
-        this.recruiterService.setUserSig(recruiter);
+        this.recruiterService.setRecruiterSig(recruiter);
         // this.currentUserSig.set(recruiter); // Opcional
       } else {
-        this.recruiterService.setUserSig(null);
+        this.recruiterService.setRecruiterSig(null);
         // this.currentUserSig.set(null); // Opcional
       }
     });
@@ -56,14 +56,14 @@ export class RecruiterAuthService {
       recruiterUID: userUid
     }
     this.recruiterService.addUserWithId(this.recruiter, userUid);
-    this.recruiterService.setUserSig(this.recruiter);
+    this.recruiterService.setRecruiterSig(this.recruiter);
   }
 
   login(email: string, password: string): Observable<void> {
     const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password)
       .then(async (response) => {
         const recruiter = await this.recruiterService.getOneRecruiter(response.user.uid);
-        this.recruiterService.setUserSig(recruiter); // Actualiza el signal en CandidateService
+        this.recruiterService.setRecruiterSig(recruiter); // Actualiza el signal en CandidateService
         // this.currentUserSig.set(recruiter); // Opcional, si querés mantenerlo aquí también
       })
       .catch((error) => {

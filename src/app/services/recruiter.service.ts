@@ -47,7 +47,7 @@ export class RecruiterService {
    * Establece el usuario actual en la señal
    * @param user Usuario o null
    */
-  setUserSig(user: Recruiter | null) {
+  setRecruiterSig(user: Recruiter | null) {
     this.recruiterSig.set(user);
     console.log(this.recruiterSig());
   }
