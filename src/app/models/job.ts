@@ -1,5 +1,9 @@
 export interface Job {
   jobId: string;
-  title: string;
-  recruiterId: string;
+  name: string;
+  description: string;
+  ownerId: string;
+  active: boolean;
+  examActive?: boolean;
+  examId?: string;
 }
