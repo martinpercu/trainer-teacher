@@ -20,6 +20,7 @@ import { LangSwitcherComponent } from '@shared/lang-switcher/lang-switcher.compo
 import { CandidatePageComponent } from '@pages/candidate-page/candidate-page.component';
 import { RecruiterPageComponent } from '@pages/recruiter-page/recruiter-page.component';
 import { JobsCrudComponent } from '@recruiter/jobs-crud/jobs-crud.component';
+import { RecruiterDashboardComponent } from '@recruiter/recruiter-dashboard/recruiter-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -28,7 +29,7 @@ export const routes: Routes = [
   },
   {
     path:'recruiter',
-    component: RecruiterPageComponent
+    component: RecruiterDashboardComponent
   },
   {
     path:'candidate',
