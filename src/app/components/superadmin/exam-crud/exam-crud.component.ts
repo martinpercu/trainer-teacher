@@ -1,4 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { Auth, authState } from '@angular/fire/auth';
+
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
@@ -22,34 +24,58 @@ export class ExamCrudComponent implements OnInit {
 
   examCrudService = inject(ExamCrudService);
   teacherCrudService = inject(TeacherCrudService);
+  auth = inject(Auth);
 
   exams$!: Observable<Exam[]>;
   teachers$!: Observable<Teacher[]>;
   newExam: Partial<Exam> = {
     title: '',
-    teacherId: '',
-    teacherName: '',
+    teacherId: 'none',
+    teacherName: 'none',
     questions: [],
     passingPercentage: 70,
     timeToWait: 48,
     enable: true,
-    timeToDoTheExam: 60
+    timeToDoTheExam: 60,
+    recruiterId: ''
   };
   errorMessage: string = '';
   editingExamId: string | undefined = undefined;
   selectedExamId: string = '';
   isSaving: boolean = false;
 
+  isAuthenticated: boolean = false;
+  private recruiterId!: string;
 
-  ngOnInit() {
-    this.exams$ = this.examCrudService.getExams();
-    this.teachers$ = this.teacherCrudService.getTeachers().pipe(
-      catchError(error => {
-        console.error('Error al cargar profesores:', error);
-        this.errorMessage = 'No se pudieron cargar los profesores';
-        return of([]);
-      })
-    );
+
+  async ngOnInit() {
+    authState(this.auth).subscribe((user) => {
+      this.isAuthenticated = !!user;
+      console.log(user);
+      if (user && user.uid) {
+        this.recruiterId = user.uid;
+        console.log(this.recruiterId);
+      }
+
+      if (!this.isAuthenticated) {
+        this.errorMessage = 'Debes iniciar sesión para acceder a los trabajos';
+        this.exams$ = of([]);
+        return;
+      }
+
+      console.log(this.recruiterId);
+
+      this.exams$ = this.examCrudService.getExamsByRecruiterId(this.recruiterId);
+      console.log(this.exams$);
+
+      this.teachers$ = this.teacherCrudService.getTeachers().pipe(
+        catchError(error => {
+          console.error('Error al cargar profesores:', error);
+          this.errorMessage = 'No se pudieron cargar los profesores';
+          return of([]);
+        })
+      )
+    })
   }
 
   loadExam(event: Event) {
@@ -110,6 +136,7 @@ export class ExamCrudComponent implements OnInit {
           this.isSaving = false;
           return;
         }
+        console.log(this.recruiterId);
 
         const examData: Partial<Exam> = {
           title: this.newExam.title!.trim(),
@@ -120,7 +147,8 @@ export class ExamCrudComponent implements OnInit {
           passingPercentage: this.newExam.passingPercentage,
           timeToWait: this.newExam.timeToWait,
           enable: this.newExam.enable,
-          timeToDoTheExam: this.newExam.timeToDoTheExam
+          timeToDoTheExam: this.newExam.timeToDoTheExam,
+          recruiterId: this.recruiterId
         };
 
         if (this.editingExamId) {

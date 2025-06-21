@@ -53,6 +53,13 @@ export class RecruiterService {
   }
 
   /**
+   * Regresa el  el usuario actual en la señal
+   */
+  currentRecruiter() {
+    return this.recruiterSig()
+  }
+
+  /**
    * Establece la señal del usuario como null
    */
   setUserSigNull() {
