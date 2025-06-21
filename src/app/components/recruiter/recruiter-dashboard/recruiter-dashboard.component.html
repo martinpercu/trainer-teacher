@@ -1,8 +1,17 @@
 <div class="flex h-[100dvh] bg-white dark:bg-neutral-850">
   <!-- Sidebar -->
   <div
-    class="w-64 bg-neutral-50 dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-700 p-4 flex flex-col gap-2">
-
+    class="w-64 font-light bg-neutral-50 dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-700 p-4 flex flex-col gap-2"
+  >
+    <!-- <div class="mt-2 mb-6">
+      <button
+        (click)="goToMain()"
+        class="flex items-center gap-2 px-4 py-2 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 bg-white dark:bg-neutral-700 shadow-md rounded-md"
+      >
+        <mat-icon class="">settings</mat-icon>
+        <span>Settings</span>
+      </button>
+    </div> -->
     <!-- <button (click)="setView('teachers')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
       [ngClass]="{'bg-neutral-100 dark:bg-neutral-800': currentView === 'teachers'}">
@@ -15,17 +24,41 @@
       <mat-icon>school</mat-icon>
       <span>Courses</span>
     </button> -->
-    <button (click)="setView('jobs')"
-      class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-      [ngClass]="{'bg-neutral-100 dark:bg-neutral-800': currentView === 'exams'}">
+    <button
+      (click)="setView('jobs')"
+      class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
+      [ngClass]="{
+        'bg-neutral-100 dark:bg-neutral-800 font-bold shadow-sm shadow-neutral-300': currentView === 'jobs'
+      }"
+    >
       <mat-icon>works</mat-icon>
-      <span>Jobs</span>
+      <span [ngClass]="{
+        'pl-1': currentView === 'jobs'
+      }">Puestos</span>
     </button>
-    <button (click)="setView('exams')"
-      class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-      [ngClass]="{'bg-neutral-100 dark:bg-neutral-800': currentView === 'exams'}">
+    <button
+      (click)="setView('exams')"
+      class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
+      [ngClass]="{
+        'bg-neutral-100 dark:bg-neutral-800 font-semibold shadow-sm shadow-neutral-300': currentView === 'exams'
+      }"
+    >
       <mat-icon>school</mat-icon>
-      <span>Exam</span>
+      <span [ngClass]="{
+        'pl-1': currentView === 'exams'
+      }">Examenes</span>
+    </button>
+    <button
+      (click)="setView('candidates')"
+      class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
+      [ngClass]="{
+        'bg-neutral-100 dark:bg-neutral-800 font-semibold shadow-sm shadow-neutral-300': currentView === 'candidates'
+      }"
+    >
+      <mat-icon>group</mat-icon>
+      <span [ngClass]="{
+        'pl-1': currentView === 'candidates'
+      }">Candidatos</span>
     </button>
     <!-- <button (click)="setView('students')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
@@ -46,45 +79,54 @@
       <span>Config</span>
     </button> -->
 
-    <div class="mt-8">
-      <button (click)="goToMain()"
-        class="flex items-center gap-2 px-4 py-2 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 bg-white dark:bg-neutral-700 shadow-md rounded-md">
-        <mat-icon class="">home</mat-icon>
-        <span>Main teacher chat</span>
-      </button>
-    </div>
     <!-- <div class="mt-8">
-      <button (click)="testCurrentRecruiter()"
-        class="flex items-center gap-2 px-4 py-2 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 bg-white dark:bg-neutral-700 shadow-md rounded-md">
-        <mat-icon class="">light</mat-icon>
-        <span>Test Current</span>
+      <button
+        (click)="goToMain()"
+        class="flex items-center gap-2 px-4 py-2 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 bg-white dark:bg-neutral-700 shadow-md rounded-md"
+      >
+        <mat-icon class="">expand_circle_down</mat-icon>
+        <span>Abrir Menu</span>
       </button>
     </div> -->
 
+    @if(!this.showSettingMenu) {
+    <div class="mt-20">
+      <button
+        (click)="switchExpand()"
+        class="flex items-center gap-2 px-4 py-2 bg-transparent dark:bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-xl border border-gray-200 dark:border-neutral-700"
+      >
+        <mat-icon class="">expand_circle_down</mat-icon>
+        <span>Abrir Menu</span>
+      </button>
+    </div>
+    } @else {
+    <div class="mt-20">
+      <button
+        (click)="switchExpand()"
+        class="flex items-center gap-2 px-4 py-2 bg-transparent dark:bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-xl border border-gray-200 dark:border-neutral-700"
+      >
+        <mat-icon class="">expand_circle_up</mat-icon>
+        <span>Cerrar Menu</span>
+      </button>
+    </div>
+    <div>
+      <app-menu-settings></app-menu-settings>
+    </div>
 
+    }
   </div>
 
-
-  <!-- Main Content -->
   <div class="flex-1 p-4 overflow-auto">
-    <!-- @if (currentView === 'teachers') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Teachers</h1>
-    @for (teacher of teachers; track teacher.id) {
-    <app-teacher-list [teacher]="teacher"></app-teacher-list>
-    }
-    } -->
-    <!-- @if (currentView === 'courses') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Courses</h1>
-    @for (course of courses; track course.id) {
-      <app-course-card [course]="course"></app-course-card>
-      }
-    } -->
+
     @if (currentView === 'jobs') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Puestos</h1>
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
+      Puestos
+    </h1>
     <app-jobs-crud></app-jobs-crud>
-    }
-    @if (currentView === 'exams') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Exams</h1>
+    } @if (currentView === 'exams') {
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
+      Exams
+    </h1>
     <app-exam-crud></app-exam-crud>
     }
 
@@ -101,8 +143,13 @@
     }
     } -->
     @if (currentView === 'config') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Configuration</h1>
-    <p class="text-neutral-600 dark:text-neutral-400">Configuration settings coming soon.</p>
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
+      Configuration
+    </h1>
+    <p class="text-neutral-600 dark:text-neutral-400">
+      Configuration settings coming soon.
+    </p>
     }
   </div>
+
 </div>

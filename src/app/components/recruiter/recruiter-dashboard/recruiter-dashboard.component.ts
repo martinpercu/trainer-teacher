@@ -30,16 +30,17 @@ import { Teacher } from '@models/teacher';
 import { TeacherListComponent } from "@school/teacher-list/teacher-list.component";
 import { ExamsListComponent } from "@school/exams-list/exams-list.component";
 
+import { MenuSettingsComponent } from "@recruiter/menu-settings/menu-settings.component";
 import { JobsCrudComponent } from "@recruiter/jobs-crud/jobs-crud.component";
 import { ExamCrudComponent } from '@superadmin/exam-crud/exam-crud.component'
-import { RecruiterAuthService } from '@services/recruiter-auth.service'
+import { RecruiterAuthService } from '@services/recruiter-auth.service';
 
 
 
 
 @Component({
   selector: 'app-recruiter-dashboard',
-  imports: [CommonModule, MatIconModule, JobsCrudComponent, ExamCrudComponent, StudentListComponent, ExamResultListComponent, TeacherListComponent, ExamsListComponent],
+  imports: [CommonModule, MatIconModule, JobsCrudComponent, ExamCrudComponent, MenuSettingsComponent, StudentListComponent, ExamResultListComponent, TeacherListComponent, ExamsListComponent],
   templateUrl: './recruiter-dashboard.component.html'
 })
 export class RecruiterDashboardComponent {
@@ -49,15 +50,21 @@ export class RecruiterDashboardComponent {
 
   // exams: Exam[] = [];
 
-  currentView: 'teachers' | 'students' | 'results' | 'config' | 'exams' | 'jobs' = 'teachers'; // Default to courses
+  currentView: 'teachers' | 'students' | 'results' | 'config' | 'exams' | 'jobs' | 'candidates' = 'teachers'; // Default to courses
+
+  showSettingMenu: boolean = false;
 
 
   ngOnInit() {
     console.log('here in dash recruiter');
   }
 
-  setView(view: 'teachers' | 'students' | 'results' | 'config' | 'exams'  | 'jobs') {
+  setView(view: 'teachers' | 'students' | 'results' | 'config' | 'exams'  | 'jobs' | 'candidates') {
     this.currentView = view;
+  }
+
+  switchExpand() {
+    this.showSettingMenu = !this.showSettingMenu
   }
 
 
