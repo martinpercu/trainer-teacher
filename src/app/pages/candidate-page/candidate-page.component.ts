@@ -4,13 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CandidateLoginComponent } from '@components/auth/candidate-login/candidate-login.component';
 import { CandidateLogoutComponent } from '@components/auth/candidate-logout/candidate-logout.component';
 import { CandidateRegisterComponent } from '@components/auth/candidate-register/candidate-register.component';
-import { CandidateService } from '@services/candidate.service'
+import { CandidateService } from '@services/candidate.service';
 
+import { CandidateEditComponent } from '@candidate/candidate-edit/candidate-edit.component';
 
 
 @Component({
   selector: 'app-candidate-page',
-  imports: [CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent],
+  imports: [CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent],
   templateUrl: './candidate-page.component.html'
 })
 export class CandidatePageComponent {
