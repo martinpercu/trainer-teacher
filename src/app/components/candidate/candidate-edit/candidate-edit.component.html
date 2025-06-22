@@ -1,0 +1,450 @@
+<p>candidate-edit works!</p>
+
+
+@if(candidate) {
+<div class="m-auto min-w-80 max-w-4xl p-2  sm:p-6 md:p-8">
+
+  <form [formGroup]="form" (ngSubmit)="saveUser($event)">
+
+    <div class="text-lg flex justify-center mt-2 mb-2 uppercase">
+      Personal Information
+    </div>
+
+    @if(editPersoInfo == false) {
+    <div class="p-4 bg-transparent border border-gray-500 ">
+
+      <div class="flex sm:flex-row mb-2">
+        <div class="grow text-lg">
+          {{this.candidate.username}} {{this.candidate.lastname}}
+        </div>
+        <div (click)="changeEditPersonalInfo()"
+          class="flex-none hover:cursor-pointer underline pr-4 text-base tracking-wider">
+          Edit
+        </div>
+      </div>
+
+      <div class="hidden md:block">
+        <div class="grid grid-cols-4 text-sm">
+          <div>
+            Email:
+          </div>
+          <div>
+            Phone:
+          </div>
+          <div>
+            Birth date:
+          </div>
+          <div class="text-nowrap">
+            Preferred contact:
+          </div>
+        </div>
+        <div class="grid grid-cols-4 text-sm">
+          <div>
+            {{this.candidate.email}}
+          </div>
+          <div>
+            {{this.candidate.phone}}
+          </div>
+          <div>
+            {{this.candidate.birthdate | date }}
+          </div>
+          <div class="text-nowrap">
+            @if(this.candidate.byEmail && !this.candidate.byPhone){ by email }
+            @if(!this.candidate.byEmail && this.candidate.byPhone){ by phone }
+            @if(this.candidate.byEmail && this.candidate.byPhone){ by email and phone }
+          </div>
+        </div>
+      </div>
+
+      <div class="md:hidden">
+        <div class="grid grid-cols-2 text-sm">
+          <div>
+            Email:
+          </div>
+          <div>
+            {{this.candidate.email}}
+          </div>
+          <div>
+            Phone:
+          </div>
+          <div>
+            {{this.candidate.phone}}
+          </div>
+          <div>
+            Birth date:
+          </div>
+          <div>
+            {{ this.candidate.birthdate | date }}
+          </div>
+          <div class="text-nowrap">
+            Contact by:
+          </div>
+          <div class="text-nowrap">
+            @if(this.candidate.byEmail && !this.candidate.byPhone){ by email }
+            @if(!this.candidate.byEmail && this.candidate.byPhone){ by phone }
+            @if(this.candidate.byEmail && this.candidate.byPhone){ by email and phone }
+          </div>
+        </div>
+      </div>
+      @if(this.candidate.optionalText){
+      <div class="text-sm italic mt-2">
+        "{{ this.candidate.optionalText }}"
+      </div>
+      }
+
+    </div>
+    }
+
+    @if(editPersoInfo == true) {
+    <div class="p-4 bg-transparent border border-gray-500 ">
+      <div class="grid gap-6 mb-6 sm:grid-cols-3">
+
+        <div>
+          <label class="block mb-2 text-sm font-medium text-gray-900 ">
+            First Name:
+          </label>
+          <input type="text" formControlName="firstname" class="x_input" [class.is-valid]="isfirstnameFieldValid"
+            [class.is-invalid]="isfirstnameFieldInvalid" />
+          <div class="messages absolute" [class.active]="firstnameField!.touched && firstnameField!.invalid">
+            @if (firstnameField!.hasError('maxlength')){<div class="pb-4 pt-1 text-sm text-red-600">
+              No more than 30 letters</div> }
+            @if (firstnameField!.hasError('required')){<div class="pb-4 pt-1 text-sm text-red-600">
+              You must write something</div> }
+            @if (firstnameField!.hasError('minlength')){<div class="pb-4 pt-1 text-sm text-red-600">
+              At least 2 letters please</div> }
+          </div>
+        </div>
+
+        <div>
+          <label class="block mb-2 text-sm font-medium text-gray-900">
+            Last Name:
+          </label>
+          <input type="text" formControlName="lastname" class="x_input" [class.is-valid]="islastnameFieldValid"
+            [class.is-invalid]="islastnameFieldInvalid" />
+          <div class="messages absolute" [class.active]="lastnameField!.touched && lastnameField!.invalid">
+            @if (lastnameField!.hasError('maxlength')){<div class="pb-4 pt-1 text-sm text-red-600">No more than 30
+              letters</div> }
+            @if (lastnameField!.hasError('minlength')){<div class="pb-4 pt-1 text-sm text-red-600">
+              At Least 1 letters please</div> }
+          </div>
+        </div>
+
+        <div>
+          <label class="block mb-2 text-sm font-medium text-gray-900">Email:</label>
+          <input type="email" formControlName="email" class="x_input" [class.is-valid]="isemailFieldValid"
+            [class.is-invalid]="isemailFieldInvalid" placeholder="john.doe@company.com" />
+          <div class="messages absolute" [class.active]="emailField!.touched && emailField!.invalid">
+            @if (emailField!.hasError('email')){<div class="pb-4 pt-1 text-sm text-red-600">
+              This is not a valid email</div> }
+            @if (emailField!.hasError('required')){<div class="pb-4 pt-1 text-sm text-red-600">
+              This input is required</div> }
+            @if (emailField!.hasError('maxlength')){<div class="pb-4 pt-1 text-sm text-red-600">
+              No more than 80 letters </div> }
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label" class="block mb-1 mt-1 text-sm font-medium text-gray-900 ">
+            Phone number:</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+              <svg class="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor" viewBox="0 0 19 18">
+                <path
+                  d="M18 13.446a3.02 3.02 0 0 0-.946-1.985l-1.4-1.4a3.054 3.054 0 0 0-4.218 0l-.7.7a.983.983 0 0 1-1.39 0l-2.1-2.1a.983.983 0 0 1 0-1.389l.7-.7a2.98 2.98 0 0 0 0-4.217l-1.4-1.4a2.824 2.824 0 0 0-4.218 0c-3.619 3.619-3 8.229 1.752 12.979C6.785 16.639 9.45 18 11.912 18a7.175 7.175 0 0 0 5.139-2.325A2.9 2.9 0 0 0 18 13.446Z" />
+              </svg>
+            </div>
+            <input type="tel" formControlName="phone" class="x_input_with_icon" [class.is-valid]="isphoneFieldValid"
+              [class.is-invalid]="isphoneFieldInvalid" placeholder="123-456-7890" />
+          </div>
+          <div class="messages absolute" [class.active]="phoneField!.touched && phoneField!.invalid">
+            @if (phoneField!.hasError('minlength')){<div class="pb-4 pt-1 text-sm text-red-600">
+              At least 9 number for phones</div> }
+            @if (phoneField!.hasError('maxlength')){<div class="pb-4 pt-1 text-sm text-red-600">
+              No more than 15 letters</div> }
+            @if (phoneField!.hasError('pattern')){<div class="pb-4 pt-1 text-sm text-red-600">
+              Only numbers!</div> }
+          </div>
+        </div>
+
+        <div>
+          <label class="block mb-2 text-sm font-medium text-gray-900">Birthday:</label>
+          <input type="date" formControlName="birthdate" class="x_input" />
+        </div>
+
+        <div class="pt-3 gap-4">
+          <label class="block mb-2 text-sm font-medium text-gray-900">Preferred contact:</label>
+          <input type="checkbox" formControlName="byEmail"
+            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2  ">
+          <label class="ms-2 text-sm font-medium text-gray-900 relative bottom-0.5">
+            Email
+          </label>
+          <input type="checkbox" formControlName="byPhone"
+            class="ml-5 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+          <label class="ms-2 text-sm font-medium text-gray-900  relative bottom-0.5">
+            Phone
+          </label>
+        </div>
+
+        <!-- <div class="flex mt-4 mb-4 py-1">
+          <div class="flex items-center me-4">
+            <label for="inline-checked-checkbox" class="ms-2 text-sm font-medium text-gray-900 ">
+              Conctact by... </label>
+          </div>
+          <div class="flex items-center me-4">
+            <input type="checkbox" formControlName="byEmail"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2  ">
+            <label class="ms-2 text-sm font-medium text-gray-900 ">
+              Email
+            </label>
+          </div>
+          <div class="flex items-center me-4">
+            <input type="checkbox" formControlName="byPhone"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+            <label class="ms-2 text-sm font-medium text-gray-900 ">
+              Phone
+            </label>
+          </div>
+        </div> -->
+
+      </div>
+
+
+      <!-- @if(!this.candidate.subscription) {
+        <div class="text-lg justify-center mt-6 mb-2">
+          <div class="hidden sm:block mb-2 text-xs font-medium sm:w-3/4">You are currently unsubscribed.
+            To resubscribe, please click <span (click)="modalSubscription('active')" class="hover:underline hover:cursor-pointer">here</span>.
+          </div>
+
+          <div class="block sm:hidden mb-2 text-xs font-medium">You are currently unsubscribed. To resubscribe, please click <span (click)="modalSubscription('active')" class="hover:underline hover:cursor-pointer">here</span>.
+          </div>
+        </div>
+      }
+
+      @if(this.candidate.subscription) {
+        <div class="text-lg justify-center mt-6 mb-2">
+          <div class="hidden sm:block mb-2 text-xs font-medium sm:w-3/4">As a member of Kohue Wines, you agree to receive marketing
+            communications from us.<br>You can unsubscribe anytime by clicking <span (click)="modalSubscription('inactive')" class="hover:underline hover:cursor-pointer">here</span>.
+          </div>
+
+          <div class="block sm:hidden mb-2 text-xs font-medium">As a member of Kohue Wines, you agree to receive marketing
+            communications from us. You can unsubscribe anytime by clicking <span (click)="modalSubscription('inactive')" class="hover:underline hover:cursor-pointer">here</span>.
+          </div>
+        </div>
+      } -->
+
+
+
+      <div class="text-lg justify-center mt-6 mb-2">
+        <div>
+          <label class="block mb-2 text-sm font-medium text-gray-900">Optional notes:</label>
+          <!-- <input type="text" formControlName="optionalText" class="x_input" /> -->
+          <textarea formControlName="optionalText" rows="2"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-transparent  border border-gray-400"></textarea>
+        </div>
+      </div>
+
+      <button [disabled]="form.invalid" [class.buttonDisabled]="form.invalid" type="submit" class="button bg-red-400">
+        Save
+      </button>
+
+    </div>
+    }
+
+
+    <!-- @if(this.candidate.username && this.candidate.birthdate) { -->
+
+    <div class="text-lg flex justify-center mt-12 mb-2 uppercase">
+      Shipping Address
+    </div>
+
+    @if(editShipping == false) {
+
+    <div class="p-4 bg-transparent border border-gray-500 ">
+
+      <div class="flex sm:flex-row mb-2">
+        <div class="grow text-lg">
+
+          <div class="grid grid-row-4 text-sm">
+            <div>
+              {{this.candidate.username}} {{this.candidate.lastname}}
+            </div>
+            <div>
+              {{this.candidate.address}}
+            </div>
+            @if(this.candidate.addressExtra) {
+            <div>
+              {{this.candidate.addressExtra}}
+            </div>
+            }
+            <div>
+              {{this.candidate.city}} @if(this.candidate.city && this.candidate.state){,} {{this.candidate.state}}
+            </div>
+            <div>
+              {{this.candidate.zipCode}}
+            </div>
+          </div>
+          <!-- {{this.candidate.username}} {{this.candidate.lastname}} -->
+        </div>
+      </div>
+
+    </div>
+
+    }
+
+
+    @if(editShipping == true) {
+    <div class="p-4 bg-transparent border border-gray-500 ">
+      <div class="grid gap-6 mb-6 sm:grid-cols-3">
+
+
+
+        <div>
+          <label class="block mb-2 text-sm font-medium text-gray-900">Address 1:</label>
+          <input type="text" formControlName="address" class="x_input" />
+          <div class="messages absolute" [class.active]="addressField!.touched && addressField!.invalid">
+            @if (addressField!.hasError('minlength')){<div class="pb-4 pt-1 text-sm text-red-600">
+              At least 8 characters in Address</div> }
+          </div>
+        </div>
+
+
+        <div>
+          <label class="block mb-2 text-sm font-medium text-gray-900">Address 2:</label>
+          <input type="text" formControlName="addressExtra" class="x_input" />
+        </div>
+
+        <div>
+          <label class="block mb-2 text-sm font-medium text-gray-900">City:</label>
+          <input type="text" formControlName="city" class="x_input" />
+        </div>
+
+
+        <div>
+
+          <label class="block mb-2 text-sm font-medium text-gray-900">State:</label>
+          <select formControlName="state" class="x_input">
+            <option></option>
+            <option>Alabama</option>
+            <option>Alaska</option>
+            <option>Arizona</option>
+            <option>Arkansas</option>
+            <option>California</option>
+            <option>Colorado</option>
+            <option>Connecticut</option>
+            <option>Delaware</option>
+            <option>Florida</option>
+            <option>Georgia</option>
+            <option>Hawaii</option>
+            <option>Idaho</option>
+            <option>Illinois</option>
+            <option>Indiana</option>
+            <option>Iowa</option>
+            <option>Kansas</option>
+            <option>Kentucky</option>
+            <option>Louisiana</option>
+            <option>Maine</option>
+            <option>Maryland</option>
+            <option>Massachusetts</option>
+            <option>Michigan</option>
+            <option>Minnesota</option>
+            <option>Mississippi</option>
+            <option>Missouri</option>
+            <option>Montana</option>
+            <option>Nebraska</option>
+            <option>Nevada</option>
+            <option>New Hampshire</option>
+            <option>New Jersey</option>
+            <option>New Mexico</option>
+            <option>New York</option>
+            <option>North Carolina</option>
+            <option>North Dakota</option>
+            <option>Ohio</option>
+            <option>Oklahoma</option>
+            <option>Oregon</option>
+            <option>Pennsylvania</option>
+            <option>Rhode Island</option>
+            <option>South Carolina</option>
+            <option>South Dakota</option>
+            <option>Tennessee</option>
+            <option>Texas</option>
+            <option>Utah</option>
+            <option>Vermont</option>
+            <option>Virginia</option>
+            <option>Washington</option>
+            <option>West Virginia</option>
+            <option>Wisconsin</option>
+            <option>Wyoming</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="form-label" class="block mb-1 mt-1 text-sm font-medium text-gray-900 ">
+            ZIP code:</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+              <svg class="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor" viewBox="0 0 16 20">
+                <path
+                  d="M8 0a7.992 7.992 0 0 0-6.583 12.535 1 1 0 0 0 .12.183l.12.146c.112.145.227.285.326.4l5.245 6.374a1 1 0 0 0 1.545-.003l5.092-6.205c.206-.222.4-.455.578-.7l.127-.155a.934.934 0 0 0 .122-.192A8.001 8.001 0 0 0 8 0Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" />
+              </svg>
+            </div>
+            <input type="tel" formControlName="zipCode" class="x_input_with_icon" [class.is-valid]="iszipCodeFieldValid"
+              [class.is-invalid]="iszipCodeFieldInvalid" placeholder="12345" />
+          </div>
+          <div class="messages absolute" [class.active]="zipCodeField!.touched && zipCodeField!.invalid">
+            @if (zipCodeField!.hasError('minlength')){<div class="pb-4 pt-1 text-sm text-red-600">
+              At least 5 characters in zipcodes</div> }
+            @if (zipCodeField!.hasError('maxlength')){<div class="pb-4 pt-1 text-sm text-red-600">
+              No more than 8 characters in zipcodes</div> }
+          </div>
+        </div>
+
+        <!-- <div class="flex mt-4 mb-4 py-1">
+          @if(this.candidate.billDifThanShip == false){
+          <button (click)="setBillDifShipping()"  class="button">
+            BILL address DIF than Shipping
+          </button>}
+          @if(this.candidate.billDifThanShip == true){
+          <button (click)="copyfromShipping()" class="button">
+            BILL address Same than Shipping
+          </button>}
+        </div> -->
+
+        <div class="flex mt-4 mb-4 py-1">
+          <div class="flex items-center me-4">
+            <label for="inline-checked-checkbox" class="ms-2 text-sm font-medium text-gray-900 ">
+              Use shipping address as billing address. </label>
+          </div>
+          <div class="flex items-center me-4">
+            <input type="checkbox" formControlName="billDifThanShip"
+              class="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2  ">
+            <label class="ms-2 text-sm font-medium text-gray-900 ">
+              YES
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <button [disabled]="form.invalid" [class.buttonDisabled]="form.invalid" type="submit" class="button">
+        Save
+      </button>
+
+    </div>
+    }
+
+
+
+
+    <!-- }  This is for billing address ===> if shipping not same as billing -->
+
+    <!-- }  This last "}" is from if user username + birthdate -->
+
+  </form>
+
+</div>
+}
+<div class="mb-10">
+
+</div>

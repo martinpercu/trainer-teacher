@@ -19,9 +19,9 @@ export class CandidateService {
    * @returns Observable con un arreglo de usuarios
    */
   getAllUsers(): Observable<Candidate[]> {
-    const usersRef = collection(this.firestore, 'candidates');
-    const usersQuery = query(usersRef, orderBy('username'));
-    return collectionData(usersQuery, { idField: 'userUID' }).pipe(
+    const canidatesRef = collection(this.firestore, 'candidates');
+    const candidatesQuery = query(canidatesRef, orderBy('username'));
+    return collectionData(candidatesQuery, { idField: 'candidateUID' }).pipe(
       map(candidates => candidates as Candidate[]),
       catchError(error => {
         console.error('Error al obtener usuarios:', error);
@@ -74,6 +74,17 @@ export class CandidateService {
       return null;
     }
   }
+
+  async getThisCandidate(userId: string) {
+    // const clientDocRef = doc(this.firestore, `users/${clientId}`);
+    const userDocRef = doc(this.firestore, 'candidates', userId);
+    console.log(userDocRef);
+    const candidate = (await getDoc(userDocRef)).data();
+    console.log(candidate);
+    return candidate as Candidate
+  };
+
+
 
   /**
    * Elimina un usuario por su ID
