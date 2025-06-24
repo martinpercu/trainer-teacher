@@ -7,6 +7,7 @@ export interface Candidate {
   lastname?: string;
   recruiters?: string[];
   jobs?: string[];
+  lastJobId?: string;
   phone?: string;
   birthdate?: string;
   optionalText?: string;

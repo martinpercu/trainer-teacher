@@ -27,7 +27,7 @@ export class RecruiterLoginComponent {
     const rawForm = this.form.getRawValue();
     this.recruiterAuthService.login(rawForm.email, rawForm.password).subscribe({
       next: () => {
-        this.router.navigateByUrl('/recruiter');
+        // this.router.navigateByUrl('/recruiter');
       },
       error: (err) => {
         this.errorMessage = err.code;
