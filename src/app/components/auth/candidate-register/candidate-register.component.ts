@@ -44,6 +44,8 @@ export class CandidateRegisterComponent {
         // Use ownerId as a string
         this.jobRecruiterId = ownerId;
         console.log(this.jobRecruiterId, this.jobId); // "I8oITrIOHDX2rkMvJmtU6iUHqkn1"
+      }else {
+        console.log('no Recuiter for this Job');
       }
     }
   }

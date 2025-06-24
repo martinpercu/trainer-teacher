@@ -28,37 +28,49 @@
       (click)="setView('jobs')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
       [ngClass]="{
-        'bg-neutral-100 dark:bg-neutral-800 font-bold shadow-sm shadow-neutral-300': currentView === 'jobs'
+        'bg-neutral-100 dark:bg-neutral-800 font-bold shadow-sm shadow-neutral-300':
+          currentView === 'jobs'
       }"
     >
       <mat-icon>works</mat-icon>
-      <span [ngClass]="{
-        'pl-1': currentView === 'jobs'
-      }">Puestos</span>
+      <span
+        [ngClass]="{
+          'pl-1': currentView === 'jobs'
+        }"
+        >Puestos</span
+      >
     </button>
     <button
       (click)="setView('exams')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
       [ngClass]="{
-        'bg-neutral-100 dark:bg-neutral-800 font-semibold shadow-sm shadow-neutral-300': currentView === 'exams'
+        'bg-neutral-100 dark:bg-neutral-800 font-semibold shadow-sm shadow-neutral-300':
+          currentView === 'exams'
       }"
     >
       <mat-icon>school</mat-icon>
-      <span [ngClass]="{
-        'pl-1': currentView === 'exams'
-      }">Examenes</span>
+      <span
+        [ngClass]="{
+          'pl-1': currentView === 'exams'
+        }"
+        >Examenes</span
+      >
     </button>
     <button
       (click)="setView('candidates')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
       [ngClass]="{
-        'bg-neutral-100 dark:bg-neutral-800 font-semibold shadow-sm shadow-neutral-300': currentView === 'candidates'
+        'bg-neutral-100 dark:bg-neutral-800 font-semibold shadow-sm shadow-neutral-300':
+          currentView === 'candidates'
       }"
     >
       <mat-icon>group</mat-icon>
-      <span [ngClass]="{
-        'pl-1': currentView === 'candidates'
-      }">Candidatos</span>
+      <span
+        [ngClass]="{
+          'pl-1': currentView === 'candidates'
+        }"
+        >Candidatos</span
+      >
     </button>
     <!-- <button (click)="setView('students')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
@@ -117,7 +129,6 @@
   </div>
 
   <div class="flex-1 p-4 overflow-auto">
-
     @if (currentView === 'jobs') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
       Puestos
@@ -129,13 +140,38 @@
     </h1>
     <app-exam-crud></app-exam-crud>
     }
-
-    <!-- @if (currentView === 'students') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Students</h1>
-    @for (userWithResults of usersWithResults; track userWithResults.user.userUID) {
-    <app-student-list [user]="userWithResults.user" [results]="userWithResults.results"></app-student-list>
+    @if (currentView === 'candidates') {
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Candidatos</h1>
+    @for (candidate of candidates; track candidate.candidateUID) {
+      <app-candidates-list  [candidate]="candidate"></app-candidates-list>
+    <!-- <app-exam-result-list></app-exam-result-list> -->
     }
-    } -->
+    }
+
+
+    <!-- @if (currentView === 'candidates') {
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
+      Students
+    </h1>
+    @for (userWithResults of usersWithResults; track
+    userWithResults.user.userUID) {
+    <app-student-list
+      [user]="userWithResults.user"
+      [results]="userWithResults.results"
+    ></app-student-list>
+    } } -->
+
+    <!-- @if (currentView === 'candidates') {
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
+      Students
+    </h1>
+    @for (userWithResults of usersWithResults; track
+    userWithResults.user.userUID) {
+    <app-student-list
+      [user]="userWithResults.user"
+      [results]="userWithResults.results"
+    ></app-student-list>
+    } } -->
     <!-- @if (currentView === 'results') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Exams Results</h1>
     @for (result of results; track result.id) {
@@ -151,5 +187,4 @@
     </p>
     }
   </div>
-
 </div>

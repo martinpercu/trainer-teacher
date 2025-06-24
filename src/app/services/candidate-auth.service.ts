@@ -57,18 +57,20 @@ export class CandidateAuthService {
       username: username,
       candidateUID: userUid,
       recruiters: [jobRecruiterId],
-      jobs: [jobId]
+      jobs: [jobId],
+      lastJobId: jobId
     }
     this.candidateService.addUserWithId(this.candidate, userUid);
     this.candidateService.setUserSig(this.candidate);
   }
 
-  login(email: string, password: string): Observable<void> {
+  login(email: string, password: string, jobId: string, jobRecruiterId: string): Observable<void> {
     const promise = signInWithEmailAndPassword(this.firebaseAuth, email, password)
       .then(async (response) => {
-        const candidate = await this.candidateService.getOneCandidate(response.user.uid);
+        const candidate = await this.candidateService.getThisCandidate(response.user.uid);
         this.candidateService.setUserSig(candidate); // Actualiza el signal en CandidateService
         // this.currentUserSig.set(candidate); // Opcional, si querés mantenerlo aquí también
+        this.candidateService.updateCandidateIfNeeded(response.user.uid, jobId, jobRecruiterId)
       })
       .catch((error) => {
         console.error('Error en login:', error);

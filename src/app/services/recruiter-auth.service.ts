@@ -5,6 +5,8 @@ import { Observable, from } from 'rxjs';
 
 import { Recruiter } from '@models/recruiter';
 import { RecruiterService } from '@services/recruiter.service';
+import { Router } from '@angular/router';
+
 
 
 @Injectable({
@@ -16,6 +18,7 @@ export class RecruiterAuthService {
   recruiterService = inject(RecruiterService)
   recruiter$ = user(this.firebaseAuth);
   currentRecruiterSig = signal<Recruiter | null | undefined>(undefined);
+  router = inject(Router);
 
   recruiter!: Recruiter;
 
@@ -64,7 +67,8 @@ export class RecruiterAuthService {
       .then(async (response) => {
         const recruiter = await this.recruiterService.getOneRecruiter(response.user.uid);
         this.recruiterService.setRecruiterSig(recruiter); // Actualiza el signal en CandidateService
-        // this.currentUserSig.set(recruiter); // Opcional, si querés mantenerlo aquí también
+        this.currentRecruiterSig.set(recruiter); // Opcional, si querés mantenerlo aquí también
+        this.router.navigateByUrl('/recruiter');
       })
       .catch((error) => {
         console.error('Error en login:', error);
