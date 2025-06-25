@@ -1,5 +1,6 @@
 import { Component, Input, inject } from '@angular/core';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 // import { Student } from '@models/student';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,7 +12,7 @@ import { ResultService } from '@services/result.service';
 @Component({
   selector: 'app-candidates-list',
   imports: [MatIconModule, CommonModule, MatIconModule, DatePipe, DecimalPipe],
-  templateUrl: './candidates-list.component.html'
+  templateUrl: './candidates-list.component.html',
 })
 export class CandidatesListComponent {
   // @Input() students!: Student[];
@@ -19,8 +20,7 @@ export class CandidatesListComponent {
   // @Input() result!: Result;
   @Input() results: Result[] = [];
 
-
-  // userService = inject(UserService);
+  router = inject(Router);
   // users: User[] = [];
   // userResurl!: Result;
   showExamsResult: boolean = false;
@@ -32,12 +32,15 @@ export class CandidatesListComponent {
   }
 
   switchShowExamsResults() {
-    this.showExamsResult = !this.showExamsResult
+    this.showExamsResult = !this.showExamsResult;
   }
 
   switchShowDetails() {
-    this.showDetails = !this.showDetails
+    this.showDetails = !this.showDetails;
   }
 
-
+  getResume() {
+    // this.router.nav;
+    window.open(`${this.candidate.resumePath}`, '_blank');
+  }
 }

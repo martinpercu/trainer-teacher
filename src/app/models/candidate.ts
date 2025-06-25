@@ -9,6 +9,7 @@ export interface Candidate {
   jobs?: string[];
   lastJobId?: string;
   resumePath?: string;
+  resumeDocName?: string;
   phone?: string;
   birthdate?: string;
   optionalText?: string;

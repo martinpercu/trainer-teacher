@@ -5,6 +5,19 @@
       <mat-icon class="text-neutral-600 dark:text-neutral-300">person</mat-icon>
       <h2 class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">{{ candidate.username }}</h2>
     </div>
+    @if (candidate.resumePath ) {
+      @if (candidate.resumeDocName?.endsWith('.pdf')) {
+        <div (click)="getResume()" class="cursor-pointer rounded-lg border p-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+          Ver CV
+        </div>
+      }
+      @if (!candidate.resumeDocName?.endsWith('.pdf')) {
+        <div (click)="getResume()" class="cursor-pointer rounded-lg border p-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+          Descargar CV
+        </div>
+      }
+    }
+
     <div (click)="switchShowDetails()" class="cursor-pointer rounded-lg border p-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
       Detalles
     </div>
