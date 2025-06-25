@@ -21,8 +21,18 @@ import { CandidatePageComponent } from '@pages/candidate-page/candidate-page.com
 import { RecruiterPageComponent } from '@pages/recruiter-page/recruiter-page.component';
 import { JobsCrudComponent } from '@recruiter/jobs-crud/jobs-crud.component';
 import { RecruiterDashboardComponent } from '@recruiter/recruiter-dashboard/recruiter-dashboard.component';
+import { UploadComponent } from '@components/candidate/upload/upload.component';
+import { PdfShowComponent } from '@shared/pdf-show/pdf-show.component';
 
 export const routes: Routes = [
+  {
+    path:'resume/:pdfname',
+    component: PdfShowComponent
+  },
+  {
+    path:'upload',
+    component: UploadComponent
+  },
   {
     path:'job-crud',
     component: JobsCrudComponent

@@ -11,10 +11,12 @@ import { CandidateAuthService } from '@services/candidate-auth.service';
 
 import { CandidateEditComponent } from '@candidate/candidate-edit/candidate-edit.component';
 
+import { UploadComponent } from '@components/candidate/upload/upload.component';
+
 
 @Component({
   selector: 'app-candidate-page',
-  imports: [CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent],
+  imports: [CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent],
   templateUrl: './candidate-page.component.html'
 })
 export class CandidatePageComponent {
