@@ -25,5 +25,23 @@
     "to_login": "aller Login",
     "to_signup": "aller SignUp",
     "login_or_signup": "Login ou SignUp"
+  },
+  "recruiter": {
+    "posts": "Postes",
+    "posts_edit" : "Postes editer",
+    "exams": "Examens",
+    "exams_edit": "Examens editer",
+    "candidates": "Candidats",
+    "close_menu": "Fermer le menu",
+    "open_menu": "Ouvrir le menu",
+    "see_cv": "Voir le CV",
+    "download_cv": "Télécharger le CV",
+    "details": "Détails",
+    "results": "Résultats",
+    "results_all": "Résultats tous",
+    "name": "Prénom",
+    "last_name": "Nom",
+    "email": "Email",
+    "no_result": "Aucun résultat pour ce candidat."
   }
 }

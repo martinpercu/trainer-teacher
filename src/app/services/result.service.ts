@@ -91,6 +91,34 @@ export class ResultService {
     );
   }
 
+
+  /**
+   * Obtiene resultados de exámenes filtrados por una lista de userUIDs.
+   * @param userUIDs Un array de UIDs de usuarios (candidates) para filtrar los resultados.
+   * @returns Un Observable de un array de objetos Result.
+   */
+  getResultsByUserUIDs(userUIDs: string[]): Observable<Result[]> {
+    if (!userUIDs || userUIDs.length === 0) {
+      console.warn('No userUIDs provided for filtering results.');
+      return of([]); // Retorna un Observable vacío si no hay UIDs
+    }
+
+    const resultsCollection = collection(this.firestore, 'examsresults');
+    // Crea una consulta para buscar documentos donde 'userUID' esté en el array 'userUIDs'
+    // Firestore permite hasta 10 cláusulas 'in' en una sola consulta. Si esperas más de 10 candidates,
+    // necesitarás dividir la consulta o reestructurar cómo obtienes los resultados.
+    const q = query(resultsCollection, where('userUID', 'in', userUIDs));
+
+    return collectionData(q, { idField: 'id' }).pipe(
+      map((results) => results as Result[]),
+      catchError((error) => {
+        console.error('Error al obtener resultados por userUIDs:', error);
+        return of([]);
+      })
+    );
+  }
+
+
   getLastResultByUserAndExam(userId: string, examId: string): Observable<Result | null> {
     const resultsCollection = collection(this.firestore, 'examsresults');
     const resultsQuery = query(

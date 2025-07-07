@@ -1,1 +1,54 @@
-<p>jobs-list works!</p>
+
+<div class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-lg mb-2 p-6 border border-neutral-200 dark:border-neutral-700">
+  <!-- Header -->
+  <div class="flex flex-row items-center align-middle space-x-2 h-7 gap-1">
+    <div class="flex grow items-center space-x-2">
+      <mat-icon class="text-neutral-600 dark:text-neutral-300">assignment_ind</mat-icon>
+      <h2 class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">{{ job.name }}</h2>
+    </div>
+    <div class="flex items-center space-x-2">
+    @if(job.active){
+        <mat-icon class="text-green-600 dark:text-green-500">check_circle</mat-icon>
+        <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Active</h2>
+    } @else {
+        <mat-icon class="text-red-600 dark:text-red-500">cancel</mat-icon>
+        <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Inactive</h2>
+    }
+    </div>
+  </div>
+
+  <!-- Details Section -->
+  <div class="grid grid-cols-1 gap-4 mt-4">
+    <!-- Description -->
+    <div class="flex items-center space-x-3">
+      <mat-icon class="text-neutral-600 dark:text-neutral-300">person_play</mat-icon>
+      <div>
+        <!-- <p class="text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ 'recruiter.name' | transloco }}</p> -->
+        <p class="text-base text-neutral-600 dark:text-neutral-400">{{ job.description }}</p>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="flex items-center space-x-3">
+      <mat-icon class="text-neutral-600 dark:text-neutral-300">group</mat-icon>
+      <div>
+        <p class="text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ 'recruiter.candidates' | transloco }}</p>
+        <p class="text-base text-neutral-600 dark:text-neutral-400">{{ job.name }}</p>
+      </div>
+    </div>
+
+    <!-- Lastname -->
+    <div class="flex items-center space-x-3">
+      <mat-icon class="text-neutral-600 dark:text-neutral-300">badge</mat-icon>
+      <div>
+        <p class="text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ 'recruiter.last_name' | transloco }}</p>
+        <p class="text-base text-neutral-600 dark:text-neutral-400">{{ job.name || 'N/A' }}</p>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+</div>
