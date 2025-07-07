@@ -49,7 +49,7 @@ import { ResultService } from '@services/result.service';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { of, forkJoin } from 'rxjs'; // Import 'of'
-import { switchMap, tap, filter, catchError, map } from 'rxjs/operators';
+import { switchMap, tap, filter, catchError, map, take } from 'rxjs/operators';
 // import { map } from 'rxjs/operators';
 
 @Component({
@@ -111,27 +111,31 @@ export class RecruiterDashboardComponent {
           // Use forkJoin to fetch candidates and jobs in parallel
           return forkJoin({
             candidates: this.candidateService.getCandidatesByRecruiter(recruiterUid).pipe(
+              take(1), // <--- Add take(1) here
               tap((candidates) => {
                 this.candidates = candidates; // Assign candidates here
-                console.log('Retrieved candidates:', this.candidates);
+                console.log('Retrieved candidates (inside forkJoin)::', this.candidates);
               }),
               map((candidates) => candidates.map((c) => c.candidateUID)), // Extract UIDs for results
               catchError((error) => {
-                console.error('Error fetching candidates:', error);
+                console.error('Error fetching candidates (inside forkJoin)::', error);
                 return of([]);
               })
             ),
             jobs: this.jobCrudService.getJobs(recruiterUid).pipe( // Fetch jobs
+              take(1), // <--- Add take(1) here
               tap((jobs) => {
                 this.jobs = jobs; // Assign jobs here
-                console.log('Retrieved jobs:', this.jobs);
+                console.log('Retrieved jobs (inside forkJoin)::', this.jobs);
               }),
               catchError((error) => {
-                console.error('Error fetching jobs:', error);
+                console.error('Error fetching jobs (inside forkJoin)::', error);
                 return of([]);
               })
             )
-          });
+          }).pipe(
+            tap(forkJoinResults => console.log('forkJoin emitted:', forkJoinResults)) // <-- Add this
+          );
         }),
         // Now, process the results of forkJoin (which contains candidateUIDs and jobs)
         switchMap(({ candidates, jobs }) => {
@@ -147,13 +151,10 @@ export class RecruiterDashboardComponent {
         })
       )
       .subscribe({
-        next: ({ results: filteredResults, jobs }) => { // Destructure to get both results and jobs
+        next: ({ results: filteredResults, jobs }) => {
           this.results = filteredResults;
-          this.jobs = jobs; // Re-assign jobs (already assigned in tap, but ensures consistency)
-          console.log(
-            'Results filtered by candidate UIDs:',
-            this.results
-          );
+          this.jobs = jobs;
+          console.log('Results filtered by candidate UIDs:', this.results);
           console.log('Jobs for recruiter:', this.jobs);
         },
         error: (error) => {
@@ -163,6 +164,8 @@ export class RecruiterDashboardComponent {
           console.log('All data subscriptions completed.');
         },
       });
+
+
     // this.authService.user$
     //   .pipe(
     //     // Filter out null users (not authenticated)
@@ -238,6 +241,38 @@ export class RecruiterDashboardComponent {
   getResultsForCandidate(candidateUID: string): Result[] {
     return this.results.filter((result) => result.userUID === candidateUID);
   }
+
+  /**
+   * Filters the 'results' array to return only those belonging to a specific candidate.
+   * @param candidateUID The UID of the candidate to filter results for.
+   * @returns An array of Result objects for the given candidate.
+   */
+  getCandidatesForJob(jobId: string): Candidate[] { // Return type should be Candidate[], not Result[]
+    return this.candidates.filter((candidate) =>
+      // Check if candidate.jobs exists and if the jobId is included in that array
+      candidate.jobs && candidate.jobs.includes(jobId)
+    );
+  }
+
+  /**
+   * Returns results associated with candidates of a specific job.
+   * @param jobId The ID of the job to filter results for.
+   * @returns An array of Result objects.
+   */
+  getResultsForJobCandidates(jobId: string): Result[] {
+    // 1. Get the candidates for the current job
+    const candidatesForThisJob = this.getCandidatesForJob(jobId);
+    // 2. Extract their UIDs
+    const candidateUIDsForJob = candidatesForThisJob.map(
+      (candidate) => candidate.candidateUID
+    );
+    // 3. Filter the global 'results' array based on these UIDs
+    return this.results.filter((result) =>
+      candidateUIDsForJob.includes(result.userUID)
+    );
+  }
+
+
 
   switchExpand() {
     this.showSettingMenu = !this.showSettingMenu;
