@@ -1,7 +1,7 @@
 <div class="flex h-[100dvh] bg-white dark:bg-neutral-850">
   <!-- Sidebar -->
   <div
-    class="w-64 font-light bg-neutral-50 dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-700 p-4 flex flex-col gap-2"
+    class="sm:w-64 font-light bg-neutral-50 dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-700 p-1 sm:p-4 flex flex-col gap-2"
   >
     <!-- <div class="mt-2 mb-6">
       <button
@@ -24,20 +24,44 @@
       <mat-icon>school</mat-icon>
       <span>Courses</span>
     </button> -->
+    <button (click)="setView('jobs')"
+      class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
+      [ngClass]="{
+        'bg-neutral-100 dark:bg-neutral-800 font-semibold shadow-sm shadow-neutral-300':
+      currentView === 'jobs'}">
+      <mat-icon>article_person</mat-icon>
+      <span class="hidden sm:block" [ngClass]="{
+          'pl-1': currentView === 'jobs'
+        }"
+        >{{ 'recruiter.posts' | transloco }}</span
+      >
+    </button>
+    <button (click)="setView('results')"
+      class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
+      [ngClass]="{
+        'bg-neutral-100 dark:bg-neutral-800 font-semibold shadow-sm shadow-neutral-300':
+      currentView === 'results'}">
+      <mat-icon>school</mat-icon>
+      <span class="hidden sm:block" [ngClass]="{
+          'pl-1': currentView === 'jobs_edit'
+        }"
+        >{{ 'recruiter.results_all' | transloco }}</span
+      >
+    </button>
     <button
-      (click)="setView('jobs')"
+      (click)="setView('jobs_edit')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
       [ngClass]="{
         'bg-neutral-100 dark:bg-neutral-800 font-bold shadow-sm shadow-neutral-300':
-          currentView === 'jobs'
+          currentView === 'jobs_edit'
       }"
     >
       <mat-icon>works</mat-icon>
-      <span
+      <span class="hidden sm:block"
         [ngClass]="{
-          'pl-1': currentView === 'jobs'
+          'pl-1': currentView === 'jobs_edit'
         }"
-        >Puestos</span
+        >{{ 'recruiter.posts_edit' | transloco }}</span
       >
     </button>
     <button
@@ -49,11 +73,11 @@
       }"
     >
       <mat-icon>school</mat-icon>
-      <span
+      <span class="hidden sm:block"
         [ngClass]="{
           'pl-1': currentView === 'exams'
         }"
-        >Examenes</span
+        >{{ 'recruiter.exams_edit' | transloco }}</span
       >
     </button>
     <button
@@ -65,11 +89,11 @@
       }"
     >
       <mat-icon>group</mat-icon>
-      <span
+      <span class="hidden sm:block"
         [ngClass]="{
           'pl-1': currentView === 'candidates'
         }"
-        >Candidatos</span
+        >{{ 'recruiter.candidates' | transloco }}</span
       >
     </button>
     <!-- <button (click)="setView('students')"
@@ -108,7 +132,7 @@
         class="flex items-center gap-2 px-4 py-2 bg-transparent dark:bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-xl border border-gray-200 dark:border-neutral-700"
       >
         <mat-icon class="">expand_circle_down</mat-icon>
-        <span>Abrir Menu</span>
+        <span class="hidden sm:block">{{ 'recruiter.open_menu' | transloco }}</span>
       </button>
     </div>
     } @else {
@@ -118,7 +142,7 @@
         class="flex items-center gap-2 px-4 py-2 bg-transparent dark:bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-xl border border-gray-200 dark:border-neutral-700"
       >
         <mat-icon class="">expand_circle_up</mat-icon>
-        <span>Cerrar Menu</span>
+        <span class="hidden sm:block">{{ 'recruiter.close_menu' | transloco }}</span>
       </button>
     </div>
     <div>
@@ -131,19 +155,34 @@
   <div class="flex-1 p-4 overflow-auto">
     @if (currentView === 'jobs') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
-      Puestos
+      {{ 'recruiter.posts' | transloco }}
+    </h1>
+    @for (job of jobs; track job.jobId) {
+      <app-jobs-list
+        [job]="job"
+      >
+      </app-jobs-list>
+    }
+    }
+    @if (currentView === 'jobs_edit') {
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
+      {{ 'recruiter.posts_edit' | transloco }}
     </h1>
     <app-jobs-crud></app-jobs-crud>
-    } @if (currentView === 'exams') {
+    }
+    @if (currentView === 'exams') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
-      Exams
+      {{ 'recruiter.exams_edit' | transloco }}
     </h1>
     <app-exam-crud></app-exam-crud>
     }
     @if (currentView === 'candidates') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Candidatos</h1>
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">{{ 'recruiter.candidates' | transloco }}</h1>
     @for (candidate of candidates; track candidate.candidateUID) {
-      <app-candidates-list  [candidate]="candidate"></app-candidates-list>
+      <app-candidates-list
+        [candidate]="candidate"
+        [results]="getResultsForCandidate(candidate.candidateUID)">
+      </app-candidates-list>
     <!-- <app-exam-result-list></app-exam-result-list> -->
     }
     }
@@ -172,12 +211,12 @@
       [results]="userWithResults.results"
     ></app-student-list>
     } } -->
-    <!-- @if (currentView === 'results') {
+    @if (currentView === 'results') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Exams Results</h1>
     @for (result of results; track result.id) {
     <app-exam-result-list [result]="result"></app-exam-result-list>
     }
-    } -->
+    }
     @if (currentView === 'config') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
       Configuration

@@ -47,6 +47,7 @@ export class JobsCrudComponent {
     active: true, // Valor por defecto para nuevos trabajos
     examId: '',
     examActive: false,
+    // jobId: ''
   };
 
   errorMessage: string = '';
@@ -100,6 +101,7 @@ export class JobsCrudComponent {
           if (job) {
             // Poblar el formulario con todos los datos del trabajo, incluyendo los nuevos
             this.newJob = {
+              jobId: job.jobId,
               name: job.name,
               description: job.description,
               ownerId: job.ownerId, // Usar el ownerId del trabajo cargado

@@ -131,7 +131,7 @@ export class ExamCrudService {
     const examData: Partial<Exam> = {
       title: exam.title!.trim(),
       teacherId: exam.teacherId!,
-      teacherName: exam.teacherName?.trim() || undefined,
+      teacherName: exam.teacherName?.trim() || "",
       questions: exam.questions!,
       // courseId: exam.courseId,
       passingPercentage: exam.passingPercentage,

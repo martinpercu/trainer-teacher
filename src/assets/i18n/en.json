@@ -25,5 +25,23 @@
     "to_login": "to Login",
     "to_signup": "to SignUp",
     "login_or_signup": "Login or SignUp"
+  },
+  "recruiter": {
+    "posts" : "Positions",
+    "posts_edit" : "Positions edit",
+    "exams": "Exams",
+    "exams_edit": "Exams edit",
+    "candidates": "Candidates",
+    "close_menu": "Close Menu",
+    "open_menu": "Open Menu",
+    "see_cv": "See Resume",
+    "download_cv": "Download Resume",
+    "details": "Details",
+    "results": "Results",
+    "results_all": "Results All",
+    "name": "Name",
+    "last_name": "Last Name",
+    "email": "Email",
+    "no_result": "No result for this candidate."
   }
 }
