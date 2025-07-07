@@ -32,6 +32,8 @@
     "exams": "Examens",
     "exams_edit": "Examens editer",
     "candidates": "Candidats",
+    "no_candidates": "Pas de candidat pour ce poste",
+    "candidates_test_ok": "Candidats Examen OK",
     "close_menu": "Fermer le menu",
     "open_menu": "Ouvrir le menu",
     "see_cv": "Voir le CV",

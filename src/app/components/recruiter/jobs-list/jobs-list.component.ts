@@ -6,6 +6,8 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { MatIconModule } from '@angular/material/icon';
 
 import { Job } from '@models/job';
+import { Candidate } from '@models/candidate';
+import { Result } from '@models/result';
 
 @Component({
   selector: 'app-jobs-list',
@@ -16,10 +18,14 @@ import { Job } from '@models/job';
 export class JobsListComponent {
 
   @Input() job!: Job;
+  @Input() candidatesForJob!: Candidate[];
+  @Input() results!: Result[]
 
 
   ngOnInit() {
     console.log(this.job);
+    console.log(this.candidatesForJob);
+    console.log(this.results);
   }
 
 
