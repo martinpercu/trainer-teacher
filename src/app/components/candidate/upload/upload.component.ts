@@ -44,6 +44,8 @@ export class UploadComponent {
   if (this.selectedFile && this.userId) {
     const path = `resumes/${this.userId}/${Date.now()}_${this.selectedFile.name}`;
     const fileName = this.selectedFile.name
+    console.log(path);
+
     this.storageService.uploadFile(this.selectedFile, path).subscribe({
       next: (url) => {
         console.log('Received URL:', url, typeof url); // Debug

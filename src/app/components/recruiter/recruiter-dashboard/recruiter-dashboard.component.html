@@ -169,73 +169,64 @@
 
       }
     </div>
+
   </div>
 
+
   <div class="flex-1 p-4 overflow-auto">
+
     @if (currentView === 'jobs') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
       {{ "recruiter.posts" | transloco }}
     </h1>
-    @for (job of jobs; track job.jobId) {
-    <app-jobs-list
-      [job]="job"
-      [candidatesForJob]="getCandidatesForJob(job.jobId)"
-      [results]="getResultsForJobCandidates(job.jobId)"
-    >
-    </app-jobs-list>
-    } } @if (currentView === 'jobs_edit') {
+      @for (job of jobsOrderedByCandidates; track job.jobId) {
+      <app-jobs-list
+        [job]="job"
+        [candidatesForJob]="getCandidatesForJob(job.jobId)"
+        [candidatesForJobAndExamPassed]="getApprovedCandidatesForJob(job.jobId)"
+      >
+      </app-jobs-list>
+      }
+    }
+
+    @if (currentView === 'jobs_edit') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
       {{ "recruiter.posts_edit" | transloco }}
     </h1>
     <app-jobs-crud></app-jobs-crud>
-    } @if (currentView === 'exams') {
+    }
+
+    @if (currentView === 'exams') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
       {{ "recruiter.exams_edit" | transloco }}
     </h1>
     <app-exam-crud></app-exam-crud>
-    } @if (currentView === 'candidates') {
+    }
+
+    @if (currentView === 'candidates') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
       {{ "recruiter.candidates" | transloco }}
     </h1>
-    @for (candidate of candidates; track candidate.candidateUID) {
-    <app-candidates-list
-      [candidate]="candidate"
-      [results]="getResultsForCandidate(candidate.candidateUID)"
-    >
-    </app-candidates-list>
-    <!-- <app-exam-result-list></app-exam-result-list> -->
-    } }
+      @for (candidate of candidates; track candidate.candidateUID) {
+      <app-candidates-list
+        [candidate]="candidate"
+        [results]="getResultsForCandidate(candidate.candidateUID)"
+      >
+      </app-candidates-list>
+      <!-- <app-exam-result-list></app-exam-result-list> -->
+      }
+    }
 
-    <!-- @if (currentView === 'candidates') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
-      Students
-    </h1>
-    @for (userWithResults of usersWithResults; track
-    userWithResults.user.userUID) {
-    <app-student-list
-      [user]="userWithResults.user"
-      [results]="userWithResults.results"
-    ></app-student-list>
-    } } -->
-
-    <!-- @if (currentView === 'candidates') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
-      Students
-    </h1>
-    @for (userWithResults of usersWithResults; track
-    userWithResults.user.userUID) {
-    <app-student-list
-      [user]="userWithResults.user"
-      [results]="userWithResults.results"
-    ></app-student-list>
-    } } -->
     @if (currentView === 'results') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
       Exams Results
     </h1>
-    @for (result of results; track result.id) {
-    <app-exam-result-list [result]="result"></app-exam-result-list>
-    } } @if (currentView === 'config') {
+      @for (result of results; track result.id) {
+      <app-exam-result-list [result]="result"></app-exam-result-list>
+      }
+    }
+
+    @if (currentView === 'config') {
     <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
       Configuration
     </h1>
@@ -243,5 +234,29 @@
       Configuration settings coming soon.
     </p>
     }
+
+    <!-- @if (currentView === 'candidates') {
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
+      Students
+    </h1>
+    @for (userWithResults of usersWithResults; track
+    userWithResults.user.userUID) {
+    <app-student-list
+      [user]="userWithResults.user"
+      [results]="userWithResults.results"
+    ></app-student-list>
+    } } -->
+
+    <!-- @if (currentView === 'candidates') {
+    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
+      Students
+    </h1>
+    @for (userWithResults of usersWithResults; track
+    userWithResults.user.userUID) {
+    <app-student-list
+      [user]="userWithResults.user"
+      [results]="userWithResults.results"
+    ></app-student-list>
+    } } -->
   </div>
 </div>
