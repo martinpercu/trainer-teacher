@@ -30,7 +30,7 @@ export class CandidateEditComponent {
   candidate!: Candidate;
   candidateId!: string;
 
-  editPersoInfo: boolean = false;
+  editPersoInfo: boolean = true;
   editShipping: boolean = false;
   editBilling: boolean = false;
 

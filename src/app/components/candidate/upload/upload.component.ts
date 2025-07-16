@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { StorageService } from '@services/storage.service';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 import { CandidateService } from '@services/candidate.service';
 import { AuthService } from '@services/auth.service';
@@ -8,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-upload',
-  imports: [CommonModule, FormsModule],
+  imports: [TranslocoPipe, CommonModule, FormsModule],
   templateUrl: './upload.component.html',
 })
 export class UploadComponent {
