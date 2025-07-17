@@ -6,8 +6,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-pdfviewer',
   imports: [],
-  templateUrl: './pdfviewer.component.html',
-  styleUrl: './pdfviewer.component.css'
+  templateUrl: './pdfviewer.component.html'
 })
 export class PdfviewerComponent {
   private pagesService = inject(PagesService);
