@@ -2,15 +2,11 @@ import { Routes } from '@angular/router';
 
 import { TeacherMainPageComponent } from '@pages/teacher-main-page/teacher-main-page.component'
 import { LoginComponent } from '@components/auth/login/login.component';
-import { ChatComponent } from '@components/chat/chat.component';
-import { LeftMenuComponent } from '@components/left-menu/left-menu.component';
-import { EthicSupervisorsComponent } from '@components/pdfs/ethic-supervisors/ethic-supervisors.component';
+import { ChatComponent } from '@teacher/chat/chat.component';
+// import { LeftMenuComponent } from '@teacher/left-menu/left-menu.component';
+// import { EthicSupervisorsComponent } from '@components/pdfs/ethic-supervisors/ethic-supervisors.component';
 import { PdfviewerComponent } from '@components/pdfviewer/pdfviewer.component';
 import { MainselectorPageComponent } from '@pages/mainselector-page/mainselector-page.component';
-<<<<<<< land-to-select-teacher
-=======
-
->>>>>>> master
 
 
 export const routes: Routes = [
@@ -35,8 +31,16 @@ export const routes: Routes = [
     path:'chat',
     component: ChatComponent
   },
-  {
-    path:'leftmenu',
-    component: LeftMenuComponent
-  }
+  // {
+  //   path:'leftmenu',
+  //   component: LeftMenuComponent
+  // }
+  // {
+  //   path:'leftmenu',
+  //   component: LeftMenuComponent
+  // },
+  // {
+  //   path:'pdf',
+  //   component: EthicSupervisorsComponent
+  // }
 ];
