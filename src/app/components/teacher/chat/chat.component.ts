@@ -9,8 +9,8 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { FormsModule } from '@angular/forms';
 
-import { MessageWaitingComponent } from '@teacher/message-waiting/message-waiting.component';
-import { TopRightComponent } from '@teacher/top-right/top-right.component';
+import { MessageWaitingComponent } from '@components/message-waiting/message-waiting.component';
+import { TopRightComponent } from '@components/top-right/top-right.component';
 
 import { ChatMessage } from '@models/chatMessage';
 
