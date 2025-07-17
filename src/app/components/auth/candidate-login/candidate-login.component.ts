@@ -6,10 +6,11 @@ import { CandidateAuthService } from '@services/candidate-auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { JobCrudService } from '@services/job-crud.service';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-candidate-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, TranslocoPipe],
   templateUrl: './candidate-login.component.html',
 })
 export class CandidateLoginComponent {

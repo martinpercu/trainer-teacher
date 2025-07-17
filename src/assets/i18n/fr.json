@@ -2,6 +2,10 @@
   "lang": "fr",
   "hey": "Bonjour",
   "go_admin": "Aller vers Admin",
+  "auth": {
+    "error_already_use": "Courriel dejà registré",
+    "go_login": "allez vers Login!"
+  },
   "main": {
     "go_admin": "Aller vers Admin",
     "welcome": "Welcome!",
@@ -48,12 +52,34 @@
     "no_result": "Aucun résultat pour ce candidat."
   },
   "candidate": {
-    "upload" : "Envoyer",
+    "excellent": "Excellent",
+    "continue_upload_cv": "continuez à télécharger votre CV",
+    "upload" : "Envoyer votre CV",
+    "accepted_format_start" : "Formats acceptés : .pdf, .docx, .doc, .odt (Taille maximale : ",
+    "accepted_format_end" : " Mo)",
+    "file_exceeds_size" : "Le fichier dépasse la taille maximale de ",
+    "file_exceeds_size_end" : " Mo.",
     "cv" : "CV",
     "this_job" : "Ce le poste :",
     "title_job": "How it works",
     "description": "See Docs",
     "unique_id": "Take the Exam",
-    "exam_id": "English"
+    "exam_id": "English",
+    "welcome_to_process": "Benvenu au process de selection pour"
+  },
+  "candidate_profile": {
+    "firstname" : "Prénom",
+    "lastname" : "Nom",
+    "email" : "E-mail",
+    "password": "Mot de passe",
+    "register": "Créer compte et continuer",
+    "login": "Se connecter",
+    "already_account": "J'ai déjà un compte.",
+    "not_account": "Pas de compte ? Créez-en un.",
+    "phone_number": "Téléphone ",
+    "phone_number_placeholder": "06.12.34.56.78",
+    "city": "Ville",
+    "state": "Province",
+    "zipcode": "Code postal"
   }
 }

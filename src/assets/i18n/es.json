@@ -2,6 +2,10 @@
   "lang": "es",
   "hey": "Hola",
   "go_admin": "Ir Area Administrador",
+  "auth": {
+    "error_already_use": "Email ya en uso.",
+    "go_login": "Click en \"Ya tengo cuenta\""
+  },
   "main": {
     "go_admin": "Ir Area Administrador",
     "welcome": "Bienvenido!",
@@ -48,12 +52,34 @@
     "no_result": "No hay resultados para este candidato."
   },
   "candidate": {
-    "upload" : "Subir",
+    "excellent": "Excelente",
+    "continue_upload_cv": "continuamos con la carga de tu CV",
+    "upload" : "Cargar CV",
+    "accepted_format_start" : "Formatos aceptados: .pdf, .docx, .doc, .odt (Tamaño máximo:",
+    "accepted_format_end" : "MB)",
+    "file_exceeds_size" : "El archivo excede el tamaño máximo de ",
+    "file_exceeds_size_end" : "MB.",
     "cv" : "CV",
     "this_job" : "Este es el puesto:",
     "title_job": "How it works",
     "description": "See Docs",
     "unique_id": "Take the Exam",
-    "exam_id": "English"
+    "exam_id": "English",
+    "welcome_to_process": "Bienvendo al proceso de seleccion para"
+  },
+  "candidate_profile": {
+    "firstname" : "Nombre",
+    "lastname" : "Apellido",
+    "email" : "Email",
+    "password": "Contraseña",
+    "register": "Crear cuenta y Continuar",
+    "login": "Iniciar Sesión",
+    "already_account": "Ya tengo cuenta.",
+    "not_account": "¿No tienes cuenta? Crea una.",
+    "phone_number": "Teléfono",
+    "phone_number_placeholder": "11-1234-1234",
+    "city": "Ciudad",
+    "state": "Provincia",
+    "zipcode": "Codigo Postal"
   }
 }

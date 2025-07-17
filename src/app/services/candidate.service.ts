@@ -110,7 +110,6 @@ getCandidatesByRecruiter(recruiterUid: string): Observable<Candidate[]> {
 
   async getThisCandidate(userId: string) {
     // const clientDocRef = doc(this.firestore, `users/${clientId}`);
-
     const userDocRef = doc(this.firestore, 'candidates', userId);
     console.log(userDocRef);
     const candidate = (await getDoc(userDocRef)).data();
@@ -196,9 +195,15 @@ getCandidatesByRecruiter(recruiterUid: string): Observable<Candidate[]> {
     console.log(candidate);
 
     this.updateOneUser(candidate, userId);
-
-
-
     console.log(jobId, jobRecruiterId);
   }
+
+  // async getThisCurrentCandidate() {
+  //   // const clientDocRef = doc(this.firestore, `users/${clientId}`);
+  //   const userDocRef = doc(this.firestore, 'candidates', userId);
+  //   console.log(userDocRef);
+  //   const candidate = (await getDoc(userDocRef)).data();
+  //   console.log(candidate);
+  //   return candidate as Candidate;
+  // }
 }

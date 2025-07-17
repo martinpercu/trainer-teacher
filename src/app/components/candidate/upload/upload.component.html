@@ -1,68 +1,24 @@
-<div class="text-center flex flex-col w-max m-auto">
-  <input type="file" (change)="onFileSelected($event)" />
-  <button
-    class="rounded-md bg-green-200 border-2 font-semibold p-4"
-    [disabled]="!selectedFile"
-    (click)="uploadResume()">
-      {{ "candidate.upload" | transloco}} {{ "candidate.cv" | transloco}}
-    </button>
-</div>
+<form class="space-y-6">
+    <!-- CV Upload Field -->
+    <div class="flex flex-col text-center">
+      <!-- <label for="cv-upload" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Cargar CV:</label> -->
+      <!-- Input de tipo file oculto -->
+      <input type="file" id="cv-upload" (change)="onFileSelected($event)" accept=".pdf,.docx,.doc,.odt" required
+            class="hidden"> <!-- Clase 'hidden' para ocultar el input nativo -->
 
-    <div class="bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-xl w-full max-w-lg border border-neutral-200 dark:border-neutral-700">
-        <!-- Main application title -->
-        <h1 class="text-3xl font-extrabold text-center text-neutral-900 dark:text-neutral-100 mb-4">Empresa X</h1>
-        <p class="text-center text-neutral-600 dark:text-neutral-400 mb-8 text-lg">
-            ¡Casi listo! Por favor, adjunta tu currículum vitae y carta de presentación.
-        </p>
-
-        <!-- CV and Cover Letter Upload Section -->
-        <h2 class="text-2xl font-semibold text-neutral-700 dark:text-neutral-300 mb-5 text-center">2. Adjuntar Currículum Vitae (CV) y Carta de Presentación</h2>
-
-        <form class="space-y-6">
-            <!-- CV Upload Field -->
-            <div>
-                <label for="cv-upload" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Cargar CV:</label>
-                <input type="file" id="cv-upload" name="cv-upload" accept=".pdf,.docx,.doc" required
-                       class="block w-full text-sm text-neutral-500
-                              file:mr-4 file:py-2 file:px-4
-                              file:rounded-md file:border-0
-                              file:text-sm file:font-semibold
-                              file:bg-blue-50 file:text-blue-700
-                              hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-200 dark:hover:file:bg-blue-800
-                              dark:text-neutral-400">
-                <p class="mt-2 text-xs text-neutral-500 dark:text-neutral-400">Formatos aceptados: .pdf, .docx, .doc (Tamaño máximo: 5MB)</p>
-            </div>
-
-            <!-- Cover Letter Upload Field (Optional) -->
-            <div>
-                <label for="cover-letter-upload" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Cargar Carta de Presentación (Opcional):</label>
-                <input type="file" id="cover-letter-upload" name="cover-letter-upload" accept=".pdf,.docx,.doc"
-                       class="block w-full text-sm text-neutral-500
-                              file:mr-4 file:py-2 file:px-4
-                              file:rounded-md file:border-0
-                              file:text-sm file:font-semibold
-                              file:bg-green-50 file:text-green-700
-                              hover:file:bg-green-100 dark:file:bg-green-900 dark:file:text-green-200 dark:hover:file:bg-green-800
-                              dark:text-neutral-400">
-                <p class="mt-2 text-xs text-neutral-500 dark:text-neutral-400">Formatos aceptados: .pdf, .docx, .doc (Tamaño máximo: 5MB)</p>
-            </div>
-
-            <!-- Navigation buttons -->
-            <div class="flex justify-between pt-4">
-                <button type="button"
-                        class="py-2 px-6 border border-neutral-300 rounded-md shadow-sm
-                               text-base font-medium text-neutral-700 bg-white hover:bg-neutral-50
-                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500
-                               dark:bg-neutral-700 dark:text-neutral-200 dark:border-neutral-600 dark:hover:bg-neutral-600 dark:focus:ring-offset-neutral-800">
-                    Anterior
-                </button>
-                <button type="submit"
-                        class="py-2 px-6 border border-transparent rounded-md shadow-sm
-                               text-base font-medium text-white bg-blue-600 hover:bg-blue-700
-                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
-                               dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-offset-neutral-800">
-                    Siguiente
-                </button>
-            </div>
-        </form>
+      <!-- Botón personalizado para "Cargar Archivo" -->
+      <label for="cv-upload"
+            class="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm
+                    text-base font-medium text-white bg-blue-600 hover:bg-blue-700 cursor-pointer
+                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+                    dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-offset-neutral-800">
+          {{ "candidate.upload" | transloco}}
+      </label>
+      <p class="mt-3 text-xs text-neutral-500 dark:text-neutral-400">{{ "candidate.accepted_format_start" | transloco}}{{ MAX_FILE_SIZE_MB }}{{ "candidate.accepted_format_end" | transloco}}</p>
+    <!-- Mensaje de error de tamaño de archivo -->
+      <p *ngIf="fileSizeError" class="mt-1 text-sm text-red-600 dark:text-red-400">
+          {{ "candidate.file_exceeds_size" | transloco}} {{ MAX_FILE_SIZE_MB }}{{ "candidate.file_exceeds_size_end" | transloco}}
+      </p>
     </div>
+
+</form>

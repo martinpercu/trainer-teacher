@@ -1,23 +1,17 @@
-<!--
-  Este es un formulario de perfil de candidato creado con Angular y rediseñado con Tailwind CSS.
-  - Se ha añadido soporte para modo oscuro (dark mode).
-  - Los estilos se han simplificado y unificado para una apariencia más limpia.
-  - Se mantiene la funcionalidad de Angular y la estructura general del formulario.
-  - Se utilizan las clases de utilidad de Tailwind CSS para el diseño y la capacidad de respuesta.
--->
+
 @if(candidate) {
-<div class="m-auto min-w-80 max-w-4xl p-2 sm:p-6 md:p-8 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+<!-- <div class="m-auto min-w-80 max-w-4xl p-2 sm:p-6 md:p-8 dark:bg-gray-900 text-gray-800 dark:text-gray-200"> -->
 
   <form [formGroup]="form" (ngSubmit)="saveUser($event)">
 
     <!-- SECCIÓN DE INFORMACIÓN PERSONAL -->
-    <h2 class="text-xl font-semibold text-center mt-2 mb-4 uppercase tracking-wider">
-      Personal Information
-    </h2>
+    <!-- <h2 class="text-xl font-semibold text-center mt-2 mb-4 uppercase tracking-wider">
+      Basic Informacion
+    </h2> -->
 
     <!-- VISTA DE INFORMACIÓN PERSONAL (NO EDICIÓN) -->
-    @if(editPersoInfo == false) {
-    <div class="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
+    @if(editBasicInfo == false) {
+    <!-- <div class="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm"> -->
       <div class="flex justify-between items-start mb-4">
         <div class="text-lg font-medium">
           {{this.candidate.username}} {{this.candidate.lastname}}
@@ -45,18 +39,18 @@
         "{{ this.candidate.optionalText }}"
       </div>
       }
-    </div>
+    <!-- </div> -->
     }
 
     <!-- FORMULARIO DE EDICIÓN DE INFORMACIÓN PERSONAL -->
-    @if(editPersoInfo == true) {
-    <div class="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
+    @if(editBasicInfo == true) {
+    <!-- <div class="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm"> -->
       <div class="grid gap-y-4 gap-x-6 mb-6 sm:grid-cols-2">
 
         <!-- First Name -->
-        <div class="sm:col-span-1">
-          <label for="firstname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">First Name:</label>
-          <input type="text" id="firstname" formControlName="firstname"
+        <div class="">
+          <label for="firstname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">{{ "candidate_profile.firstname" | transloco}}:</label>
+          <input type="text" id="firstname" formControlName="firstname" placeholder="{{ 'candidate_profile.firstname' | transloco}}"
                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                  [class.border-green-500]="isfirstnameFieldValid" [class.border-red-500]="isfirstnameFieldInvalid">
           <div class="mt-1 text-xs text-red-600 dark:text-red-400 h-4">
@@ -67,9 +61,9 @@
         </div>
 
         <!-- Last Name -->
-        <div class="sm:col-span-1">
-          <label for="lastname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">Last Name:</label>
-          <input type="text" id="lastname" formControlName="lastname"
+        <div class="">
+          <label for="lastname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">{{ 'candidate_profile.lastname' | transloco}}:</label>
+          <input type="text" id="lastname" formControlName="lastname" placeholder="{{ 'candidate_profile.lastname' | transloco}}"
                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                  [class.border-green-500]="islastnameFieldValid" [class.border-red-500]="islastnameFieldInvalid">
            <div class="mt-1 text-xs text-red-600 dark:text-red-400 h-4">
@@ -79,7 +73,7 @@
         </div>
 
         <!-- Email -->
-        <div class="sm:col-span-2">
+        <!-- <div class="sm:col-span-2">
           <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">Contact Email:</label>
           <input type="email" id="email" formControlName="email"
                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -89,11 +83,15 @@
             @if (emailField?.hasError('required')){ <span>This input is required</span> }
             @if (emailField?.hasError('maxlength')){ <span>No more than 80 letters</span> }
           </div>
-        </div>
+        </div> -->
+          <!-- <div class="flex flex-row">
+            <span class="font-semibold">Email:</span>
+            {{this.candidate.email}}
+          </div> -->
 
         <!-- Phone Number -->
-        <div class="sm:col-span-1">
-          <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">Phone number:</label>
+        <div class="">
+          <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">{{ 'candidate_profile.phone_number' | transloco}}:</label>
           <div class="relative">
             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
               <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 19 18">
@@ -102,7 +100,7 @@
             </div>
             <input type="tel" id="phone" formControlName="phone"
                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                   placeholder="123-456-7890" [class.border-green-500]="isphoneFieldValid" [class.border-red-500]="isphoneFieldInvalid">
+                   placeholder="{{ 'candidate_profile.phone_number_placeholder' | transloco}}" [class.border-green-500]="isphoneFieldValid" [class.border-red-500]="isphoneFieldInvalid">
           </div>
           <div class="mt-1 text-xs text-red-600 dark:text-red-400 h-4">
             @if (phoneField?.hasError('minlength')){ <span>At least 9 numbers</span> }
@@ -112,19 +110,19 @@
         </div>
 
         <!-- City -->
-        <div class="sm:col-span-1">
-          <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">City:</label>
+        <div class="">
+          <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">{{ 'candidate_profile.city' | transloco}}:</label>
           <input type="text" id="city" formControlName="city"
                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
         </div>
 
-        <!-- Birthday -->
-        <div class="sm:col-span-1">
-          <label for="birthdate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">Birthday:</label>
-          <input type="date" id="birthdate" formControlName="birthdate"
+        <!-- Provincia State -->
+        <div class="">
+          <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">{{ 'candidate_profile.state' | transloco}}:</label>
+          <input type="text" id="state" formControlName="state"
                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-          <div class="h-4"></div>
         </div>
+
 
         <!-- ZIP Code -->
         <!-- <div class="sm:col-span-1">
@@ -154,16 +152,16 @@
         </button>
       </div>
 
-    </div>
+    <!-- </div> -->
     }
 
     <!-- SECCIÓN DE DIRECCIÓN DE ENVÍO -->
-    <h2 class="text-xl font-semibold text-center mt-12 mb-4 uppercase tracking-wider">
-      Shipping Address
-    </h2>
+    <!-- <h2 class="text-xl font-semibold text-center mt-12 mb-4 uppercase tracking-wider">
+      Extra Address
+    </h2> -->
 
     <!-- VISTA DE DIRECCIÓN DE ENVÍO (NO EDICIÓN) -->
-    @if(editShipping == false) {
+    <!-- @if(editShipping == false) {
     <div class="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
         <div class="flex justify-between items-start mb-2">
             <div class="text-sm">
@@ -180,7 +178,7 @@
             </button>
         </div>
     </div>
-    }
+    } -->
 
     <!-- FORMULARIO DE EDICIÓN DE DIRECCIÓN DE ENVÍO -->
     @if(editShipping == true) {
@@ -203,6 +201,14 @@
           <input type="text" id="addressExtra" formControlName="addressExtra"
                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
         </div> -->
+
+        <!-- Birthday -->
+        <div class="sm:col-span-1">
+          <label for="birthdate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">Birthday:</label>
+          <input type="date" id="birthdate" formControlName="birthdate"
+                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          <div class="h-4"></div>
+        </div>
 
         <!-- City -->
         <div class="sm:col-span-1">
@@ -276,6 +282,5 @@
 
   </form>
 
-</div>
+<!-- </div> -->
 }
-<div class="mb-10"></div>

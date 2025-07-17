@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CandidateAuthService } from '@services/candidate-auth.service';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 import {
   FormControl,
@@ -16,7 +17,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-candidate-edit',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslocoPipe],
   templateUrl: './candidate-edit.component.html',
 })
 export class CandidateEditComponent {
@@ -30,9 +31,9 @@ export class CandidateEditComponent {
   candidate!: Candidate;
   candidateId!: string;
 
-  editPersoInfo: boolean = true;
+  editBasicInfo: boolean = true;
   editShipping: boolean = false;
-  editBilling: boolean = false;
+  // editBilling: boolean = false;
 
   constructor() {
     const candidateSigned = this.candidateService.candidateSig();
@@ -85,16 +86,13 @@ export class CandidateEditComponent {
     // console.log(this.userId);
 
     this.getOneCandidate(); // very important each time save!!!
-    this.editPersoInfo = false;
+    this.editBasicInfo = false;
     this.editShipping = false;
-    this.editBilling = false;
+    // this.editBilling = false;
     } else {
       this.form.markAllAsTouched();
     };
-
-
   };
-
 
   get firstnameField() {
     return this.form.get('firstname')
@@ -111,7 +109,6 @@ export class CandidateEditComponent {
   get birthdateField() {
     return this.form.get('birthdate')
   };
-
   get addressField() {
     return this.form.get('address')
   };
@@ -195,24 +192,23 @@ export class CandidateEditComponent {
 
 
   changeEditPersonalInfo() {
-    this.editPersoInfo = !this.editPersoInfo;
+    this.editBasicInfo = !this.editBasicInfo;
     this.editShipping = false;
-    this.editBilling = false;
-    console.log(this.editPersoInfo);
+    // this.editBilling = false;
+    console.log(this.editBasicInfo);
   };
 
   changeEditShipping() {
     this.editShipping = !this.editShipping;
-    this.editPersoInfo = false;
-    this.editBilling = false;
+    this.editBasicInfo = false;
+    // this.editBilling = false;
     console.log(this.editShipping);
   };
 
   changeEditBilling() {
-    this.editBilling = !this.editBilling;
+    // this.editBilling = !this.editBilling;
     this.editShipping = false;
-    this.editPersoInfo = false;
-    console.log(this.editBilling);
+    this.editBasicInfo = false;
   };
 
   updateUser() {

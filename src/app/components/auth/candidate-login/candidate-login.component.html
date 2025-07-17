@@ -10,15 +10,15 @@
             <div id="login-form">
                 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
                     <div>
-                        <label for="email-login" class="block text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">Correo Electrónico:</label>
+                        <label for="email-login" class="block text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">{{ 'candidate_profile.email' | transloco}}:</label>
                         <input type="email" id="email-login" name="email-login" formControlName="email"
                                class="mt-1 block w-full px-4 py-2 border border-neutral-300 rounded-md shadow-sm
                                       focus:outline-none focus:ring-blue-500 focus:border-blue-500
                                       bg-neutral-50 dark:bg-neutral-700 dark:border-neutral-600 dark:text-neutral-100"
-                               placeholder="tu@ejemplo.com">
+                               placeholder="{{ 'candidate_profile.email' | transloco}}">
                     </div>
                     <div>
-                        <label for="password-login" class="block text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">Contraseña:</label>
+                        <label for="password-login" class="block text-left text-sm font-medium text-neutral-700 dark:text-neutral-300">{{ "candidate_profile.password" | transloco}}:</label>
                         <input type="password" id="password-login" name="password-login" formControlName="password"
                                class="mt-1 block w-full px-4 py-2 border border-neutral-300 rounded-md shadow-sm
                                       focus:outline-none focus:ring-blue-500 focus:border-blue-500
@@ -30,7 +30,7 @@
                                    text-base font-medium text-white bg-blue-600 hover:bg-blue-700
                                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
                                    dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-offset-neutral-800">
-                        Iniciar Sesión
+                        {{ "candidate_profile.login" | transloco}}
                     </button>
                     <!-- <p class="text-center text-sm">
                         <a href="#" class="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">¿Olvidaste tu contraseña?</a>

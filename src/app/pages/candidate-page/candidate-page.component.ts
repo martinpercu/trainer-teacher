@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UpperCasePipe } from '@angular/common'
 
 import { TranslocoPipe } from '@jsverse/transloco';
 
@@ -14,12 +15,13 @@ import { CandidateEditComponent } from '@candidate/candidate-edit/candidate-edit
 
 import { UploadComponent } from '@components/candidate/upload/upload.component';
 
-import { Job } from '@models/job'
+import { Job } from '@models/job';
+import { Candidate } from '@models/candidate';
 
 
 @Component({
   selector: 'app-candidate-page',
-  imports: [TranslocoPipe, CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent],
+  imports: [TranslocoPipe, UpperCasePipe,  CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent],
   templateUrl: './candidate-page.component.html'
 })
 export class CandidatePageComponent {
@@ -36,6 +38,8 @@ export class CandidatePageComponent {
   showRegister: boolean = true;
   showLogin: boolean = false;
 
+
+
   async ngOnInit() {
     // Extraer el jobPositionId
     const jobPositionId = this.route.snapshot.paramMap.get('jobId'); // Ruta /job/:jobId
@@ -51,13 +55,15 @@ export class CandidatePageComponent {
         this.router.navigateByUrl(`/job`);
       }
     }
-    const algo = this.candidateAuthService.currentCandidateSig()
-    console.log(algo);
   }
 
   switchLoginRegister() {
     this.showLogin = !this.showLogin;
     this.showRegister = !this.showRegister;
+  }
+
+  checkusuer() {
+    console.log(this.candidateService.candidateSig());
   }
 
 }

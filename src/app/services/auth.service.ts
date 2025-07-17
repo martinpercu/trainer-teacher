@@ -14,6 +14,7 @@ import { User } from '@models/user';
 import { UserService } from '@services/user.service';
 import { CandidateService } from '@services/candidate.service';
 import { RecruiterService } from '@services/recruiter.service';
+import { Candidate } from '@models/candidate';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +29,7 @@ export class AuthService {
   currentUserSig = signal<User | null | undefined>(undefined);
 
   user!: User;
+  candidateCurrent = signal<Candidate | null | undefined>(undefined);
 
   constructor() {
     this.user$.subscribe(async (firebaseUser) => {
@@ -38,7 +40,7 @@ export class AuthService {
         console.log('in get one User');
         console.log(user);
         if (!user) {
-          console.log('no hay user');
+          console.log('no hay user ==> HABRÁ candidate ???');
           const user = await this.candidateService.getOneCandidate(
             firebaseUser.uid
           );

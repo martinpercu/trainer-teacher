@@ -7,10 +7,13 @@ import { CandidateAuthService } from '@services/candidate-auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { JobCrudService } from '@services/job-crud.service';
+import { TranslocoPipe } from '@jsverse/transloco';
+
+// import { Translo }
 
 @Component({
   selector: 'app-candidate-register',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, TranslocoPipe],
   templateUrl: './candidate-register.component.html',
 })
 export class CandidateRegisterComponent {
@@ -28,6 +31,7 @@ export class CandidateRegisterComponent {
     password: ['', Validators.required],
   });
   errorMessage: string | null = null;
+  errorMessageEmailAlreadyUsed!: boolean;
 
   jobRecruiterId: string = '';
   jobId: string = '';
@@ -48,6 +52,7 @@ export class CandidateRegisterComponent {
         console.log('no Recuiter for this Job');
       }
     }
+    this.errorMessageEmailAlreadyUsed = false
   }
 
   onSubmit(): void {
@@ -56,11 +61,25 @@ export class CandidateRegisterComponent {
       .register(rawForm.email, rawForm.username, rawForm.password, this.jobRecruiterId, this.jobId)
       .subscribe({
         next: () => {
+          if(this.jobId){
+          this.router.navigateByUrl(`/job/${this.jobId}`);
+          }
+          else {
           this.router.navigateByUrl('/job');
+          }
         },
         error: (err) => {
+          console.log(err.code);
+          if(err.code == 'auth/email-already-in-use'){
+            this.errorMessageEmailAlreadyUsed = true;
+          }else {
           this.errorMessage = err.code;
+          console.log('entro al else');
+
+          }
+
         },
       });
   }
+
 }

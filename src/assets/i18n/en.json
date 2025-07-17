@@ -2,6 +2,10 @@
   "lang": "en",
   "hey": "Hello",
   "go_admin": "Go to Admin Zone",
+  "auth": {
+    "error_already_use": "Email already in use.",
+    "go_login": "Click in \"I have an account\""
+  },
   "main": {
     "go_admin": "Go to Admin Zone",
     "welcome": "Welcome!",
@@ -48,12 +52,34 @@
     "no_result": "No result for this candidate."
   },
   "candidate": {
-    "upload" : "Upload",
+    "excellent": "Excellent",
+    "continue_upload_cv": "continue uploading your resume",
+    "upload" : "Send your Resume",
+    "accepted_format_start" : "Accepted formats: .pdf, .docx, .doc, .odt (Maximum size:",
+    "accepted_format_end" : "MB)",
+    "file_exceeds_size" : "The file exceeds the maximum size of ",
+    "file_exceeds_size_end" : "MB.",
     "cv" : "resume",
     "this_job" : "This is the job: ",
     "title_job": "How it works",
     "description": "See Docs",
     "unique_id": "Take the Exam",
-    "exam_id": "English"
+    "exam_id": "English",
+    "welcome_to_process": "Welcome to recruitment process to"
+  },
+  "candidate_profile": {
+    "firstname" : "First name",
+    "lastname" : "Last name",
+    "email" : "Email",
+    "password": "Password",
+    "register": "Create and Continue",
+    "login": "Log in",
+    "already_account": "I have an account",
+    "not_account": "Don't have an account? Create one.",
+    "phone_number": "Phone number",
+    "phone_number_placeholder": "123-345-6789",
+    "city": "City",
+    "state": "State",
+    "zipcode": "Zip Code"
   }
 }

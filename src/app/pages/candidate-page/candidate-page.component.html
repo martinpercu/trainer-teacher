@@ -8,10 +8,12 @@
 
     @if(job){
     <div class="flex flex-col">
-    <h1 class="text-xl font-extrabold text-center text-neutral-900 dark:text-neutral-100 mb-4">Bienvenido</h1>
+    <!-- <h1 class="text-xl font-extrabold text-center text-neutral-900 dark:text-neutral-100 mb-4">Bienvenido</h1> -->
     <p class="text-center text-neutral-600 dark:text-neutral-400 mb-8 text-lg">
-        Estes el proceso de seleccion para <br><span class="font-semibold"> "{{ job.name }}" </span><br><br>
-        Por favor, inicia sesión o crea tu cuenta.
+        {{ "candidate.welcome_to_process" | transloco}}<br><span class="font-semibold"> "{{ job.name }}" </span>
+    </p>
+    <p class="text-center text-neutral-600 dark:text-neutral-400 mb-2 text-base">
+        <!-- Inicia sesión o crea tu cuenta. -->
     </p>
 
     </div>
@@ -23,7 +25,7 @@
           <button (click)="switchLoginRegister()"
             class="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300
                     font-medium text-sm focus:outline-none">
-              ¿No tienes cuenta? Crea una.
+              {{ "candidate_profile.not_account" | transloco}}
           </button>
       </div>
       </div>
@@ -35,7 +37,7 @@
           <button (click)="switchLoginRegister()"
             class="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300
                     font-medium text-sm focus:outline-none">
-              Ya tengo cuenta.
+              {{ "candidate_profile.already_account" | transloco}}
           </button>
       </div>
     </div>
@@ -46,16 +48,27 @@
 
 
 @if(candidateService.candidateSig()) {
-
-
-<!-- <div>
-  <app-candidate-logout></app-candidate-logout>
-</div> -->
+  <!-- <app-candidate-logout></app-candidate-logout> -->
+@if(!candidateService.candidateSig()?.resumePath && candidateService.candidateSig()?.username){
 <div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
   <div class="flex flex-col bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-xl w-full max-w-md border border-neutral-200 dark:border-neutral-700">
-  <app-upload></app-upload>
+    <div class="flex flex-col">
+      <p class="text-center text-neutral-600 dark:text-neutral-400 mb-8 text-lg">
+        {{ "candidate.excellent" | transloco}} {{ candidateService.candidateSig()?.username }} <br>{{ "candidate.continue_upload_cv" | transloco}}<br>
+      </p>
+    </div>
+    <app-upload></app-upload>
   </div>
 </div>
+}@else {
+<div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
+  <div class="flex flex-col bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-xl w-full max-w-md border border-neutral-200 dark:border-neutral-700">
+    Solo nos faltan estos datos y terminamos.
+      <app-candidate-edit></app-candidate-edit>
+  </div>
+</div>
+}
+
 <!-- <div>
   <app-candidate-edit></app-candidate-edit>
 </div> -->
