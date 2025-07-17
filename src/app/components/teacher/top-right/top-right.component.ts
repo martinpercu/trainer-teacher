@@ -15,8 +15,7 @@ import { LoginComponent } from '@components/auth/login/login.component';
 @Component({
   selector: 'app-top-right',
   imports: [MatIconModule, RegisterComponent, LoginComponent],
-  templateUrl: './top-right.component.html',
-  styleUrl: './top-right.component.css'
+  templateUrl: './top-right.component.html'
 })
 export class TopRightComponent {
 
@@ -88,7 +87,7 @@ export class TopRightComponent {
   }
 
   returnMain() {
-    this.router.navigate(['/'])
+    this.router.navigate(['/main'])
   }
 
 }
