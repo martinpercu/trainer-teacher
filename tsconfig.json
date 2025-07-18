@@ -24,6 +24,8 @@
       "@components/*": ["./src/app/components/*"],
       "@teacher/*": ["./src/app/components/teacher/*"],
       "@superadmin/*": ["./src/app/components/superadmin/*"],
+      "@school/*": ["./src/app/components/school/*"],
+      "@evaluation/*": ["./src/app/components/evaluation/*"],
       "@env/*": ["./src/environments/*"],
       "@pipes/*": ["./src/app/pipes/*"],
     }

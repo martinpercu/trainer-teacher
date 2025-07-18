@@ -7,4 +7,5 @@ export interface User {
   token?: string;
   id?: string;
   userUID?: string;
+  roleAdmin?: boolean;
 }

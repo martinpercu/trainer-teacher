@@ -1,0 +1,27 @@
+<p>exam works!</p>
+
+<div class="max-w-2xl mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4">{{ exam?.title }}</h1>
+  @if (preparedQuestions.length > 0) {
+    @for (pq of preparedQuestions; track pq.question.text; let i = $index) {
+      <div class="mb-6">
+        <p class="text-lg font-semibold mb-2">{{ i + 1 }}. {{ pq.question.text }}</p>
+        <div class="space-y-2">
+          @for (option of pq.options; track option.text) {
+            <label class="flex items-center">
+              <input type="radio" [name]="'question-' + i" [value]="option.text"
+                     (change)="selectAnswer(i, option.text)" class="mr-2">
+              {{ option.text }}
+            </label>
+          }
+        </div>
+      </div>
+    }
+    <button (click)="submitExam()"
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+      Enviar Examen
+    </button>
+  } @else {
+    <p class="text-gray-500">Cargando examen...</p>
+  }
+</div>
