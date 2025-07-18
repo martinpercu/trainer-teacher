@@ -4,7 +4,7 @@ import { TeacherMainPageComponent } from '@pages/teacher-main-page/teacher-main-
 import { LoginComponent } from '@components/auth/login/login.component';
 import { ChatComponent } from '@components/chat/chat.component';
 import { LeftMenuComponent } from '@components/left-menu/left-menu.component';
-import { EthicSupervisorsComponent } from '@components/pdfs/ethic-supervisors/ethic-supervisors.component';
+// import { EthicSupervisorsComponent } from '@components/pdfs/ethic-supervisors/ethic-supervisors.component';
 import { PdfviewerComponent } from '@components/pdfviewer/pdfviewer.component';
 import { MainselectorPageComponent } from '@pages/mainselector-page/mainselector-page.component';
 import { SchoolMainPageComponent } from '@pages/school-main-page/school-main-page.component';
