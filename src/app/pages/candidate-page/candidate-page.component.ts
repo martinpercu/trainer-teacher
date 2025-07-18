@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UpperCasePipe } from '@angular/common'
 
 import { TranslocoPipe } from '@jsverse/transloco';
 
@@ -21,7 +20,7 @@ import { Candidate } from '@models/candidate';
 
 @Component({
   selector: 'app-candidate-page',
-  imports: [TranslocoPipe, UpperCasePipe,  CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent],
+  imports: [TranslocoPipe, CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent],
   templateUrl: './candidate-page.component.html'
 })
 export class CandidatePageComponent {
@@ -62,8 +61,5 @@ export class CandidatePageComponent {
     this.showRegister = !this.showRegister;
   }
 
-  checkusuer() {
-    console.log(this.candidateService.candidateSig());
-  }
 
 }

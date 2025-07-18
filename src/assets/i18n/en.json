@@ -52,6 +52,7 @@
     "no_result": "No result for this candidate."
   },
   "candidate": {
+    "fill_the_fields": "please fill in the requested fields",
     "excellent": "Excellent",
     "continue_upload_cv": "continue uploading your resume",
     "upload" : "Send your Resume",
@@ -65,7 +66,13 @@
     "description": "See Docs",
     "unique_id": "Take the Exam",
     "exam_id": "English",
-    "welcome_to_process": "Welcome to recruitment process to"
+    "welcome_to_process": "Welcome to recruitment process to",
+    "your_application_for": "your application for the position of",
+    "been_ok_received": "has been successfully received",
+    "sincerely_interest": "We sincerely appreciate your interest",
+    "what_next": "What's next?",
+    "our_recruitment": "Our recruitment team will carefully review your profile",
+    "if_you_match": "We will contact you to inform you about the next steps in the selection process"
   },
   "candidate_profile": {
     "firstname" : "First name",
@@ -80,6 +87,7 @@
     "phone_number_placeholder": "123-345-6789",
     "city": "City",
     "state": "State",
-    "zipcode": "Zip Code"
+    "zipcode": "Zip Code",
+    "continue": "Continue"
   }
 }

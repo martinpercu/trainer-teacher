@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CandidateAuthService } from '@services/candidate-auth.service';
+// import { CandidateAuthService } from '@services/candidate-auth.service';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import {
@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
   templateUrl: './candidate-edit.component.html',
 })
 export class CandidateEditComponent {
-  private candidateAuthService = inject(CandidateAuthService);
+  // private candidateAuthService = inject(CandidateAuthService);
   private candidateService = inject(CandidateService);
   private router = inject(Router);
   private formBuilder = inject(FormBuilder);
@@ -64,12 +64,12 @@ export class CandidateEditComponent {
   private buildForm() {
     this.form = this.formBuilder.group({
       firstname: [this.candidate.username, [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
-      lastname: [this.candidate.lastname, [Validators.minLength(1), Validators.maxLength(30)]],
+      lastname: [this.candidate.lastname, [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
       email: [this.candidate.email, [Validators.required, Validators.email, Validators.maxLength(80)]],
-      phone: [this.candidate.phone, [Validators.minLength(9), Validators.maxLength(15), Validators.pattern("^[0-9]*$")]],
+      phone: [this.candidate.phone, [Validators.required, Validators.minLength(9), Validators.maxLength(15), Validators.pattern("^[0-9]*$")]],
       birthdate: [this.candidate.birthdate, [Validators.minLength(7)]],
-      address: [this.candidate.address, Validators.minLength(8)],
-      city: [this.candidate.city, [Validators.minLength(2)]],
+      // address: [this.candidate.address, Validators.minLength(8)],
+      city: [this.candidate.city, [Validators.required, Validators.minLength(3)]],
       state: [this.candidate.state],
       zipCode: [this.candidate.zipCode, [Validators.minLength(5), Validators.maxLength(8)]],
       // // country: [this.candidate.country],
@@ -84,11 +84,13 @@ export class CandidateEditComponent {
     this.candidateService.updateOneUser(this.form.value, this.candidateId);
     // this.user = this.form.value;
     // console.log(this.userId);
+    // this.getOneCandidate(); // very important each time save!!!
+    window.location.reload();
 
-    this.getOneCandidate(); // very important each time save!!!
-    this.editBasicInfo = false;
-    this.editShipping = false;
+    // this.editBasicInfo = false;
+    // this.editShipping = false;
     // this.editBilling = false;
+
     } else {
       this.form.markAllAsTouched();
     };

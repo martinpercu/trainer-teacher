@@ -270,49 +270,6 @@ export class RecruiterDashboardComponent {
     );
   }
 
-  /**
-   * Orders the 'jobs' array by the number of candidates assigned to each job
-   * and assigns the result to 'jobsOrderedByCandidates'.
-   * Jobs with more candidates will appear first.
-   */
-  // orderJobsByCandidateCount(): void {
-  //   // Crea una copia de la lista de trabajos para no modificar la original directamente
-  //   this.jobsOrderedByCandidates = [...this.jobs];
-
-  //   this.jobsOrderedByCandidates.sort((a, b) => {
-  //     const candidatesA = this.getCandidatesForJob(a.jobId).length;
-  //     const candidatesB = this.getCandidatesForJob(b.jobId).length;
-  //     // Orden descendente: b - a
-  //     return candidatesB - candidatesA;
-  //   });
-
-  //   console.log('Jobs ordered by candidate count:', this.jobsOrderedByCandidates);
-  // }
-
-  //   /**
-  //  * Filters the 'jobs' array to include only active jobs (active: true),
-  //  * then orders them by the number of candidates assigned to each job,
-  //  * and assigns the result to 'jobsOrderedByCandidates'.
-  //  * Jobs with more candidates will appear first.
-  //  */
-  // orderJobsByCandidateCount(): void {
-  //   // 1. Filtrar solo los trabajos activos
-  //   const activeJobs = this.jobs.filter(job => job.active === true);
-
-  //   // 2. Crear una copia de los trabajos activos para ordenar
-  //   this.jobsOrderedByCandidates = [...activeJobs];
-
-  //   // 3. Ordenar los trabajos activos por la cantidad de candidatos
-  //   this.jobsOrderedByCandidates.sort((a, b) => {
-  //     const candidatesA = this.getCandidatesForJob(a.jobId).length;
-  //     const candidatesB = this.getCandidatesForJob(b.jobId).length;
-  //     // Orden descendente: b - a
-  //     return candidatesB - candidatesA;
-  //   });
-
-  //   console.log('Jobs filtered (active) and ordered by candidate count:', this.jobsOrderedByCandidates);
-  // }
-
     orderJobsByCandidateCount(): void {
     // 1. Dividir los trabajos en activos e inactivos
     const activeJobs = this.jobs.filter(job => job.active === true);

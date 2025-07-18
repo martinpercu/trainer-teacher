@@ -46,10 +46,22 @@
   </div>
 }
 
-
 @if(candidateService.candidateSig()) {
   <!-- <app-candidate-logout></app-candidate-logout> -->
-@if(!candidateService.candidateSig()?.resumePath && candidateService.candidateSig()?.username){
+@if(!candidateService.candidateSig()?.lastname){
+<div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
+  <div class="flex flex-col bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-xl w-full max-w-md border border-neutral-200 dark:border-neutral-700">
+    <div class="flex flex-col">
+      <p class="text-center text-neutral-600 dark:text-neutral-400 mb-8 text-lg">
+        {{ candidateService.candidateSig()?.username }} {{ "candidate.fill_the_fields" | transloco}}.
+      </p>
+    </div>
+    <app-candidate-edit></app-candidate-edit>
+  </div>
+</div>
+}
+
+@if(!candidateService.candidateSig()?.resumePath && candidateService.candidateSig()?.lastname){
 <div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
   <div class="flex flex-col bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-xl w-full max-w-md border border-neutral-200 dark:border-neutral-700">
     <div class="flex flex-col">
@@ -60,14 +72,27 @@
     <app-upload></app-upload>
   </div>
 </div>
-}@else {
+}
+
+@if(job && candidateService.candidateSig()?.resumePath && candidateService.candidateSig()?.lastname){
 <div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
   <div class="flex flex-col bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-xl w-full max-w-md border border-neutral-200 dark:border-neutral-700">
-    Solo nos faltan estos datos y terminamos.
-      <app-candidate-edit></app-candidate-edit>
+    <div class="flex flex-col">
+      <p class="text-neutral-600 dark:text-neutral-400 mb-8 text-lg">
+        {{ candidateService.candidateSig()?.username }},
+        {{ "candidate.your_application_for" | transloco}}
+        <span class="font-semibold">{{ job.name }}</span>
+        {{ "candidate.been_ok_received" | transloco}}.<br>
+        {{ "candidate.sincerely_interest" | transloco}}.<br><br>
+        <span class="font-semibold">{{ "candidate.what_next" | transloco}}</span><br>
+        {{ "candidate.our_recruitment" | transloco}}.
+        {{ "candidate.if_you_match" | transloco}}.
+      </p>
+    </div>
   </div>
 </div>
 }
+
 
 <!-- <div>
   <app-candidate-edit></app-candidate-edit>

@@ -78,6 +78,7 @@ export class UploadComponent {
           this.candidateService.updateOneUser({ resumePath: url, resumeDocName:fileName }, this.userId)
             .then(() => {
               console.log('Resume URL saved to candidate')
+              alert('Resume uploaded OK')
               window.location.reload();
             })
             .catch((err) => console.error('Error saving URL:', err));

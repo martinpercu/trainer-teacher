@@ -52,6 +52,7 @@
     "no_result": "No hay resultados para este candidato."
   },
   "candidate": {
+    "fill_the_fields": "rellena por favor los campos solicitados",
     "excellent": "Excelente",
     "continue_upload_cv": "continuamos con la carga de tu CV",
     "upload" : "Cargar CV",
@@ -65,7 +66,13 @@
     "description": "See Docs",
     "unique_id": "Take the Exam",
     "exam_id": "English",
-    "welcome_to_process": "Bienvendo al proceso de seleccion para"
+    "welcome_to_process": "Bienvendo al proceso de seleccion para",
+    "your_application_for": "tu solicitud para el puesto de",
+    "been_ok_received": "ha sido recibido con éxito",
+    "sincerely_interest": "Agradecemos sinceramente tu interés",
+    "what_next": "¿Qué sigue ahora?",
+    "our_recruitment": "Nuestro equipo de reclutamiento revisará cuidadosamente tu perfil",
+    "if_you_match": "Nos pondremos en contacto contigo para informarte sobre los siguientes pasos en el proceso de selección"
   },
   "candidate_profile": {
     "firstname" : "Nombre",
@@ -80,6 +87,7 @@
     "phone_number_placeholder": "11-1234-1234",
     "city": "Ciudad",
     "state": "Provincia",
-    "zipcode": "Codigo Postal"
+    "zipcode": "Codigo Postal",
+    "continue": "Continuar"
   }
 }
