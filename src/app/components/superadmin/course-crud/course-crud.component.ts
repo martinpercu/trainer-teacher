@@ -24,10 +24,11 @@ export class CoursesCRUDComponent implements OnInit {
     title: '',
     teacherId: '',
     teacherName: '',
-    enabled: false,
-    startDate: '',
-    endDate: '',
-    description: ''
+    enabled: true,
+    startDate: undefined, // Inicialmente undefined
+    endDate: undefined, // Inicialmente undefined
+    description: '',
+    difficulty: 2 // Valor por defecto
   };
   errorMessage: string = '';
   editingCourseId: string | undefined = undefined;
@@ -63,10 +64,11 @@ export class CoursesCRUDComponent implements OnInit {
               title: course.title,
               teacherId: course.teacherId || '',
               teacherName: course.teacherName || '',
-              enabled: course.enabled ?? false,
-              startDate: course.startDate || '',
-              endDate: course.endDate || '',
-              description: course.description || ''
+              enabled: course.enabled ?? true,
+              startDate: course.startDate || undefined, // Mantener undefined si no hay valor
+              endDate: course.endDate || undefined, // Mantener undefined si no hay valor
+              description: course.description || '',
+              difficulty: course.difficulty ?? 2 // Por defecto 2 si no está definido
             };
             this.editingCourseId = courseId;
             this.errorMessage = '';
@@ -105,10 +107,11 @@ export class CoursesCRUDComponent implements OnInit {
           title: this.newCourse.title!.trim(),
           teacherId: this.newCourse.teacherId || undefined,
           teacherName: this.newCourse.teacherName || undefined,
-          enabled: this.newCourse.enabled ?? false,
-          startDate: this.newCourse.startDate || undefined,
-          endDate: this.newCourse.endDate || undefined,
-          description: this.newCourse.description?.trim() || undefined
+          enabled: this.newCourse.enabled ?? true,
+          startDate: this.newCourse.startDate?.trim() || undefined, // Convertir '' a undefined
+          endDate: this.newCourse.endDate?.trim() || undefined, // Convertir '' a undefined
+          description: this.newCourse.description?.trim() || undefined,
+          difficulty: this.newCourse.difficulty ?? 2 // Incluir difficulty
         };
 
         if (this.editingCourseId) {
@@ -150,7 +153,7 @@ export class CoursesCRUDComponent implements OnInit {
 
   deleteCourse() {
     if (this.editingCourseId) {
-      const confirmDelete = confirm('¿Estás seguro de que quieres eliminar este curso?');
+      const confirmDelete = confirm('Are you sure you want to delete this course?');
       if (confirmDelete) {
         this.courseCrudService.deleteCourse(this.editingCourseId).subscribe({
           next: (success) => {
@@ -191,12 +194,36 @@ export class CoursesCRUDComponent implements OnInit {
       teacherId: '',
       teacherName: '',
       enabled: false,
-      startDate: '',
-      endDate: '',
-      description: ''
+      startDate: undefined, // No inicializar con ''
+      endDate: undefined, // No inicializar con ''
+      description: '',
+      difficulty: 2 // Por defecto 2
     };
     this.editingCourseId = undefined;
     this.selectedCourseId = '';
     this.errorMessage = '';
+  }
+
+  // Borrar el campo startDate
+  clearStartDate() {
+    this.newCourse.startDate = undefined;
+  }
+
+  // Borrar el campo endDate
+  clearEndDate() {
+    this.newCourse.endDate = undefined;
+  }
+
+
+  // Mapear el valor de difficulty a una etiqueta legible
+  getDifficultyLabel(difficulty: number | undefined): string {
+    switch (difficulty) {
+      case 1: return 'Easy';
+      case 2: return 'Moderate';
+      case 3: return 'Challenging';
+      case 4: return 'Hard';
+      case 5: return 'Very Difficult';
+      default: return 'Moderate'; // Por defecto
+    }
   }
 }
