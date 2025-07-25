@@ -41,6 +41,7 @@
     "with_test_ok": "Examen OK",
     "close_menu": "Cerrar Menu",
     "open_menu": "Abrir Menu",
+    "menu": "Menu",
     "see_cv": "Ver CV",
     "download_cv": "Descargar CV",
     "details": "Detalles",
@@ -89,5 +90,24 @@
     "state": "Provincia",
     "zipcode": "Codigo Postal",
     "continue": "Continuar"
+  },
+  "position_edit": {
+    "select_job" : "Selecciona Puesto",
+    "select_a_job" : "Selecciona un Puesto",
+    "create_new_job" : "Crear Nuevo Trabajo",
+    "edit_job" : "Editar Trabajo",
+    "job_name" : "Nombre del Trabajo",
+    "id_unique": "Identificador Único:",
+    "description": "Descripción",
+    "job_state": "Estado del Trabajo",
+    "enable": "Activo",
+    "disable": "Inactivo",
+    "exam_associate": "Examen Asociado",
+    "without_exam": "Sin Examen",
+    "exam_state": "Estado del Examen",
+    "create_job": "Crear Puesto",
+    "update_job": "Actualizar",
+    "cancel_job": "Cancelar",
+    "delete_job": "Eliminar Puesto"
   }
 }

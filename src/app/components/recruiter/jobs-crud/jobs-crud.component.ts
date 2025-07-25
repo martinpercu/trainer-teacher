@@ -20,20 +20,26 @@ import { JobCrudService } from '@services/job-crud.service';
 import { Job } from '@models/job';
 import { ExamCrudService } from '@services/exam-crud.service';
 import { Exam } from '@models/exam';
+import { TranslocoPipe } from '@jsverse/transloco';
+
+import { RecruiterService } from '@services/recruiter.service'
 
 
 @Component({
   selector: 'app-jobs-crud',
-  imports: [FormsModule, CommonModule, AsyncPipe],
+  imports: [FormsModule, CommonModule, AsyncPipe, TranslocoPipe],
   templateUrl: './jobs-crud.component.html',
 })
 export class JobsCrudComponent {
+
 
 
   // --- Inyección de Dependencias ---
   auth = inject(Auth);
   jobCrudService = inject(JobCrudService);
   examCrudService = inject(ExamCrudService);
+
+  recruiterService = inject(RecruiterService);
 
   // --- Propiedades del Componente ---
   jobs$!: Observable<Job[]>;
@@ -162,7 +168,11 @@ export class JobsCrudComponent {
             return;
           }
           this.jobCrudService.updateJob(this.editingJobId, jobData).subscribe({
-            next: () => this.resetForm(),
+            next: () => {
+              this.resetForm();
+              // Reload page to show in recruiter dash OK
+              window.location.reload();
+            },
             error: (err) => {
               console.error('Error al actualizar:', err);
               this.errorMessage = 'Error al actualizar el trabajo.';
@@ -172,7 +182,11 @@ export class JobsCrudComponent {
           // Lógica de Creación
           jobData.ownerId = this.recruiterId; // Asignar propietario
           this.jobCrudService.createJob(jobData as Job).subscribe({
-            next: () => this.resetForm(),
+            next: () => {
+              this.resetForm();
+              // Reload page to show in recruiter dash OK
+              window.location.reload();
+            },
             error: (err) => {
                 console.error('Error al crear:', err);
                 this.errorMessage = 'Error al crear el trabajo.';
@@ -197,7 +211,11 @@ export class JobsCrudComponent {
     // NOTA: Reemplazar confirm por un modal custom en una app real
     if (confirm('¿Estás seguro de que quieres eliminar este trabajo?')) {
       this.jobCrudService.deleteJob(this.editingJobId).subscribe({
-        next: () => this.resetForm(),
+        next: () => {
+          this.resetForm();
+          // Reload page to show in recruiter dash OK
+          window.location.reload();
+        },
         error: (err) => {
             console.error('Error al eliminar:', err);
             this.errorMessage = 'Error al eliminar el trabajo.';

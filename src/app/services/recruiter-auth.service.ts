@@ -56,7 +56,8 @@ export class RecruiterAuthService {
     this.recruiter = {
       email: email,
       username: username,
-      recruiterUID: userUid
+      recruiterUID: userUid,
+      subscriptionLevel: 3
     }
     this.recruiterService.addUserWithId(this.recruiter, userUid);
     this.recruiterService.setRecruiterSig(this.recruiter);

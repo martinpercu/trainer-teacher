@@ -41,6 +41,7 @@
     "with_test_ok": "Exam Passed",
     "close_menu": "Close Menu",
     "open_menu": "Open Menu",
+    "menu": "Menu",
     "see_cv": "See Resume",
     "download_cv": "Download Resume",
     "details": "Details",
@@ -89,5 +90,24 @@
     "state": "State",
     "zipcode": "Zip Code",
     "continue": "Continue"
+  },
+  "position_edit": {
+    "select_job": "Select Position",
+    "select_a_job": "Select a Job Position",
+    "create_new_job": "Create New Job Position",
+    "edit_job": "Edit Position",
+    "job_name": "Position Name",
+    "id_unique": "Unique Identifier:",
+    "description": "Description",
+    "job_state": "Position State",
+    "enable": "Active",
+    "disable": "Inactive",
+    "exam_associate": "Associated Exam",
+    "without_exam": "Without Exam",
+    "exam_state": "Exam State",
+    "create_job": "Create Position",
+    "update_job": "Update",
+    "cancel_job": "Cancel",
+    "delete_job": "Delete Position"
   }
 }

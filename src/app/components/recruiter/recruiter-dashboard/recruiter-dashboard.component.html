@@ -1,3 +1,4 @@
+@if(recruiterService.recruiterSig(); as theRecruiter){
 <div class="flex h-[100dvh] bg-white dark:bg-neutral-850">
   <!-- Sidebar -->
   <div
@@ -24,6 +25,7 @@
       <mat-icon>school</mat-icon>
       <span>Courses</span>
     </button> -->
+    @if(this.jobs.length >= 1){
     <button
       (click)="setView('jobs')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
@@ -41,6 +43,8 @@
         >{{ "recruiter.posts" | transloco }}</span
       >
     </button>
+    }
+    @if(this.results.length >= 1){
     <button
       (click)="setView('results')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
@@ -49,7 +53,7 @@
           currentView === 'results'
       }"
     >
-      <mat-icon>school</mat-icon>
+      <mat-icon>checklist</mat-icon>
       <span
         class="hidden sm:block"
         [ngClass]="{
@@ -58,6 +62,7 @@
         >{{ "recruiter.results_all" | transloco }}</span
       >
     </button>
+    }
     <button
       (click)="setView('jobs_edit')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
@@ -75,6 +80,7 @@
         >{{ "recruiter.posts_edit" | transloco }}</span
       >
     </button>
+    @if(theRecruiter.subscriptionLevel >= 8){
     <button
       (click)="setView('exams')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
@@ -92,6 +98,8 @@
         >{{ "recruiter.exams_edit" | transloco }}</span
       >
     </button>
+    }
+    @if(candidates.length >=1){
     <button
       (click)="setView('candidates')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
@@ -109,6 +117,7 @@
         >{{ "recruiter.candidates" | transloco }}</span
       >
     </button>
+    }
     <!-- <button (click)="setView('students')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
       [ngClass]="{'bg-neutral-100 dark:bg-neutral-800': currentView === 'students'}">
@@ -138,7 +147,7 @@
       </button>
     </div> -->
 
-    <div>
+    <!-- <div>
       @if(!this.showSettingMenu) {
       <div class="mt-20">
         <button
@@ -166,7 +175,39 @@
       <div>
         <app-menu-settings></app-menu-settings>
       </div>
+      }
+    </div> -->
 
+    <div class="z-20 absolute right-0 top-0 p-2">
+      @if(!this.showSettingMenu) {
+      <div class="">
+        <button
+          (click)="switchExpand()"
+          class="flex items-center gap-2 px-4 py-2 bg-transparent dark:bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-xl border border-gray-200 dark:border-neutral-700"
+        >
+          <span class="hidden sm:block">{{
+            "recruiter.menu" | transloco
+          }}</span>
+          <mat-icon class="">menu_open</mat-icon>
+        </button>
+      </div>
+      } @else {
+      <div class="flex flex-col w-full items-end">
+        <div class="flex-shrink-0">
+          <button
+            (click)="switchExpand()"
+            class="flex items-center gap-2 px-4 py-2 bg-transparent dark:bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-xl border border-gray-200 dark:border-neutral-700"
+          >
+            <span class="hidden sm:block">{{
+              "recruiter.menu" | transloco
+            }}</span>
+            <mat-icon class="">menu_open</mat-icon>
+          </button>
+        </div>
+        <div class="mt-2 shadow-md rounded-xl">
+          <app-menu-settings></app-menu-settings>
+        </div>
+      </div>
       }
     </div>
 
@@ -279,4 +320,11 @@
     ></app-student-list>
     } } -->
   </div>
+
 </div>
+}
+@else{
+<div class="fixed inset-0 flex pt-48 justify-center z-50 shadow-2xl rounded-xl">
+  <app-menu-settings></app-menu-settings>
+</div>
+}

@@ -24,6 +24,7 @@ import { User } from '@models/user';
 import { Result } from '@models/result';
 import { Exam } from '@models/exam';
 import { Job } from '@models/job';
+import { Recruiter } from '@models/recruiter';
 
 import { Observable } from 'rxjs';
 import { ExamResultListComponent } from '@school/exam-result-list/exam-result-list.component';
@@ -93,90 +94,9 @@ export class RecruiterDashboardComponent {
     | 'exams'
     | 'jobs'
     | 'jobs_edit'
-    | 'candidates' = 'jobs'; // Default to courses
+    | 'candidates' = 'jobs_edit'; // Default to courses
 
   showSettingMenu: boolean = false;
-
-  // async ngOnInit() {
-  //   this.authService.user$
-  //     .pipe(
-  //       // Ensure user is authenticated
-  //       filter((user) => !!user),
-  //       // switchMap to get the recruiter's UID and then fetch both candidates and jobs
-  //       switchMap((user) => {
-  //         const recruiterUid = user!.uid;
-  //         console.log('Recruiter UID:', recruiterUid);
-
-  //         // Use forkJoin to fetch candidates and jobs in parallel
-  //         return forkJoin({
-  //           candidates: this.candidateService
-  //             .getCandidatesByRecruiter(recruiterUid)
-  //             .pipe(
-  //               take(1), // <--- Add take(1) here
-  //               tap((candidates) => {
-  //                 this.candidates = candidates; // Assign candidates here
-  //                 console.log(
-  //                   'Retrieved candidates (inside forkJoin)::',
-  //                   this.candidates
-  //                 );
-  //               }),
-  //               map((candidates) => candidates.map((c) => c.candidateUID)), // Extract UIDs for results
-  //               catchError((error) => {
-  //                 console.error(
-  //                   'Error fetching candidates (inside forkJoin)::',
-  //                   error
-  //                 );
-  //                 return of([]);
-  //               })
-  //             ),
-  //           jobs: this.jobCrudService.getJobs(recruiterUid).pipe(
-  //             // Fetch jobs
-  //             take(1), // <--- Add take(1) here
-  //             tap((jobs) => {
-  //               this.jobs = jobs; // Assign jobs here
-  //               console.log('Retrieved jobs (inside forkJoin)::', this.jobs);
-  //             }),
-  //             catchError((error) => {
-  //               console.error('Error fetching jobs (inside forkJoin)::', error);
-  //               return of([]);
-  //             })
-  //           ),
-  //         }).pipe(
-  //           tap((forkJoinResults) =>
-  //             console.log('forkJoin emitted:', forkJoinResults)
-  //           ) // <-- Add this
-  //         );
-  //       }),
-  //       // Now, process the results of forkJoin (which contains candidateUIDs and jobs)
-  //       switchMap(({ candidates, jobs }) => {
-  //         // If no candidateUIDs, return an empty observable of results
-  //         if (candidates.length === 0) {
-  //           console.log('No candidate UIDs to fetch results for.');
-  //           return of({ results: [], jobs: jobs }); // Pass jobs through even if no results
-  //         }
-  //         // Call the service method with the extracted UIDs for results
-  //         return this.resultService.getResultsByUserUIDs(candidates).pipe(
-  //           map((results) => ({ results, jobs })) // Combine results with jobs for the next step
-  //         );
-  //       })
-  //     )
-  //     .subscribe({
-  //       next: ({ results: filteredResults, jobs }) => {
-  //         this.results = filteredResults;
-  //         this.jobs = jobs;
-  //         console.log('Results filtered by candidate UIDs:', this.results);
-  //         console.log('Jobs for recruiter:', this.jobs);
-  //         // Llama a la nueva función para ordenar los trabajos
-  //         this.orderJobsByCandidateCount();
-  //       },
-  //       error: (error) => {
-  //         console.error('Error in main subscription:', error);
-  //       },
-  //       complete: () => {
-  //         console.log('All data subscriptions completed.');
-  //       },
-  //     });
-  // }
 
   async ngOnInit() {
     this.authService.user$
@@ -185,8 +105,15 @@ export class RecruiterDashboardComponent {
         filter((user) => !!user),
         // 2. `switchMap` para obtener el UID del reclutador y luego los datos relacionados
         switchMap((user) => {
+          console.log(user);
+
           const recruiterUid = user!.uid; // Obtenemos el UID del reclutador aquí
           console.log('Recruiter UID:', recruiterUid);
+          // const recruiter = this.recruiterService.getOneRecruiter(recruiterUid);
+          // console.log(recruiter);
+          // console.log('jsdjsjsjsjsjsjsdkljfqsd qsklfj qklsfklqsj dlfkqldsfj ' + this.recruiterService.recruiterSig());
+
+
 
           // `forkJoin` para buscar candidatos y trabajos en paralelo
           return forkJoin({

@@ -1,27 +1,23 @@
-<div class="flex sm:w-56">
+<div class="flex">
   <div
     class="flex flex-col h-fit text-sm text-neutral-700 dark:text-neutral-200 bg-white dark:bg-neutral-750 rounded-xl border border-gray-200 dark:border-neutral-700"
   >
-
-    <div class="flex sm:hidden flex-row px-2 py-1 mt-1">
+    <!-- <div class="flex sm:hidden flex-row px-2 py-1 mt-1">
       @if(!showChangeLang) {
       <div
         class="flex flex-row p-2 grow cursor-pointer rounded-lg items-center"
         (click)="showChangeList()"
       >
-
         <mat-icon>language</mat-icon>
-
       </div>
   }
-    </div>
-    @if(showChangeLang) {
+    </div> -->
+    <!-- @if(showChangeLang) {
     <div class="sm:hidden py-2" (click)="showChangeList()">
       <app-lang-switcher></app-lang-switcher>
     </div>
-    }
-
-    <div class="hidden sm:flex flex-row px-2 py-1 mt-1">
+    } -->
+    <div class="flex flex-row px-2 py-1 mt-1">
       <div
         class="flex flex-row p-2 grow rounded-lg items-center"
       >
@@ -51,7 +47,7 @@
         (click)="changeTheme()"
       >
         <mat-icon>dark_mode</mat-icon>
-        <div class="hidden sm:flex pl-3">{{ "top_right.dark" | transloco }}</div>
+        <div class="flex pl-3">{{ "top_right.dark" | transloco }}</div>
       </div>
     </div>
     } @if(themeService.isDarkModeSig()) {
@@ -63,7 +59,7 @@
         (click)="changeTheme()"
       >
         <mat-icon>light_mode</mat-icon>
-        <div class="hidden sm:flex pl-3">{{ "top_right.light" | transloco }}</div>
+        <div class="flex pl-3">{{ "top_right.light" | transloco }}</div>
       </div>
     </div>
     } @if(recruiterService.recruiterSig()) {
@@ -73,7 +69,7 @@
         (click)="logout()"
       >
         <mat-icon>logout</mat-icon>
-        <div class="hidden sm:flex pl-3 font-semibold">
+        <div class="flex pl-3 font-semibold">
           {{ "top_right.logout" | transloco }}
         </div>
       </div>
@@ -95,7 +91,7 @@
         } @if(this.showRegisterOrLogin() == false) {
         <mat-icon>login</mat-icon>
         }
-        <div class="hidden sm:flex pl-3 font-semibold">
+        <div class="flex pl-3 font-semibold">
           @if(this.showRegisterOrLogin() == undefined) {
           {{ "top_right.login_or_signup" | transloco }}}
           @if(this.showRegisterOrLogin() == true) {

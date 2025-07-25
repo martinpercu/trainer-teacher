@@ -5,4 +5,5 @@ export interface Recruiter {
   displayname?: string;
   lastname?: string;
   id?: string;
+  subscriptionLevel: number;
 }
