@@ -1,4 +1,47 @@
 @if(recruiterService.recruiterSig(); as theRecruiter){
+
+<div (click)="switchExpand()" class="z-10 absolute right-0 top-0 p-2 flex flex-col items-end">
+    <button
+      class="flex items-center gap-2 px-4 py-2 bg-transparent dark:bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-xl border border-gray-200 dark:border-neutral-700"
+    >
+      <span class="hidden sm:block">{{
+        "recruiter.menu" | transloco
+      }}</span>
+      <mat-icon class="">menu_open</mat-icon>
+    </button>
+  @if(this.showSettingMenu) {
+    <div class="flex bg-transparent w-[100vw] h-[92vh]">
+      <div class="grow"></div>
+      <div class="flex flex-col">
+        <div class="mt-2 shadow-md rounded-xl" (click)="$event.stopPropagation()">
+          <app-menu-settings></app-menu-settings>
+        </div>
+        <div class="grow"></div>
+      </div>
+    </div>
+  }
+</div>
+
+<!-- <div class="z-10 absolute right-0 top-0 p-2">
+  <div class="z-20">
+    <button
+      (click)="switchExpand()"
+      class="flex items-center gap-2 px-4 py-2 bg-transparent dark:bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-xl border border-gray-200 dark:border-neutral-700"
+    >
+      <span class="hidden sm:block">{{
+        "recruiter.menu" | transloco
+      }}</span>
+      <mat-icon class="">menu_open</mat-icon>
+    </button>
+  </div>
+
+  @if(this.showSettingMenu) {
+    <div class="mt-2 shadow-md rounded-xl absolute right-2">
+      <app-menu-settings></app-menu-settings>
+    </div>
+  }
+</div> -->
+
 <div class="flex h-[100dvh] bg-white dark:bg-neutral-850">
   <!-- Sidebar -->
   <div
@@ -178,38 +221,6 @@
       }
     </div> -->
 
-    <div class="z-20 absolute right-0 top-0 p-2">
-      @if(!this.showSettingMenu) {
-      <div class="">
-        <button
-          (click)="switchExpand()"
-          class="flex items-center gap-2 px-4 py-2 bg-transparent dark:bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-xl border border-gray-200 dark:border-neutral-700"
-        >
-          <span class="hidden sm:block">{{
-            "recruiter.menu" | transloco
-          }}</span>
-          <mat-icon class="">menu_open</mat-icon>
-        </button>
-      </div>
-      } @else {
-      <div class="flex flex-col w-full items-end">
-        <div class="flex-shrink-0">
-          <button
-            (click)="switchExpand()"
-            class="flex items-center gap-2 px-4 py-2 bg-transparent dark:bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-xl border border-gray-200 dark:border-neutral-700"
-          >
-            <span class="hidden sm:block">{{
-              "recruiter.menu" | transloco
-            }}</span>
-            <mat-icon class="">menu_open</mat-icon>
-          </button>
-        </div>
-        <div class="mt-2 shadow-md rounded-xl">
-          <app-menu-settings></app-menu-settings>
-        </div>
-      </div>
-      }
-    </div>
 
   </div>
 
@@ -324,7 +335,7 @@
 </div>
 }
 @else{
-<div class="fixed inset-0 flex pt-48 justify-center z-50 shadow-2xl rounded-xl">
+<div class="fixed inset-0 flex pt-24 sm:pt-48 justify-center z-50 shadow-2xl rounded-xl">
   <app-menu-settings></app-menu-settings>
 </div>
 }

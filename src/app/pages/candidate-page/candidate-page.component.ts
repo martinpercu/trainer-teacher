@@ -11,6 +11,7 @@ import { JobCrudService } from '@services/job-crud.service';
 import { CandidateAuthService } from '@services/candidate-auth.service';
 
 import { CandidateEditComponent } from '@candidate/candidate-edit/candidate-edit.component';
+import { CandidateHeaderComponent } from '@candidate/candidate-header/candidate-header.component';
 
 import { UploadComponent } from '@components/candidate/upload/upload.component';
 
@@ -20,7 +21,7 @@ import { Candidate } from '@models/candidate';
 
 @Component({
   selector: 'app-candidate-page',
-  imports: [TranslocoPipe, CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent],
+  imports: [TranslocoPipe, CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent, CandidateHeaderComponent],
   templateUrl: './candidate-page.component.html'
 })
 export class CandidatePageComponent {

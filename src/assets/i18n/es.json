@@ -26,9 +26,9 @@
     "dark": "Oscuro",
     "light": "Claro",
     "logout": "Logout",
-    "to_login": "ir al Login",
-    "to_signup": "ir al SignUp",
-    "login_or_signup": "Login o SignUp"
+    "to_login": "ir Inicio",
+    "to_signup": "ir Crear Cuenta",
+    "login_or_signup": "Ingresar"
   },
   "recruiter": {
     "posts" : "Puestos",
@@ -51,6 +51,13 @@
     "last_name": "Apellido",
     "email": "Email",
     "no_result": "No hay resultados para este candidato."
+  },
+  "recruiter_auth": {
+    "login": "Iniciar sesión",
+    "signin": "Registrarse",
+    "placeholder_username": "Nombre",
+    "placeholder_email": "Correo electrónico",
+    "placeholder_password": "Contraseña"
   },
   "candidate": {
     "fill_the_fields": "rellena por favor los campos solicitados",

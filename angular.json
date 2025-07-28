@@ -41,6 +41,27 @@
               ],
               "outputHashing": "all"
             },
+            "trainer": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "2MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.trainer.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
@@ -63,6 +84,9 @@
           "configurations": {
             "production": {
               "buildTarget": "front-teacher:build:production"
+            },
+            "trainer": {
+              "buildTarget": "front-teacher:build:trainer"
             },
             "development": {
               "buildTarget": "front-teacher:build:development"

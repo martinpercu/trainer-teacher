@@ -1,6 +1,6 @@
-<div class="flex">
+<!-- <div class="flex"> -->
   <div
-    class="flex flex-col h-fit text-sm text-neutral-700 dark:text-neutral-200 bg-white dark:bg-neutral-750 rounded-xl border border-gray-200 dark:border-neutral-700"
+    class="flex flex-col w-52 h-fit text-sm text-neutral-700 dark:text-neutral-200 bg-white dark:bg-neutral-750 rounded-xl border border-gray-200 dark:border-neutral-700"
   >
     <!-- <div class="flex sm:hidden flex-row px-2 py-1 mt-1">
       @if(!showChangeLang) {
@@ -100,13 +100,13 @@
           {{ "top_right.to_login" | transloco }}}
         </div>
       </div>
-      <div class="flex flex-row">
+      <div class="flex flex-col">
         @if(this.showRegisterOrLogin() == true) {
-        <div class="m-auto mt-4">
+        <div class="mt-2 mb-1 border-neutral-500 bg-slate-100 dark:bg-neutral-800 rounded-xl">
           <app-recruiter-login></app-recruiter-login>
         </div>
         } @if(this.showRegisterOrLogin() == false) {
-        <div class="m-auto mt-4">
+        <div class="mt-2 mb-1 border-neutral-500 bg-slate-100 dark:bg-neutral-800 rounded-xl">
           <app-recruiter-register></app-recruiter-register>
         </div>
         }
@@ -115,4 +115,4 @@
     }
   <!-- } -->
   </div>
-</div>
+<!-- </div> -->

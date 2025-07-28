@@ -4,10 +4,11 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Recruiter } from '@models/recruiter';
 import { RecruiterAuthService } from '@services/recruiter-auth.service';
 import { Router } from '@angular/router';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-recruiter-register',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, TranslocoPipe],
   templateUrl: './recruiter-register.component.html'
 })
 export class RecruiterRegisterComponent {

@@ -26,8 +26,8 @@
     "dark": "Dark",
     "light": "Light",
     "logout": "Logout",
-    "to_login": "to Login",
-    "to_signup": "to SignUp",
+    "to_login": "Go to Login",
+    "to_signup": "Go to SignUp",
     "login_or_signup": "Login or SignUp"
   },
   "recruiter": {
@@ -51,6 +51,13 @@
     "last_name": "Last Name",
     "email": "Email",
     "no_result": "No result for this candidate."
+  },
+  "recruiter_auth": {
+    "login" : "Log in",
+    "signin" : "Sign in",
+    "placeholder_username" : "First Name",
+    "placeholder_email": "Email",
+    "placeholder_password": "Password"
   },
   "candidate": {
     "fill_the_fields": "please fill in the requested fields",

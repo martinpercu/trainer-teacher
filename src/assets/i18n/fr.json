@@ -18,17 +18,17 @@
   },
   "top_right": {
     "return" : "Retourner",
-    "how_works": "Comment function",
+    "how_works": "Comment ça marche",
     "see_docs": "Voir Docs",
-    "take_exam": "Faire le test",
+    "take_exam": "Passer l'examen",
     "language": "Français",
     "change": "Changer",
     "dark": "Sombre",
     "light": "Claire",
-    "logout": "Logout",
-    "to_login": "aller Login",
-    "to_signup": "aller SignUp",
-    "login_or_signup": "Login ou SignUp"
+    "logout": "Déconnexion",
+    "to_login": "aller à la connexion",
+    "to_signup": "aller à l'inscription",
+    "login_or_signup": "Se connecter"
   },
   "recruiter": {
     "posts": "Postes",
@@ -51,6 +51,13 @@
     "last_name": "Nom",
     "email": "Email",
     "no_result": "Aucun résultat pour ce candidat."
+  },
+  "recruiter_auth": {
+    "login": "Se connecter",
+    "signin": "S'inscrire",
+    "placeholder_username": "Prénom",
+    "placeholder_email": "Courriel",
+    "placeholder_password": "Mot de passe"
   },
   "candidate": {
     "fill_the_fields": "veuillez remplir les champs demandés",
