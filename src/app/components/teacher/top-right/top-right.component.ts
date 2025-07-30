@@ -96,7 +96,12 @@ export class TopRightComponent {
   }
 
   returnMain() {
-    this.router.navigate(['/main'])
+    this.router.navigate([''])
+  }
+
+  takeExam() {
+    const coursePath = this.pagesService.courseId();
+    this.router.navigate([`/exam/${coursePath}`])
   }
 
 }

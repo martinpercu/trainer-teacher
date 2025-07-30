@@ -115,6 +115,7 @@ export class ChatComponent {
 
     const formData = {
       message: this.userMessage,
+      session_id: 'gagaga',
       // session_id: this.authService.currentUserSig()?.email + '-' + this.assistSelector.assistant_name(),
       // session_id: this.combinedUserEmailAndAssistant(),
       // system_prompt_text: this.assistSelector.assistant_description()

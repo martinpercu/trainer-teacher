@@ -9,13 +9,17 @@ import { ModalhowitworksComponent } from '@teacher/modalhowitworks/modalhowitwor
 import { AuthService } from '@services/auth.service';
 import { VisualStatesService } from '@services/visual-states.service';
 import { PagesService } from '@services/pages.service';
+import { CourseCrudService } from '@services/course-crud.service';
 
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { Teacher } from '@models/teacher';
+import { Course } from '@models/course';
 
 import { UserService } from '@services/user.service';
+
 
 
 @Component({
@@ -32,103 +36,67 @@ export class TeacherMainPageComponent {
   pagesService = inject(PagesService);
   private route = inject(ActivatedRoute);
 
-
   userService = inject(UserService);
-
+  courseCrudService = inject(CourseCrudService);
 
   private firestore = inject(Firestore);
 
-  // currentUser = this.authService.currentUserSig();
   currentUser = this.userService.userSig();
 
-  async ngOnInit() {
-    // Extraer el teacherId de la URL
-    const teacherId = this.route.snapshot.paramMap.get('id'); // Asumiendo ruta /teacher/:id
+  course!: Course;
 
-    if (teacherId) {
-      try {
-        // Pasar el teacherId a PagesService
-        await this.pagesService.setConfiguration(teacherId);
-      } catch (error) {
-        alert('problems setting teacher hey Martin!')
-        // console.error('Error al configurar el teacher:', error);
-        // Redirigir a una ruta de error o por defecto
-        // this.router.navigate(['/teacher/error']);
-      }
+  async ngOnInit() {
+    // Extraer el courseId de la URL.. OJO esta en /teacher/:id
+    const courseId = this.route.snapshot.paramMap.get('id'); // Ruta /teacher/:id
+
+    if (courseId) {
+
+      this.pagesService.setExamPath(courseId);
+
+      this.courseCrudService.getCourseById(courseId).pipe(
+        catchError(error => {
+          console.error('Error fetching course:', error);
+          return of(null);
+        })
+      ).subscribe(course => {
+        if (course) {
+          this.course = course;
+          // Usar teacherId del curso para PagesService
+          if (course.teacherId) {
+            this.pagesService.setConfiguration(course.teacherId).catch(error => {
+              console.error('Error setting configuration:', error);
+            });
+          } else {
+            console.error('No teacherId found for course:', courseId);
+          }
+        } else {
+          console.error('Course not found for ID:', courseId);
+        }
+      });
     } else {
-      // Manejar caso sin teacherId
-      alert('hey no teacher talk to Martin')
-      // console.warn('No se proporcionó teacherId en la URL');
-      // this.pagesService.initialize();
-      // this.router.navigate(['/teacher/supervisors']);
+      console.error('No course ID provided in URL');
     }
   }
 
   // async ngOnInit() {
   //   // Extraer el teacherId de la URL
-  //   const teacherId = this.route.snapshot.paramMap.get('id'); // Asumiendo ruta /teacher/:id
+  //   const courseId = this.route.snapshot.paramMap.get('id'); // Asumiendo ruta /teacher/:id
 
-  //   if (teacherId) {
+  //   if (courseId) {
   //     try {
-  //       // Pasar el teacherId a PagesService para que cargue los datos
-  //       await this.pagesService.setConfiguration(teacherId);
+  //       // this.course = this.courseCrudService.getCourseById(courseId)
+  //       this.course = this.courseCrudService.getCourseById(courseId)
+  //       // Pasar el teacherId a PagesService
+  //       await this.pagesService.setConfiguration(this.teacherId);
   //     } catch (error) {
   //       alert('problems setting teacher hey Martin!')
-  //       // console.error('Error al configurar el teacher:', error);
-  //       // Redirigir a una ruta de error o por defecto
-  //       // this.router.navigate(['/teacher/error']);
   //     }
   //   } else {
-  //     // Manejar caso sin teacherId
   //     alert('hey no teacher talk to Martin')
-  //     // console.warn('No se proporcionó teacherId en la URL');
-  //     // this.pagesService.initialize();
-  //     // this.router.navigate(['/teacher/supervisors']);
   //   }
   // }
 
-  // ngOnInit() {
-  //   // Detectar la ruta actual y configurar el servicio
-  //   this.route.url.subscribe(urlSegments => {
-  //     const path = urlSegments.map(segment => segment.path).join('/');
-  //     if (path.includes('supervisors')) {
-  //       this.pagesService.setConfiguration('supervisors');
-  //     } else if (path.includes('employee')) {
-  //       this.pagesService.setConfiguration('employee');
-  //     } else {
-  //       this.pagesService.setConfiguration('supervisors'); // Por defecto
-  //     }
-  //   });
-  // }
 
-
-  // ngOnInit() {
-  //   // Cargar la lista de teachers desde Firestore
-  //   const teachersCollection = collection(this.firestore, 'teachers');
-  //   this.teachers$ = collectionData(teachersCollection, { idField: 'id' }) as Observable<Teacher[]>;
-
-  //   // Detectar la ruta actual y configurar el servicio
-  //   this.route.url.subscribe(urlSegments => {
-  //     const path = urlSegments.map(segment => segment.path).join('/');
-  //     // Intentar extraer un teacherId de la URL (por ejemplo, /teachers/abc123)
-  //     const teacherId = urlSegments.length > 0 ? urlSegments[urlSegments.length - 1].path : '';
-
-  //     if (teacherId) {
-  //       // Intentar cargar el teacher especificado en la URL
-  //       this.pagesService.setConfiguration(teacherId);
-  //     } else {
-  //       // Cargar el primer teacher disponible
-  //       this.teachers$.subscribe(teachers => {
-  //         if (teachers.length > 0) {
-  //           this.pagesService.setConfiguration(teachers[0].id);
-  //         } else {
-  //           // No hay teachers, usar estado por defecto
-  //           this.pagesService.initialize();
-  //         }
-  //       });
-  //     }
-  //   });
-  // }
 
 
   toggleShowLeftMenuHeader() {

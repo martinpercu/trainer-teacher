@@ -1,14 +1,16 @@
-<div (click)="switchShowList()" class="z-20 absolute right-0 top-0 p-4">
+<div (click)="switchShowList()" class="z-20 absolute right-0 top-0 p-2">
 
-  <div (click)="$event.stopPropagation()" class="flex flex-col">
+    <div class="flex flex-col">
 
-    <div (click)="switchShowList()" class="cursor-pointer text-right pr-4">
-      <!-- <mat-icon fontIcon="insert_emoticon" class="scale-150 text-black dark:text-neutral-200"></mat-icon> -->
-      <mat-icon class="scale-150 text-neutral-600 dark:text-neutral-200">mood</mat-icon>
+    <div  class="flex flex-row absolute right-3 text-right pr-4 pl-4 py-2 border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-200 rounded-2xl cursor-pointer border shadow-md">
+      <div class="hidden sm:flex pr-2">Menu</div>
+      <mat-icon class="scale-150 text-neutral-600 dark:text-neutral-200">menu_open</mat-icon>
     </div>
 
+
     @if(showlist) {
-    <div (click)="switchShowList()" class="flex bg-transparent w-[100vw] h-[90vh]">
+
+    <div class="mt-12 flex bg-transparent w-[100vw] h-[92vh]">
 
       <div class="grow"></div>
 
@@ -18,7 +20,6 @@
         <div class="flex flex-row px-2 py-1 mt-1">
           <div class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
             (click)="returnMain()">
-            <!-- <mat-icon fontIcon="info" class="self-center"></mat-icon> -->
             <mat-icon>home</mat-icon>
             <div class="pl-3">Return Main</div>
           </div>
@@ -28,7 +29,6 @@
         <div class="flex flex-row px-2 py-1 mt-1">
           <div class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
             (click)="showModalInfo()">
-            <!-- <mat-icon fontIcon="info" class="self-center"></mat-icon> -->
             <mat-icon>info</mat-icon>
             <div class="pl-3">How it works</div>
           </div>
@@ -38,7 +38,6 @@
         <div class="sm:hidden flex flex-row px-2 py-1 mt-1">
           <div class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
             (click)="pdfNotAcces()">
-            <!-- <mat-icon fontIcon="picture_as_pdf" class="self-center"></mat-icon> -->
             <mat-icon>picture_as_pdf</mat-icon>
             <div class="pl-3">See Docs</div>
           </div>
@@ -48,9 +47,17 @@
         <div class="hidden sm:flex flex-row px-2 py-1 mt-1">
           <div class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
             (click)="toPdf()">
-            <!-- <mat-icon fontIcon="picture_as_pdf" class="self-center"></mat-icon> -->
             <mat-icon>picture_as_pdf</mat-icon>
             <div class="pl-3">See Docs</div>
+          </div>
+        </div>
+
+        <!-- "Go to exam" -->
+        <div class="flex flex-row px-2 py-1 mt-1">
+          <div class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
+            (click)="takeExam()">
+            <mat-icon>checklist</mat-icon>
+            <div class="pl-3">Take the Exam</div>
           </div>
         </div>
 
