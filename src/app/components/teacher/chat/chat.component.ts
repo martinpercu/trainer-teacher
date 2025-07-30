@@ -54,6 +54,21 @@ export class ChatComponent {
   // startLessonFull: string = 'Can you explain "Ethics Management for Supervisors" to me using the documents you have? Please give me a general overview of what the course is about, starting with no more than 110 words. After that, just ask me if I’d like to continue the lesson or if I want you to repeat the same explanation. Try to teach me in the most helpful way.'
   startLessonFull: string = `Can you explain "${this.pagesService.defaultTitle()}" to me using the documents you have? Please give me a general overview of what the course is about, starting with no more than 110 words. After that, just ask me if I’d like to continue the lesson or if I want you to repeat the same explanation. Try to teach me in the most helpful way.`
 
+  // start Voice
+  speakIsEnabled: boolean = true; // Controla si TTS está activado
+
+  // End Voice
+
+
+  // start Voice
+  ngOnInit(): void {
+    // Cargar voces disponibles al iniciar el componente
+    this.loadVoices();
+  }
+  // End Voice
+
+
+
 
   ngAfterViewInit(): void {
     // Escuchar el evento de scroll en el contenedor de los mensajes
@@ -64,6 +79,52 @@ export class ChatComponent {
     // Este hook se asegura de que el scroll se mueva solo después de que el DOM se haya actualizado.
     this.scrollToBottom();
   }
+
+
+
+  // Start Voice
+  // Nueva función para cargar voces disponibles
+  private loadVoices(): void {
+    window.speechSynthesis.onvoiceschanged = () => {
+      const voices = window.speechSynthesis.getVoices();
+    };
+  }
+
+
+  toggleSpeak(): void {
+    this.speakIsEnabled = !this.speakIsEnabled;
+  }
+
+
+  // Nueva función para reproducir texto como voz
+
+  speakText(text: string): void {
+    // VERY IMPORTANT ===> Clean the tail ==>  LIMPIAR LA COLA DE SPEECH!!!
+    window.speechSynthesis.cancel(); // clean the reproduction queu
+
+    if (!this.speakIsEnabled) return; // No reproducir si TTS está desactivado
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US'; // Idioma Inglés (puedes cambiar a 'es-US' u otros)
+    utterance.volume = 1; // Volumen (0 a 1)
+    utterance.rate = 1; // Velocidad (0.1 a 10)
+    utterance.pitch = 1; // Tono (0 a 2)
+
+    // Opcional: Seleccionar una voz específica
+    // List of en-US inChrome: 'Samantha', 'Victoria', 'Alex', 'Fred' and 'Google US English'
+    const voices = window.speechSynthesis.getVoices();
+    console.log('Voces disponibles en speakText:', voices.map(v => v.name)); // Depuración
+    const selectedVoice = voices.find(voice => voice.name === 'Samantha'); // Seleccionar Samantha
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+      console.log('Voz seleccionada:', selectedVoice.name, selectedVoice.voiceURI);
+    } else {
+      console.log('the selected voice not found , use en-US by default');
+    }
+
+    window.speechSynthesis.speak(utterance);
+  }
+  // End Voice
+
 
   onScroll(): void {
     const container = this.messagesContainer.nativeElement;
@@ -77,49 +138,45 @@ export class ChatComponent {
     }
   }
 
-  sendMessage_stream() {
-    if (this.userMessage.trim() === "") return;
+
+
+  sendMessage(message: string, showUserMessage: boolean = true): void {
+    if (message.trim() === "") return;
 
     this.loadingResponse = true;
-    this.chatMessages.push({ role: "user", message: this.userMessage });
+    if (showUserMessage) {
+      this.chatMessages.push({ role: "user", message });
+    }
 
     const responseMessage = { role: "assistant", message: "" };
     this.chatMessages.push(responseMessage);
 
-    console.log(this.chatMessages);
-
-
     let completeResponse = "";
     let displayedChars = 0;
     let typingInterval: any = null;
+    let responseReceived = false;
 
-    // Velocidad dinámica basada en la longitud
     const charsPerTick = Math.max(3, Math.floor(completeResponse.length / 80));
 
-    // Función para simular la escritura gradual
     const simulateTyping = () => {
-      if (displayedChars < completeResponse.length) {
+      if (displayedChars < completeResponse.length && !responseReceived) {
         const nextChunk = Math.min(displayedChars + charsPerTick, completeResponse.length);
         responseMessage.message = completeResponse.substring(0, nextChunk);
         displayedChars = nextChunk;
         this.loadingResponse = false;
         setTimeout(() => this.scrollToBottom(), 10);
       }
-      if (displayedChars >= completeResponse.length) {
+      if (displayedChars >= completeResponse.length || responseReceived) {
         clearInterval(typingInterval);
+        responseMessage.message = completeResponse;
         this.loadingResponse = false;
         this.startingResponse = false;
       }
     };
 
-
     const formData = {
-      message: this.userMessage,
+      message,
       session_id: 'gagaga',
-      // session_id: this.authService.currentUserSig()?.email + '-' + this.assistSelector.assistant_name(),
-      // session_id: this.combinedUserEmailAndAssistant(),
-      // system_prompt_text: this.assistSelector.assistant_description()
-      // system_prompt_text: 'Eres un asistente que responde unicamente usando la informacion de los PDFs que tienes en las vectorstore',
       pages: this.pagesService.pagesSelected(),
       doc_path: this.pagesService.docPath()
     };
@@ -128,7 +185,7 @@ export class ChatComponent {
       clearInterval(typingInterval);
       responseMessage.message = completeResponse;
       this.loadingResponse = false;
-    }, 10000); // 10 segundos de timeout
+    }, 10000);
 
     this.http.post("https://assistant-chat-backend-production.up.railway.app/stream_chat_test", formData, {
     // this.http.post("http://127.0.0.1:8000/stream_chat_test", formData, {
@@ -141,16 +198,14 @@ export class ChatComponent {
           if (event.type === HttpEventType.DownloadProgress) {
             const rawText = (event as HttpDownloadProgressEvent).partialText ?? "";
             completeResponse = rawText.trim();
-
             if (!typingInterval) {
               typingInterval = setInterval(simulateTyping, 80);
             }
-          }
-          else if (event.type === HttpEventType.Response) {
-            // Guarda el texto completo pero **NO lo muestra directamente**
+          } else if (event.type === HttpEventType.Response) {
             completeResponse = (event.body as string)?.trim() || completeResponse;
-
-            // Si el simulador sigue activo, permite que termine naturalmente
+            responseReceived = true;
+            responseMessage.message = completeResponse;
+            this.speakText(completeResponse);
           }
         },
         error: (err) => {
@@ -161,22 +216,21 @@ export class ChatComponent {
           this.loadingResponse = false;
         },
         complete: () => {
-          // El simulador se encargará de completar el mensaje
           clearTimeout(timeout);
         }
       });
 
-    // Clear input
     this.userMessage = "";
-    setTimeout(() => {
-      this.userMessage = "";
-      this.adjustHeight()
-    }, 100);
+    if (showUserMessage) {
+      setTimeout(() => {
+        this.userMessage = "";
+        this.adjustHeight();
+      }, 100);
+    }
 
     setTimeout(() => {
       this.scrollToBottomFromArrow();
     }, 100);
-
   }
 
 
@@ -200,10 +254,17 @@ export class ChatComponent {
     textarea.style.height = `${textarea.scrollHeight}px`;
   }
 
+  // handleKeydown(event: KeyboardEvent): void {
+  //   if (event.key === 'Enter' && !event.shiftKey) {
+  //     event.preventDefault();
+  //     this.sendMessage_stream();
+  //   }
+  // }
+
   handleKeydown(event: KeyboardEvent): void {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
-      this.sendMessage_stream();
+      this.sendMessage(this.userMessage);
     }
   }
 
@@ -211,108 +272,238 @@ export class ChatComponent {
     this.visualStatesService.togleShowLeftMenu()
   }
 
-  sendMessage_stream_without_text(sendingMessage: string) {
-    // if (this.userMessage.trim() === "") return;
-    console.log('esot aqui<s');
-
-    console.log(this.pagesService.pagesSelected());
 
 
-    this.userMessage = sendingMessage
+  // sendMessage_stream() {
+  //   if (this.userMessage.trim() === "") return;
 
-    this.loadingResponse = true;
-    // this.chatMessages.push({ role: "user", message: this.userMessage });
+  //   this.loadingResponse = true;
+  //   this.chatMessages.push({ role: "user", message: this.userMessage });
 
-    const responseMessage = { role: "assistant", message: "" };
-    this.chatMessages.push(responseMessage);
+  //   const responseMessage = { role: "assistant", message: "" };
+  //   this.chatMessages.push(responseMessage);
 
-    let completeResponse = "";
-    let displayedChars = 0;
-    let typingInterval: any = null;
-
-    // Velocidad dinámica basada en la longitud
-    const charsPerTick = Math.max(3, Math.floor(completeResponse.length / 80));
-
-    // Función para simular la escritura gradual
-    const simulateTyping = () => {
-      if (displayedChars < completeResponse.length) {
-        const nextChunk = Math.min(displayedChars + charsPerTick, completeResponse.length);
-        responseMessage.message = completeResponse.substring(0, nextChunk);
-        displayedChars = nextChunk;
-        this.loadingResponse = false;
-        setTimeout(() => this.scrollToBottom(), 10);
-      }
-      if (displayedChars >= completeResponse.length) {
-        clearInterval(typingInterval);
-        this.loadingResponse = false;
-        this.startingResponse = false;
-      }
-    };
-
-    const formData = {
-      message: this.userMessage,
-      // session_id: this.authService.currentUserSig()?.email + '-' + this.assistSelector.assistant_name(),
-      // session_id: this.combinedUserEmailAndAssistant(),
-      // system_prompt_text: this.assistSelector.assistant_description()
-      // system_prompt_text: 'Eres un profesor que analiza y entiende los documentos recibidos. Puedes hacer preguntas en relacion a los PDF y testear el conocimiento del user. Importante solamente puedes usar la informacion de los PDFs que tienes en las vectorstore',
-      pages: this.pagesService.pagesSelected(),
-      doc_path: this.pagesService.docPath()
-    };
-
-    console.log(formData);
-
-    const timeout = setTimeout(() => {
-      clearInterval(typingInterval);
-      responseMessage.message = completeResponse;
-      this.loadingResponse = false;
-    }, 10000); // 10 segundos de timeout
-
-    // this.http.post("https://assistant-chat-backend-production.up.railway.app/stream_chat_test", formData, {
-    this.http.post("http://127.0.0.1:8000/stream_chat_test", formData, {
-      responseType: 'text',
-      observe: 'events',
-      reportProgress: true,
-    })
-      .subscribe({
-        next: (event: HttpEvent<string>) => {
-          if (event.type === HttpEventType.DownloadProgress) {
-            const rawText = (event as HttpDownloadProgressEvent).partialText ?? "";
-            completeResponse = rawText.trim();
-
-            if (!typingInterval) {
-              typingInterval = setInterval(simulateTyping, 80);
-            }
-          }
-          else if (event.type === HttpEventType.Response) {
-            // Guarda el texto completo pero **NO lo muestra directamente**
-            completeResponse = (event.body as string)?.trim() || completeResponse;
-
-            // Si el simulador sigue activo, permite que termine naturalmente
-          }
-        },
-        error: (err) => {
-          console.error('Error:', err);
-          clearInterval(typingInterval);
-          clearTimeout(timeout);
-          responseMessage.message = "Error al obtener la respuesta. Intenta de nuevo.";
-          this.loadingResponse = false;
-        },
-        complete: () => {
-          // El simulador se encargará de completar el mensaje
-          clearTimeout(timeout);
-        }
-      });
+  //   console.log(this.chatMessages);
 
 
-    // Clear input
-    this.userMessage = "";
-    setTimeout(() => {
-      this.userMessage = "";
-    }, 100);
+  //   let completeResponse = "";
+  //   let displayedChars = 0;
+  //   let typingInterval: any = null;
+  //   let responseReceived = false; // Bandera para saber si la respuesta completa está lista
 
-    setTimeout(() => {
-      this.scrollToBottomFromArrow();
-    }, 100);
-  }
+  //   // Velocidad dinámica basada en la longitud
+  //   const charsPerTick = Math.max(3, Math.floor(completeResponse.length / 80));
+
+  //   // Función para simular la escritura gradual
+  //   const simulateTyping = () => {
+  //     if (displayedChars < completeResponse.length) {
+  //       const nextChunk = Math.min(displayedChars + charsPerTick, completeResponse.length);
+  //       responseMessage.message = completeResponse.substring(0, nextChunk);
+  //       displayedChars = nextChunk;
+  //       this.loadingResponse = false;
+  //       setTimeout(() => this.scrollToBottom(), 10);
+  //     }
+  //     if (displayedChars >= completeResponse.length) {
+  //       clearInterval(typingInterval);
+  //       responseMessage.message = completeResponse; // Asegurar que el texto completo se muestre
+  //       this.loadingResponse = false;
+  //       this.startingResponse = false;
+  //       // // Start Voice
+  //       // // Reproducir la respuesta completa como voz
+  //       // this.speakText(completeResponse);
+  //       // // End Voice
+  //     }
+  //   };
+
+
+  //   const formData = {
+  //     message: this.userMessage,
+  //     session_id: 'gagaga',
+  //     // session_id: this.authService.currentUserSig()?.email + '-' + this.assistSelector.assistant_name(),
+  //     // session_id: this.combinedUserEmailAndAssistant(),
+  //     // system_prompt_text: this.assistSelector.assistant_description()
+  //     // system_prompt_text: 'Eres un asistente que responde unicamente usando la informacion de los PDFs que tienes en las vectorstore',
+  //     pages: this.pagesService.pagesSelected(),
+  //     doc_path: this.pagesService.docPath()
+  //   };
+
+  //   const timeout = setTimeout(() => {
+  //     clearInterval(typingInterval);
+  //     responseMessage.message = completeResponse;
+  //     this.loadingResponse = false;
+  //   }, 10000); // 10 segundos de timeout
+
+  //   // this.http.post("https://assistant-chat-backend-production.up.railway.app/stream_chat_test", formData, {
+  //   this.http.post("http://127.0.0.1:8000/stream_chat_test", formData, {
+  //     responseType: 'text',
+  //     observe: 'events',
+  //     reportProgress: true,
+  //   })
+  //     .subscribe({
+  //       next: (event: HttpEvent<string>) => {
+  //         if (event.type === HttpEventType.DownloadProgress) {
+  //           const rawText = (event as HttpDownloadProgressEvent).partialText ?? "";
+  //           completeResponse = rawText.trim();
+
+  //           if (!typingInterval) {
+  //             typingInterval = setInterval(simulateTyping, 80);
+  //           }
+  //         }
+  //         else if (event.type === HttpEventType.Response) {
+  //           // Guarda el texto completo pero **NO lo muestra directamente**
+  //           completeResponse = (event.body as string)?.trim() || completeResponse;
+
+  //           responseReceived = true; // Marcar que la respuesta completa está recibida
+  //           responseMessage.message = completeResponse; // Mostrar el texto completo en la UI
+
+  //           // Start Voice
+  //           // Reproducir la respuesta completa como voz
+  //           this.speakText(completeResponse);
+  //           // End Voice
+
+  //           // Si el simulador sigue activo, permite que termine naturalmente
+  //         }
+  //       },
+  //       error: (err) => {
+  //         console.error('Error:', err);
+  //         clearInterval(typingInterval);
+  //         clearTimeout(timeout);
+  //         responseMessage.message = "Error al obtener la respuesta. Intenta de nuevo.";
+  //         this.loadingResponse = false;
+  //       },
+  //       complete: () => {
+  //         // El simulador se encargará de completar el mensaje
+  //         clearTimeout(timeout);
+  //       }
+  //     });
+
+  //   // Clear input
+  //   this.userMessage = "";
+  //   setTimeout(() => {
+  //     this.userMessage = "";
+  //     this.adjustHeight()
+  //   }, 100);
+
+  //   setTimeout(() => {
+  //     this.scrollToBottomFromArrow();
+  //   }, 100);
+
+  // }
+
+
+
+
+  // sendMessage_stream_without_text(sendingMessage: string) {
+  //   // if (this.userMessage.trim() === "") return;
+  //   console.log('esot aqui<s');
+
+  //   console.log(this.pagesService.pagesSelected());
+
+
+  //   this.userMessage = sendingMessage
+
+  //   this.loadingResponse = true;
+  //   // this.chatMessages.push({ role: "user", message: this.userMessage });
+
+  //   const responseMessage = { role: "assistant", message: "" };
+  //   this.chatMessages.push(responseMessage);
+
+  //   let completeResponse = "";
+  //   let displayedChars = 0;
+  //   let typingInterval: any = null;
+  //   let responseReceived = false; // Bandera para saber si la respuesta completa está lista
+
+  //   // Velocidad dinámica basada en la longitud
+  //   const charsPerTick = Math.max(3, Math.floor(completeResponse.length / 80));
+
+  //   // Función para simular la escritura gradual
+  //   const simulateTyping = () => {
+  //     if (displayedChars < completeResponse.length) {
+  //       const nextChunk = Math.min(displayedChars + charsPerTick, completeResponse.length);
+  //       responseMessage.message = completeResponse.substring(0, nextChunk);
+  //       displayedChars = nextChunk;
+  //       this.loadingResponse = false;
+  //       setTimeout(() => this.scrollToBottom(), 10);
+  //     }
+  //     if (displayedChars >= completeResponse.length) {
+  //       clearInterval(typingInterval);
+  //       responseMessage.message = completeResponse; // Asegurar que el texto completo se muestre
+  //       this.loadingResponse = false;
+  //       this.startingResponse = false;
+  //     }
+  //   };
+
+  //   const formData = {
+  //     message: this.userMessage,
+  //     // session_id: this.authService.currentUserSig()?.email + '-' + this.assistSelector.assistant_name(),
+  //     // session_id: this.combinedUserEmailAndAssistant(),
+  //     // system_prompt_text: this.assistSelector.assistant_description()
+  //     // system_prompt_text: 'Eres un profesor que analiza y entiende los documentos recibidos. Puedes hacer preguntas en relacion a los PDF y testear el conocimiento del user. Importante solamente puedes usar la informacion de los PDFs que tienes en las vectorstore',
+  //     pages: this.pagesService.pagesSelected(),
+  //     doc_path: this.pagesService.docPath()
+  //   };
+
+  //   console.log(formData);
+
+  //   const timeout = setTimeout(() => {
+  //     clearInterval(typingInterval);
+  //     responseMessage.message = completeResponse;
+  //     this.loadingResponse = false;
+  //   }, 10000); // 10 segundos de timeout
+
+  //   // this.http.post("https://assistant-chat-backend-production.up.railway.app/stream_chat_test", formData, {
+  //   this.http.post("http://127.0.0.1:8000/stream_chat_test", formData, {
+  //     responseType: 'text',
+  //     observe: 'events',
+  //     reportProgress: true,
+  //   })
+  //     .subscribe({
+  //       next: (event: HttpEvent<string>) => {
+  //         if (event.type === HttpEventType.DownloadProgress) {
+  //           const rawText = (event as HttpDownloadProgressEvent).partialText ?? "";
+  //           completeResponse = rawText.trim();
+
+  //           if (!typingInterval) {
+  //             typingInterval = setInterval(simulateTyping, 80);
+  //           }
+  //         }
+  //         else if (event.type === HttpEventType.Response) {
+  //           // Guarda el texto completo pero **NO lo muestra directamente**
+  //           completeResponse = (event.body as string)?.trim() || completeResponse;
+  //           responseReceived = true; // Marcar que la respuesta completa está recibida
+  //           responseMessage.message = completeResponse; // Mostrar el texto completo en la UI
+
+  //           // Start Voice
+  //           // Reproducir la respuesta completa como voz
+  //           this.speakText(completeResponse);
+  //           // End Voice
+
+  //           // Si el simulador sigue activo, permite que termine naturalmente
+  //         }
+  //       },
+  //       error: (err) => {
+  //         console.error('Error:', err);
+  //         clearInterval(typingInterval);
+  //         clearTimeout(timeout);
+  //         responseMessage.message = "Error al obtener la respuesta. Intenta de nuevo.";
+  //         this.loadingResponse = false;
+  //       },
+  //       complete: () => {
+  //         // El simulador se encargará de completar el mensaje
+  //         clearTimeout(timeout);
+  //       }
+  //     });
+
+
+  //   // Clear input
+  //   this.userMessage = "";
+  //   setTimeout(() => {
+  //     this.userMessage = "";
+  //   }, 100);
+
+  //   setTimeout(() => {
+  //     this.scrollToBottomFromArrow();
+  //   }, 100);
+  // }
 
 }
