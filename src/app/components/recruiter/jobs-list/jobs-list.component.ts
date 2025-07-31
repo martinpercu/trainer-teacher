@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { Job } from '@models/job';
 import { Candidate } from '@models/candidate';
 
+import { environment } from '@env/environment';
+
 @Component({
   selector: 'app-jobs-list',
   imports: [TranslocoPipe, MatIconModule],
@@ -31,7 +33,7 @@ export class JobsListComponent {
     console.log(this.candidatesForJobAndExamPassed);
     this.showCandidates = false
     this.showCandidatesExamPassed = false
-    this.magicLink = "http://localhost:4200/job/"+this.job.jobId;
+    this.magicLink = `${environment.BASEURL}/job/${this.job.jobId}`;
     console.log(this.magicLink);
     console.log('END OnINIT Job-List');
   };

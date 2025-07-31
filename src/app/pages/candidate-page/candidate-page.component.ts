@@ -62,5 +62,12 @@ export class CandidatePageComponent {
     this.showRegister = !this.showRegister;
   }
 
+  async testeo() {
+    const resumeUrl = "https://firebasestorage.googleapis.com/v0/b/trainer-teacher.firebasestorage.app/o/resumes%2Fy5qcLmxLWEfPoq6gV39UNUrketA3%2F1753979962452_Resume-SUMsmall-skil6.pdf?alt=media&token=d5157d1a-cc5d-489d-a9f6-5cd1921fa022";
+    const userId = "IoUuFFIjqK8cv8lR1vQR";
+    const fileType = "application/pdf";
+    const texho = await this.candidateService.processResumeWithPythonTest(resumeUrl, userId, fileType)
+    console.log(texho);
+  }
 
 }

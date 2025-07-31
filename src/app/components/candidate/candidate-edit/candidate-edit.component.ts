@@ -81,11 +81,13 @@ export class CandidateEditComponent {
   saveUser(event: Event) {
     if (this.form.valid) {
     // console.log(this.form.value);
-    this.candidateService.updateOneUser(this.form.value, this.candidateId);
+    const updatedUser = this.candidateService.updateOneUser(this.form.value, this.candidateId);
+    // this.candidate = updatedUser
     // this.user = this.form.value;
     // console.log(this.userId);
     // this.getOneCandidate(); // very important each time save!!!
-    window.location.reload();
+    console.log(updatedUser);
+    // window.location.reload();
 
     // this.editBasicInfo = false;
     // this.editShipping = false;

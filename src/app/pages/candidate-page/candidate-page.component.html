@@ -46,8 +46,13 @@
   </div>
 }
 
+
 @if(candidateService.candidateSig()) {
   <app-candidate-header></app-candidate-header>
+
+  <div (click)="testeo()" class="h-20 bg-red-400">
+    TESTEO
+  </div>
   <!-- <app-candidate-logout></app-candidate-logout> -->
 @if(!candidateService.candidateSig()?.lastname){
 <div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
@@ -61,6 +66,7 @@
   </div>
 </div>
 }
+
 
 @if(!candidateService.candidateSig()?.resumePath && candidateService.candidateSig()?.lastname){
 <div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
@@ -93,8 +99,6 @@
   </div>
 </div>
 }
-
-
 <!-- <div>
   <app-candidate-edit></app-candidate-edit>
 </div> -->
