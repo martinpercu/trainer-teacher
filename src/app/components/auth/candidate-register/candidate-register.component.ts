@@ -35,6 +35,7 @@ export class CandidateRegisterComponent {
 
   jobRecruiterId: string = '';
   jobId: string = '';
+  resumeInDB: boolean = false;
 
   async ngOnInit() {
     // Extraer el jobPositionId
@@ -58,7 +59,7 @@ export class CandidateRegisterComponent {
   onSubmit(): void {
     const rawForm = this.form.getRawValue();
     this.candidateAuthService
-      .register(rawForm.email, rawForm.username, rawForm.password, this.jobRecruiterId, this.jobId)
+      .register(rawForm.email, rawForm.username, rawForm.password, this.jobRecruiterId, this.jobId, this.resumeInDB)
       .subscribe({
         next: () => {
           if(this.jobId){

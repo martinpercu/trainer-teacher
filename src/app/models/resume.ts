@@ -1,31 +1,30 @@
 export interface Works {
-  jobtitle: string;
-  company: string;
-  dates: string;
-  description: string;
+  jobtitle?: string;
+  company?: string;
+  dates?: string;
+  description?: string;
 }
 
 export interface Certification {
-  certificate: string;
-  issuingOrganization: string;
-  year: string;
+  certificate?: string;
+  issuingOrganization?: string;
+  year?: string;
 }
 
 export interface Education {
-  degree: string;
-  institution: string;
-  graduationYear: string;
+  degree?: string;
+  institution?: string;
+  graduationYear?: string;
 }
 
 export interface Resume {
   candidateUID: string;
-  jobsRelated: string;
-  recruiterId: string;
-  name: string;
-  email: string;
-  phone: string;
-  summary: string;
-  works: Works[]; // Texto de la pregunta
-  certifications: Certification[]; // Texto de la pregunta
-  education: Education[]; // Texto de la pregunta
+  jobRelated: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  summary?: string;
+  works?: Works[]; // Texto de la pregunta
+  certifications?: Certification[]; // Texto de la pregunta
+  education?: Education[]; // Texto de la pregunta
 }

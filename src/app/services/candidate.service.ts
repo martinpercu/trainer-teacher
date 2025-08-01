@@ -171,7 +171,7 @@ getCandidatesByRecruiter(recruiterUid: string): Observable<Candidate[]> {
       console.error('Error al actualizar usuario:', error);
       throw error;
     });
-}
+  }
 
 
 
