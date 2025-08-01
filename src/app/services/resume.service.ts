@@ -56,44 +56,86 @@ export class ResumeService {
   async saveResumeDataToFirestore(resumeData: any, candidateUID: string, jobId: string): Promise<string> {
     console.log(`Saving resume data for user: ${candidateUID}`);
 
-    // Here's where we map the raw JSON fields to your Resume model fields.
     const newResume: Resume = {
       candidateUID: candidateUID,
       jobRelated: jobId,
 
-      name: resumeData['Name'],
-      email: resumeData['Email'],
-      phone: resumeData['Phone Number'],
-      summary: resumeData['Summary/Objective'],
+      name: resumeData['Name'] || null,
+      email: resumeData['Email'] || null,
+      phone: resumeData['Phone Number'] || null,
+      summary: resumeData['Summary/Objective'] || null,
 
-      // Mapea los arrays de objetos
-      works: resumeData['Work Experience'].map((work: any) => ({
-        jobtitle: work['Job Title'],
-        company: work['Company'],
-        dates: work['Dates'],
-        description: work['Description'],
+      // Validamos si 'Work Experience' existe antes de mapear
+      works: (resumeData['Work Experience'] || []).map((work: any) => ({
+        jobtitle: work['Job Title'] || null,
+        company: work['Company'] || null,
+        dates: work['Dates'] || null,
+        description: work['Description'] || null,
       })),
 
-      certifications: resumeData['Certification'].map((cert: any) => ({
-        certificate: cert['Certificate'],
-        issuingOrganization: cert['Issuing Organization'],
-        year: cert['Year'],
+      // <-- CORRECCIÓN AQUÍ: Validamos si 'Certification' existe antes de mapear
+      certifications: (resumeData['Certification'] || []).map((cert: any) => ({
+        certificate: cert['Certificate'] || null,
+        issuingOrganization: cert['Issuing Organization'] || null,
+        year: cert['Year'] || null,
       })),
 
-      education: resumeData['Education'].map((edu: any) => ({
-        degree: edu['Degree'],
-        institution: edu['Institution'],
-        year: edu['Graduation Year'], // <-- Nota: el campo de tu modelo es 'year' pero el JSON es 'Graduation Year'
+      // <-- CORRECCIÓN AQUÍ: Validamos si 'Education' existe antes de mapear
+      education: (resumeData['Education'] || []).map((edu: any) => ({
+        degree: edu['Degree'] || null,
+        institution: edu['Institution'] || null,
+        year: edu['Graduation Year'] || null,
       })),
     };
+
     console.log(newResume);
 
-
-    // Usamos addDoc para crear un documento con ID aleatorio
     const docRef = await addDoc(this.resumesCollection, newResume);
     console.log(`Resume data saved successfully with document ID: ${docRef.id}`);
 
     return docRef.id;
   }
+  // async saveResumeDataToFirestore(resumeData: any, candidateUID: string, jobId: string): Promise<string> {
+  //   console.log(`Saving resume data for user: ${candidateUID}`);
+
+  //   // Here's where we map the raw JSON fields to your Resume model fields.
+  //   const newResume: Resume = {
+  //     candidateUID: candidateUID,
+  //     jobRelated: jobId,
+
+  //     name: resumeData['Name'],
+  //     email: resumeData['Email'],
+  //     phone: resumeData['Phone Number'],
+  //     summary: resumeData['Summary/Objective'],
+
+  //     // Mapea los arrays de objetos
+  //     works: resumeData['Work Experience'].map((work: any) => ({
+  //       jobtitle: work['Job Title'],
+  //       company: work['Company'],
+  //       dates: work['Dates'],
+  //       description: work['Description'],
+  //     })),
+
+  //     certifications: resumeData['Certification'].map((cert: any) => ({
+  //       certificate: cert['Certificate'],
+  //       issuingOrganization: cert['Issuing Organization'],
+  //       year: cert['Year'],
+  //     })),
+
+  //     education: resumeData['Education'].map((edu: any) => ({
+  //       degree: edu['Degree'],
+  //       institution: edu['Institution'],
+  //       year: edu['Graduation Year'], // <-- Nota: el campo de tu modelo es 'year' pero el JSON es 'Graduation Year'
+  //     })),
+  //   };
+  //   console.log(newResume);
+
+
+  //   // Usamos addDoc para crear un documento con ID aleatorio
+  //   const docRef = await addDoc(this.resumesCollection, newResume);
+  //   console.log(`Resume data saved successfully with document ID: ${docRef.id}`);
+
+  //   return docRef.id;
+  // }
 
 }
