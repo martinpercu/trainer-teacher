@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CandidateLogoutComponent } from '@auth/candidate-logout/candidate-logout.component';
 import { MatIconModule } from '@angular/material/icon';
+
+import { CandidateService } from '@services/candidate.service'
 
 
 @Component({
@@ -10,5 +12,6 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './candidate-header.component.css'
 })
 export class CandidateHeaderComponent {
+  candidateService = inject(CandidateService);
 
 }

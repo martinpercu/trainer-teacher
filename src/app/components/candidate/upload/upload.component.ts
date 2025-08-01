@@ -125,6 +125,21 @@ export class UploadComponent {
     }
   }
 
+  async triggerResumeProcessing(resumeUrl: string, userId: string, fileType: string): Promise<any> {
+    console.log('Sending request to Python server for resume processing...');
+    try {
+      const response = await this.candidateService.processResumeWithPython(resumeUrl, userId, fileType);
+      console.log('Resume processing request sent. Response from FastAPI:', response);
+      return response; // Devuelve la respuesta para usarla en el componente
+    } catch (err) {
+      console.error('Error triggering resume processing:', err);
+      console.log('Error details:', JSON.stringify(err)); // Más detalles del error
+      alert('An error occurred while processing your resume. Please contact support.');
+      throw err; // Propaga el error para manejarlo en el llamador
+    }
+  }
+
+
   // // --- NEW METHOD: Calls your FastAPI server to process the resume ---
   // async triggerResumeProcessing(resumeUrl: string, userId: string, fileType: string) {
   //   console.log('Sending request to Python server for resume processing...');
@@ -155,19 +170,6 @@ export class UploadComponent {
   //   window.location.reload();
   // }
 
-  async triggerResumeProcessing(resumeUrl: string, userId: string, fileType: string): Promise<any> {
-  console.log('Sending request to Python server for resume processing...');
-  try {
-    const response = await this.candidateService.processResumeWithPython(resumeUrl, userId, fileType);
-    console.log('Resume processing request sent. Response from FastAPI:', response);
-    return response; // Devuelve la respuesta para usarla en el componente
-  } catch (err) {
-    console.error('Error triggering resume processing:', err);
-    console.log('Error details:', JSON.stringify(err)); // Más detalles del error
-    alert('An error occurred while processing your resume. Please contact support.');
-    throw err; // Propaga el error para manejarlo en el llamador
-  }
-}
 
 
 
@@ -198,7 +200,6 @@ export class UploadComponent {
   //     console.error('No file selected or user not authenticated');
   //   }
   // }
-
 
 
 }
