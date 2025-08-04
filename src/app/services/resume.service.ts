@@ -3,6 +3,7 @@ import {
   Firestore,
   collection,
   addDoc,
+  getDocs,
   collectionData,
   getDoc,
   deleteDoc,
@@ -23,6 +24,7 @@ import { Resume } from '@models/resume'
 @Injectable({
   providedIn: 'root'
 })
+
 export class ResumeService {
   private firestore = inject(Firestore);
   private http = inject(HttpClient);
@@ -95,47 +97,35 @@ export class ResumeService {
 
     return docRef.id;
   }
-  // async saveResumeDataToFirestore(resumeData: any, candidateUID: string, jobId: string): Promise<string> {
-  //   console.log(`Saving resume data for user: ${candidateUID}`);
-
-  //   // Here's where we map the raw JSON fields to your Resume model fields.
-  //   const newResume: Resume = {
-  //     candidateUID: candidateUID,
-  //     jobRelated: jobId,
-
-  //     name: resumeData['Name'],
-  //     email: resumeData['Email'],
-  //     phone: resumeData['Phone Number'],
-  //     summary: resumeData['Summary/Objective'],
-
-  //     // Mapea los arrays de objetos
-  //     works: resumeData['Work Experience'].map((work: any) => ({
-  //       jobtitle: work['Job Title'],
-  //       company: work['Company'],
-  //       dates: work['Dates'],
-  //       description: work['Description'],
-  //     })),
-
-  //     certifications: resumeData['Certification'].map((cert: any) => ({
-  //       certificate: cert['Certificate'],
-  //       issuingOrganization: cert['Issuing Organization'],
-  //       year: cert['Year'],
-  //     })),
-
-  //     education: resumeData['Education'].map((edu: any) => ({
-  //       degree: edu['Degree'],
-  //       institution: edu['Institution'],
-  //       year: edu['Graduation Year'], // <-- Nota: el campo de tu modelo es 'year' pero el JSON es 'Graduation Year'
-  //     })),
-  //   };
-  //   console.log(newResume);
 
 
-  //   // Usamos addDoc para crear un documento con ID aleatorio
-  //   const docRef = await addDoc(this.resumesCollection, newResume);
-  //   console.log(`Resume data saved successfully with document ID: ${docRef.id}`);
 
-  //   return docRef.id;
-  // }
+  async getOneResume(candidateUID: string, jobRelated: string): Promise<Resume | null> {
+    // Usa 'this.resumesCollection' directamente
+    const q = query(
+      this.resumesCollection,
+      where('candidateUID', '==', candidateUID),
+      where('jobRelated', '==', jobRelated)
+    );
+
+    try {
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        console.log('No se encontró ningún currículum con esos datos.');
+        return null;
+      }
+
+      const resumeDoc = querySnapshot.docs[0];
+      const resumeData = resumeDoc.data();
+
+      return resumeData as Resume;
+    } catch (error) {
+      console.error('Error al obtener el currículum:', error);
+      return null;
+    }
+
+  }
+
 
 }

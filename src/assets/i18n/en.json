@@ -99,6 +99,12 @@
     "zipcode": "Zip Code",
     "continue": "Continue"
   },
+  "candidate_resume": {
+    "name" : "First name",
+    "lastname" : "Last name",
+    "email" : "Email",
+    "summary": "Create and Continue"
+  },
   "position_edit": {
     "select_job": "Select Position",
     "select_a_job": "Select a Job Position",

@@ -99,6 +99,12 @@
     "zipcode": "Codigo Postal",
     "continue": "Continuar"
   },
+  "candidate_resume": {
+    "name" : "Nombre",
+    "lastname" : "Apellido",
+    "email" : "Email",
+    "summary": "Resumen"
+  },
   "position_edit": {
     "select_job" : "Selecciona Puesto",
     "select_a_job" : "Selecciona un Puesto",

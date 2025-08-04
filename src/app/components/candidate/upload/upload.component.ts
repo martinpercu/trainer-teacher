@@ -46,13 +46,6 @@ export class UploadComponent {
     console.log(this.jobId);
   }
 
-  // onFileSelected(event: Event) {
-  //   const input = event.target as HTMLInputElement;
-  //   if (input.files && input.files.length > 0) {
-  //     this.selectedFile = input.files[0];
-  //     this.uploadResume()
-  //   }
-  // }
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -149,7 +142,7 @@ export class UploadComponent {
   async loadResumeData(resumeRawJson: any) {
     console.log('In loadResumeData');
     const resumeId = await this.resumeService.saveResumeDataToFirestore(resumeRawJson, this.userId, this.jobId);
-    this.switchBarState(); // Always will close the loadingBar
+    this.switchBarState(); // Should always close the loadingBar
     if (resumeId) {
         console.log('Documento creado con ID:', resumeId);
         const candidateUpdate = { resumeInDB: true };

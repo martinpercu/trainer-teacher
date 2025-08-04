@@ -23,8 +23,13 @@ import { JobsCrudComponent } from '@recruiter/jobs-crud/jobs-crud.component';
 import { RecruiterDashboardComponent } from '@recruiter/recruiter-dashboard/recruiter-dashboard.component';
 import { UploadComponent } from '@components/candidate/upload/upload.component';
 import { PdfShowComponent } from '@shared/pdf-show/pdf-show.component';
+import { CandidateResumeEditComponent } from '@components/candidate/candidate-resume-edit/candidate-resume-edit.component';
 
 export const routes: Routes = [
+  {
+    path:'caca',
+    component: CandidateResumeEditComponent
+  },
   {
     path:'resume/:pdfname',
     component: PdfShowComponent

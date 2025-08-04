@@ -12,6 +12,7 @@ import { CandidateAuthService } from '@services/candidate-auth.service';
 
 import { CandidateEditComponent } from '@candidate/candidate-edit/candidate-edit.component';
 import { CandidateHeaderComponent } from '@candidate/candidate-header/candidate-header.component';
+import { CandidateResumeEditComponent } from '@candidate/candidate-resume-edit/candidate-resume-edit.component';
 
 import { UploadComponent } from '@components/candidate/upload/upload.component';
 
@@ -21,7 +22,7 @@ import { Candidate } from '@models/candidate';
 
 @Component({
   selector: 'app-candidate-page',
-  imports: [TranslocoPipe, CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent, CandidateHeaderComponent],
+  imports: [TranslocoPipe, CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent, CandidateHeaderComponent, CandidateResumeEditComponent],
   templateUrl: './candidate-page.component.html'
 })
 export class CandidatePageComponent {
