@@ -1,36 +1,36 @@
 <div class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-lg mb-2 p-6 border border-neutral-200 dark:border-neutral-700">
   <!-- Header -->
-  <div class="flex items-center justify-between mb-4">
+  <div class="flex items-center justify-between mb-8">
     <div class="flex items-center space-x-2">
-      <mat-icon class="text-neutral-600 dark:text-neutral-300">person</mat-icon>
+      <mat-icon class="text-neutral-600 dark:text-neutral-300">smart_toy</mat-icon>
       <h2 class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">{{ teacher.name }}</h2>
     </div>
-    <span class="text-sm text-neutral-500 dark:text-neutral-400">{{ teacher.defaultTitle }}</span>
+    <!-- <span class="text-sm text-neutral-500 dark:text-neutral-400">{{ teacher.defaultTitle }}</span> -->
   </div>
 
   <!-- Details Section -->
-  <div class="grid grid-cols-1 gap-4">
+  <div class="grid grid-cols-2 gap-4">
     <!-- Name (Redundant) -->
-    <div class="flex items-center space-x-3">
-      <mat-icon class="text-neutral-600 dark:text-neutral-300">person_outline</mat-icon>
+    <!-- <div class="flex items-center space-x-3">
+      <mat-icon class="text-neutral-600 dark:text-neutral-300">smart_toy</mat-icon>
       <div>
         <div class="text-sm font-medium text-neutral-800 dark:text-neutral-200">Name</div>
         <div class="text-base text-neutral-600 dark:text-neutral-400">{{ teacher.name }}</div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Default Title -->
     <div class="flex items-center space-x-3">
-      <mat-icon class="text-neutral-600 dark:text-neutral-300">badge</mat-icon>
+      <mat-icon class="text-neutral-600 dark:text-neutral-300">topic</mat-icon>
       <div>
-        <div class="text-sm font-medium text-neutral-800 dark:text-neutral-200">Title</div>
+        <div class="text-sm font-medium text-neutral-800 dark:text-neutral-200">Subject</div>
         <div class="text-base text-neutral-600 dark:text-neutral-400">{{ teacher.defaultTitle }}</div>
       </div>
     </div>
 
     <!-- Document Path -->
     <div class="flex items-center space-x-3">
-      <mat-icon class="text-neutral-600 dark:text-neutral-300">description</mat-icon>
+      <mat-icon class="text-neutral-600 dark:text-neutral-300">book_5</mat-icon>
       <div>
         <!-- <div class="text-sm font-medium text-neutral-800 dark:text-neutral-200">Document:</div> -->
         <!-- <div class="text-base text-neutral-600 dark:text-neutral-400">

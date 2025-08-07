@@ -14,53 +14,58 @@ import { UserService } from '@services/user.service';
 import { CourseCrudService } from '@services/course-crud.service';
 import { ResultService } from '@services/result.service';
 import { TeacherCrudService } from '@services/teacher-crud.service';
+import { ExamCrudService } from '@services/exam-crud.service';
 
 import { Course } from '@models/course';
 import { Student } from '@models/student';
 import { User } from '@models/user';
 import { Result } from '@models/result';
+import { Exam } from '@models/exam';
 
 import { Observable } from 'rxjs';
 import { ExamResultListComponent } from "../exam-result-list/exam-result-list.component";
 import { Teacher } from '@models/teacher';
 import { TeacherListComponent } from "../teacher-list/teacher-list.component";
+import { ExamsListComponent } from "../exams-list/exams-list.component";
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatIconModule, CourseCardComponent, StudentListComponent, ExamResultListComponent, TeacherListComponent],
+  imports: [CommonModule, MatIconModule, StudentListComponent, ExamResultListComponent, TeacherListComponent, ExamsListComponent],
   templateUrl: './dashboard.component.html'
 })
 
 export class DashboardComponent implements OnInit {
 
   userService = inject(UserService);
-  courseService = inject(CourseService);
+  // courseService = inject(CourseService);
   studentService = inject(StudentService);
-  courseCrudService = inject(CourseCrudService);
+  // courseCrudService = inject(CourseCrudService);
   resultService = inject(ResultService);
   teacherCrudService = inject(TeacherCrudService);
+  examCrudService = inject(ExamCrudService);
 
-  courses: Course[] = [];
+  // courses: Course[] = [];
   students: Student[] = [];
   users: User[] = [];
   results: Result[] = [];
   usersWithResults: { user: User; results: Result[] }[] = [];
   teachers: Teacher[] = [];
+  exams: Exam[] = [];
 
 
-  currentView: 'courses' | 'students' | 'results' | 'config' | 'exams' = 'students'; // Default to courses
+  currentView: 'teachers' | 'courses' | 'students' | 'results' | 'config' | 'exams' = 'students'; // Default to courses
 
   ngOnInit() {
     // this.userService.getAllUsers().subscribe(users => {
     //   this.users = users;
     //   console.log(this.users);
     // })
-    this.courseCrudService.getCourses().subscribe(courses => {
-      this.courses = courses;
-      console.log(this.courses);
-    })
+    // this.courseCrudService.getCourses().subscribe(courses => {
+    //   this.courses = courses;
+    //   console.log(this.courses);
+    // })
 
     this.resultService.getAllResults().subscribe(results => {
       this.results = results;
@@ -85,9 +90,14 @@ export class DashboardComponent implements OnInit {
       this.teachers = teachers;
       console.log(this.teachers);
     })
+
+    this.examCrudService.getExams().subscribe(exams => {
+      this.exams = exams;
+      console.log(this.exams);
+    })
   }
 
-  setView(view: 'courses' | 'exams' | 'students' | 'results'  | 'config') {
+  setView(view: 'teachers' | 'courses' | 'exams' | 'students' | 'results'  | 'config') {
     this.currentView = view;
   }
 }

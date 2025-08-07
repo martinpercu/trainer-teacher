@@ -15,4 +15,5 @@ export interface Exam {
   teacherName?: string; // Nombre del profesor, opcional
   questions: Question[]; // Lista de preguntas
   courseId?: string; // Es al course que está linkeado el examen.
+  passingPercentage: number // Is the percentage need to aprove the exam. e.g., 70 para 70%
 }
