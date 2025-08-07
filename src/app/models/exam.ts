@@ -14,4 +14,5 @@ export interface Exam {
   teacherId: string; // ID del profesor, requerido
   teacherName?: string; // Nombre del profesor, opcional
   questions: Question[]; // Lista de preguntas
+  courseId?: string; // Es al course que está linkeado el examen.
 }
