@@ -20,6 +20,7 @@
     "paths":{
       "@models/*": ["./src/app/models/*"],
       "@services/*": ["./src/app/services/*"],
+      "@directives/*": ["./src/app/directives/*"],
       "@pages/*": ["./src/app/pages/*"],
       "@components/*": ["./src/app/components/*"],
       "@teacher/*": ["./src/app/components/teacher/*"],
