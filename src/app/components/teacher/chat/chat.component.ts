@@ -187,8 +187,8 @@ export class ChatComponent {
       this.loadingResponse = false;
     }, 10000);
 
-    // this.http.post("https://assistant-chat-backend-production.up.railway.app/stream_chat_test", formData, {
-    this.http.post("http://127.0.0.1:8000/stream_chat_test", formData, {
+    this.http.post("https://assistant-chat-backend-production.up.railway.app/stream_chat_test", formData, {
+    // this.http.post("http://127.0.0.1:8000/stream_chat_test", formData, {
       responseType: 'text',
       observe: 'events',
       reportProgress: true,
