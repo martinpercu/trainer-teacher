@@ -127,5 +127,74 @@ export class ResumeService {
 
   }
 
+//   async updatedThisResume(resume: Partial<Resume>, candidateUID: string, jobRelated: string): Promise<void> {
+//   const q = query(
+//     this.resumesCollection,
+//     where('candidateUID', '==', candidateUID),
+//     where('jobRelated', '==', jobRelated)
+//   );
+
+//   try {
+//     const querySnapshot = await getDocs(q);
+
+//     if (querySnapshot.empty) {
+//       console.log('No se encontró ningún currículum con esos datos.');
+//       throw new Error('Resume not found');
+//     }
+
+//     const resumeDocRef = querySnapshot.docs[0].ref;
+//     await updateDoc(resumeDocRef, resume);
+//     console.log('Resume updated');
+//   } catch (error) {
+//     console.error('Error updating resume:', error);
+//     throw error;
+//   }
+// }
+
+async updatedThisResume(
+  resume: Partial<Resume>,
+  candidateUID: string,
+  jobRelated: string
+): Promise<Resume | null> {
+  const q = query(
+    this.resumesCollection,
+    where('candidateUID', '==', candidateUID),
+    where('jobRelated', '==', jobRelated)
+  );
+
+  try {
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      console.log('No se encontró ningún currículum con esos datos.');
+      throw new Error('Resume not found');
+    }
+
+    const resumeDocRef = querySnapshot.docs[0].ref;
+
+    // Primero, actualizamos el documento en Firestore
+    await updateDoc(resumeDocRef, resume);
+    console.log('Resume updated');
+
+    // Luego, obtenemos el documento actualizado para retornarlo
+    const updatedDoc = await getDoc(resumeDocRef);
+
+    if (updatedDoc.exists()) {
+      // Obtenemos los datos del documento y se los asignamos a la interfaz Resume.
+      // Firebase se encarga de que los datos coincidan.
+      const updatedResume = updatedDoc.data() as Resume;
+
+      return updatedResume;
+    } else {
+      console.log('Documento actualizado no encontrado.');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error updating or retrieving resume:', error);
+    throw error;
+  }
+}
+
+
 
 }

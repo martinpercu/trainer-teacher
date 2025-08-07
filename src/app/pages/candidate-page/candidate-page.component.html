@@ -80,18 +80,6 @@
 </div>
 }
 
-@if(candidateService.candidateSig()?.resumeInDB){
-  <div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
-    <div class="flex flex-col bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-xl w-full max-w-md border border-neutral-200 dark:border-neutral-700">
-      <div class="h-12 bg-green-400">
-        VAMOOOO lo tenemos en true ACA VIENE EL proceso de validar el CV
-      </div>
-      <app-candidate-resume-edit [jobId]="this.job.jobId"></app-candidate-resume-edit>
-    </div>
-  </div>
-}
-
-
 @if(!candidateService.candidateSig()?.resumePath && candidateService.candidateSig()?.lastname){
 <div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
   <div class="flex flex-col bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-xl w-full max-w-md border border-neutral-200 dark:border-neutral-700">
@@ -103,6 +91,14 @@
     <app-upload></app-upload>
   </div>
 </div>
+}
+
+@if(candidateService.candidateSig()?.resumeInDB){
+  <div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-1 sm:p-4 font-sans">
+    <!-- <div class="flex flex-col bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-xl w-full max-w-md border border-neutral-200 dark:border-neutral-700"> -->
+      <app-candidate-resume-edit [jobId]="this.job.jobId"></app-candidate-resume-edit>
+    <!-- </div> -->
+  </div>
 }
 
 @if(job && candidateService.candidateSig()?.resumePath && candidateService.candidateSig()?.lastname){

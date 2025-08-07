@@ -102,8 +102,15 @@
   "candidate_resume": {
     "name" : "First name",
     "lastname" : "Last name",
+    "fullname" : "Full name",
     "email" : "Email",
-    "summary": "Create and Continue"
+    "contact_email" : "Contact Email",
+    "summary": "Create and Continue",
+    "phone_number": "Phone number",
+    "phone_number_placeholder": "123-345-6789",
+    "work_experience" : "Experience",
+    "certifications" : "Certifications",
+    "education" : "Education"
   },
   "position_edit": {
     "select_job": "Select Position",

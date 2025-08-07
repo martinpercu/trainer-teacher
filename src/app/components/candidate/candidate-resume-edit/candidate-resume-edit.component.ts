@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 // import { CandidateAuthService } from '@services/candidate-auth.service';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { MatIconModule } from '@angular/material/icon';
+
 
 import {
   FormControl,
@@ -10,15 +12,16 @@ import {
   FormGroup,
   ReactiveFormsModule,
   FormBuilder,
+  FormArray, // <-- Importa FormArray
 } from '@angular/forms';
 import { CandidateService } from '@services/candidate.service';
 import { ResumeService } from '@services/resume.service';
 import { Candidate } from '@models/candidate';
-import { Resume } from '@models/resume';
+import { Resume, Works, Education, Certification } from '@models/resume';
 
 @Component({
   selector: 'app-candidate-resume-edit',
-  imports: [CommonModule, ReactiveFormsModule, TranslocoPipe],
+  imports: [CommonModule, ReactiveFormsModule, TranslocoPipe, MatIconModule],
   templateUrl: './candidate-resume-edit.component.html',
   styleUrl: './candidate-resume-edit.component.css'
 })
@@ -30,11 +33,24 @@ export class CandidateResumeEditComponent {
   private formBuilder = inject(FormBuilder);
 
   form!: FormGroup;
-
   candidate!: Candidate;
   candidateId!: string;
-
   resume!: Resume;
+  isLoading = false;
+
+  isInfoEditing: boolean = true
+
+  showBasicInfo: boolean = true;
+  showSummary: boolean = false;
+  showWorkExperience: boolean = false;
+  showEducation: boolean = false;
+  showCertification: boolean = false;
+
+  currentWorkIndex: number = 0;
+  currentCertIndex: number = 0;
+  currentEducationIndex: number = 0;
+
+
 
   constructor() {
     effect(() => {
@@ -55,60 +71,329 @@ export class CandidateResumeEditComponent {
     console.log(this.candidate);
   }
 
-  async getTheResume(candidateUID: string, jobID: string){
-    const resume = await this.resumeService.getOneResume(candidateUID, jobID);
-    if(resume){
-      this.resume = resume;
-      console.log(this.resume);
-
-      this.buildForm();
+  private loadResumeIfReady(): void {
+    if (this.candidate && this.jobId && !this.isLoading) {
+      this.isLoading = true;
+      this.getTheResume(this.candidate.candidateUID, this.jobId);
     }
   }
 
-  // async getOneCandidate() {
-  //   console.log('entromos get One candidate');
+  async getTheResume(candidateUID: string, jobID: string){
+    const resume = await this.resumeService.getOneResume(candidateUID, jobID);
+    this.isLoading = false;
 
-  //   const candidateGetted = await this.candidateService.getThisCandidate(
-  //     this.candidateId
-  //   );
-  //   this.candidate = candidateGetted;
-  //   console.log(this.candidate);
+    if(resume){
+      this.resume = resume;
+      this.buildForm();
+    } else {
+      this.buildEmptyForm();
+    }
+  }
 
-  //   this.buildForm();
-  // }
+
 
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: [this.resume.name, [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
-      email: [this.resume.email, [Validators.required, Validators.email, Validators.maxLength(80)]],
-      phone: [this.resume.phone, [Validators.required, Validators.minLength(9), Validators.maxLength(15), Validators.pattern("^[0-9]*$")]],
-      // summary: [this.resume.summary, [Validators.minLength(7)]]
+      name: [this.resume.name ?? null, [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
+      email: [this.resume.email ?? null, [Validators.required, Validators.email, Validators.maxLength(80)]],
+      phone: [this.resume.phone ?? null, [Validators.required, Validators.minLength(9), Validators.maxLength(15)]],
+      summary: [this.resume.summary ?? null, [Validators.minLength(7)]],
+
+      // Creamos los FormArray para las listas
+      works: this.formBuilder.array(
+        (this.resume.works || []).map(work => this.createWorkFormGroup(work))
+      ),
+      certifications: this.formBuilder.array(
+        (this.resume.certifications || []).map(cert => this.createCertificationFormGroup(cert))
+      ),
+      education: this.formBuilder.array(
+        (this.resume.education || []).map(edu => this.createEducationFormGroup(edu))
+      )
     });
-  };
+  }
 
 
+  // Método para crear un FormGroup para un Work
+  private createWorkFormGroup(work: Works): FormGroup {
+    return this.formBuilder.group({
+      jobtitle: [work.jobtitle, Validators.required],
+      company: [work.company, Validators.required],
+      dates: [work.dates],
+      description: [work.description],
+    });
+  }
+
+  // Método para crear un FormGroup para una Certification
+  private createCertificationFormGroup(cert: Certification): FormGroup {
+    return this.formBuilder.group({
+      certificate: [cert.certificate, Validators.required],
+      issuingOrganization: [cert.issuingOrganization],
+      year: [cert.year],
+    });
+  }
+
+  // Método para crear un FormGroup para una Education
+  private createEducationFormGroup(edu: Education): FormGroup {
+    return this.formBuilder.group({
+      degree: [edu.degree, Validators.required],
+      institution: [edu.institution, Validators.required],
+      graduationYear: [edu.graduationYear],
+    });
+  }
+
+  // Obtenemos los FormArray para el template
+  get worksFormArray(): FormArray {
+    return this.form.get('works') as FormArray;
+  }
+  get certificationsFormArray(): FormArray {
+    return this.form.get('certifications') as FormArray;
+  }
+  get educationFormArray(): FormArray {
+    return this.form.get('education') as FormArray;
+  }
+
+  // // Métodos para añadir nuevos elementos
+  // addWork(): void {
+  //   this.worksFormArray.push(this.createWorkFormGroup({} as Works));
+  // }
+  // addCertification(): void {
+  //   this.certificationsFormArray.push(this.createCertificationFormGroup({} as Certification));
+  // }
+  // addEducation(): void {
+  //   this.educationFormArray.push(this.createEducationFormGroup({} as Education));
+  // }
+
+  // Métodos para eliminar elementos
+  // removeWork(index: number): void {
+  //   this.worksFormArray.removeAt(index);
+  // }
+  // removeCertification(index: number): void {
+  //   this.certificationsFormArray.removeAt(index);
+  // }
+  // removeEducation(index: number): void {
+  //   console.log(index);
+  //   this.educationFormArray.removeAt(index);
+  // }
+
+  private buildEmptyForm(): void {
+    this.form = this.formBuilder.group({
+      name: [null, [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
+      email: [null, [Validators.required, Validators.email, Validators.maxLength(80)]],
+      phone: [null, [Validators.required, Validators.minLength(9), Validators.maxLength(15)]],
+      summary: [null, [Validators.minLength(7)]],
+      works: this.formBuilder.array([]),
+      certifications: this.formBuilder.array([]),
+      education: this.formBuilder.array([]),
+    });
+  }
 
 
-  saveResume(event: Event) {
+  async saveResume(event: Event) {
     if (this.form.valid) {
-    // console.log(this.form.value);
-    const updatedUser = this.candidateService.updateOneUser(this.form.value, this.candidateId);
-    // this.candidate = updatedUser
-    // this.user = this.form.value;
-    // console.log(this.userId);
-    // this.getOneCandidate(); // very important each time save!!!
-    console.log(updatedUser);
-    // window.location.reload();
-
-    // this.editBasicInfo = false;
-    // this.editShipping = false;
-    // this.editBilling = false;
-
+      console.log('In Save Resume');
+      console.log('Valores del formulario:', this.form.value);
+      try {
+        const updatedResume = await this.resumeService.updatedThisResume(this.form.value, this.resume.candidateUID, this.resume.jobRelated);
+        console.log('Currículum actualizado correctamente.');
+        if(updatedResume != null){
+          this.resume = updatedResume;
+          console.log(this.resume);
+          // 👇 Aquí marcamos el formulario como "sin cambios"
+          this.form.markAsPristine();
+        }
+      } catch (error) {
+        console.error('No se pudo actualizar el currículum:', error);
+      }
     } else {
       this.form.markAllAsTouched();
-    };
-  };
+      console.log('Formulario inválido.');
+    }
+  }
+
+  switchBasicEditing() {
+    this.isInfoEditing = !this.isInfoEditing
+  }
+
+  forwardShow() {
+    if(this.showBasicInfo){
+      this.showBasicInfo = false;
+      this.showSummary = true;
+      return
+    }
+    if(this.showSummary){
+      this.showSummary = false;
+      this.showWorkExperience = true;
+      return
+    }
+    if(this.showWorkExperience){
+      this.showWorkExperience = false;
+      this.showCertification = true;
+      return
+    }
+    if(this.showCertification){
+      this.showCertification = false;
+      this.showEducation = true;
+      return
+    }
+    if(this.showEducation){
+      alert('final')
+      // this.showEducation = false;
+      // this.showCertification = true;
+      return
+    }
+  }
+
+  goBackShow() {
+    if(this.showSummary){
+      this.showSummary = false;
+      this.showBasicInfo = true;
+      return
+    }
+    if(this.showWorkExperience){
+      this.showWorkExperience = false;
+      this.showSummary = true;
+      return
+    }
+    if(this.showCertification){
+      this.showCertification = false;
+      this.showWorkExperience = true;
+      return
+    }
+    if(this.showEducation){
+      this.showEducation = false;
+      this.showCertification = true;
+      return
+    }
+  }
+
+
+  // Métodos de navegación para las Experiencia laborales
+  nextWork(): void {
+      if (this.currentWorkIndex < this.worksFormArray.length - 1) {
+        this.currentWorkIndex++;
+      }
+    }
+
+  previousWork(): void {
+    if (this.currentWorkIndex > 0) {
+      this.currentWorkIndex--;
+    }
+  }
+
+  // Métodos de navegación para las certificaciones
+  nextCert(): void {
+    if (this.currentCertIndex < this.certificationsFormArray.length - 1) {
+      this.currentCertIndex++;
+    }
+  }
+
+  previousCert(): void {
+    if (this.currentCertIndex > 0) {
+      this.currentCertIndex--;
+    }
+  }
+
+  // <-- NUEVOS MÉTODOS de navegación para la educación
+  nextEducation(): void {
+    if (this.currentEducationIndex < this.educationFormArray.length - 1) {
+      this.currentEducationIndex++;
+    }
+  }
+
+  previousEducation(): void {
+    if (this.currentEducationIndex > 0) {
+      this.currentEducationIndex--;
+    }
+  }
+
+
+  // Método para añadir una nueva experiencia laboral, que además la mostrará
+  addWork(): void {
+    this.worksFormArray.push(this.createWorkFormGroup({} as Works));
+    this.currentWorkIndex = this.worksFormArray.length - 1; // Muestra la nueva experiencia
+  }
+
+  // Método para eliminar la experiencia actual
+  removeWork(index: number): void {
+    this.worksFormArray.removeAt(index);
+    if (this.currentWorkIndex >= this.worksFormArray.length) {
+        this.currentWorkIndex = Math.max(0, this.worksFormArray.length - 1);
+    }
+  }
+
+
+  // Sobreescribimos el método para añadir una nueva certificación, que la mostrará automáticamente
+  addCertification(): void {
+    this.certificationsFormArray.push(this.createCertificationFormGroup({} as Certification));
+    this.currentCertIndex = this.certificationsFormArray.length - 1; // Muestra la nueva certificación
+  }
+
+  // Sobreescribimos el método para eliminar la certificación actual
+  removeCertification(index: number): void {
+    this.certificationsFormArray.removeAt(index);
+    if (this.currentCertIndex >= this.certificationsFormArray.length) {
+        this.currentCertIndex = Math.max(0, this.certificationsFormArray.length - 1);
+    }
+  }
+
+  // <-- MÉTODOS DE AÑADIR Y ELIMINAR PARA EDUCATION (MODIFICADOS)
+  addEducation(): void {
+    this.educationFormArray.push(this.createEducationFormGroup({} as Education));
+    this.currentEducationIndex = this.educationFormArray.length - 1;
+  }
+
+  async removeEducation(index: number): Promise<void> {
+  // 1. Pedir confirmación al usuario
+  const confirmation = confirm('¿Estás seguro de que quieres eliminar esta entrada de educación?');
+  // 2. Si el usuario confirma...
+  if (confirmation) {
+    // 3. Eliminar el elemento del FormArray localmente
+    this.educationFormArray.removeAt(index);
+    // 4. Asegurarse de que el índice actual no sea mayor que el nuevo tamaño del array
+    if (this.currentEducationIndex >= this.educationFormArray.length) {
+      this.currentEducationIndex = Math.max(0, this.educationFormArray.length - 1);
+    }
+    // 5. Llamar al método para guardar el currículum actualizado
+    // La eliminación ya modificó el formulario, por lo que el formulario reflejará el cambio
+    // Usamos 'as any' para evitar un error de tipo si el evento no es necesario en saveResume
+    await this.saveResume({} as any);
+  }
+}
+
+
+
+  // Obtenemos el FormGroup actual para la experiencia laboral
+  get currentWorkFormGroup(): FormGroup {
+    return this.worksFormArray.at(this.currentWorkIndex) as FormGroup;
+  }
+
+  // Obtenemos el FormGroup actual para la certificación
+  get currentCertFormGroup(): FormGroup {
+    return this.certificationsFormArray.at(this.currentCertIndex) as FormGroup;
+  }
+
+  // <-- NUEVO GETTER para Education
+  get currentEducationFormGroup(): FormGroup {
+    return this.educationFormArray.at(this.currentEducationIndex) as FormGroup;
+  }
+
+  get hasChanges(): boolean {
+  return this.form && this.form.dirty;
+}
+
+async saveAndGoBack() {
+  await this.saveResume(new Event('submit'));
+  this.goBackShow();
+}
+
+async saveAndForward() {
+  await this.saveResume(new Event('submit'));
+  this.forwardShow();
+}
+
+// this.form.markAsPristine();
+
 
 
 }

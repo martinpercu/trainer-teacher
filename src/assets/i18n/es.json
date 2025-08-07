@@ -102,8 +102,15 @@
   "candidate_resume": {
     "name" : "Nombre",
     "lastname" : "Apellido",
+    "fullname" : "Nombre completo",
     "email" : "Email",
-    "summary": "Resumen"
+    "contact_email" : "Email de contacto",
+    "summary": "Resumen",
+    "phone_number": "Teléfono",
+    "phone_number_placeholder": "11-1234-1234",
+    "work_experience" : "Experiencia",
+    "certifications" : "Certificaciones",
+    "education" : "Educación"
   },
   "position_edit": {
     "select_job" : "Selecciona Puesto",
