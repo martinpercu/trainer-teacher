@@ -10,6 +10,8 @@ export class VisualStatesService {
   showModalInfo = signal<Boolean | undefined>(undefined);
 
 
+
+
   constructor() { }
 
   togleShowLeftMenu() {

@@ -50,27 +50,11 @@
 
 
 @if(candidateService.candidateSig()) {
-  <div class="fixed">
+  <!-- <div class="fixed"> -->
     <app-candidate-header></app-candidate-header>
-  </div>
+  <!-- </div> -->
 
-  <!-- <div (click)="testeo()" class="h-20 bg-red-400">
-    TESTEO
-  </div> -->
-  <!-- <app-candidate-logout></app-candidate-logout> -->
-
-<!-- @if(!candidateService.candidateSig()?.lastname){
-<div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
-  <div class="flex flex-col bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-xl w-full max-w-md border border-neutral-200 dark:border-neutral-700">
-    <div class="flex flex-col">
-      <p class="text-center text-neutral-600 dark:text-neutral-400 mb-8 text-lg">
-        {{ candidateService.candidateSig()?.username }} {{ "candidate.fill_the_fields" | transloco}}.
-      </p>
-    </div>
-    <app-candidate-edit></app-candidate-edit>
-  </div>
-</div>
-} -->
+<div class="mt-20" (click)="testeo()">chequear signed canddate</div>
 
 @if(!candidateService.candidateSig()?.resumeInDB){
 <div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
@@ -80,7 +64,7 @@
 </div>
 }
 
-@if(!candidateService.candidateSig()?.resumePath && candidateService.candidateSig()?.lastname){
+<!-- @if(!candidateService.candidateSig()?.resumePath && candidateService.candidateSig()?.lastname){
 <div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-4 font-sans">
   <div class="flex flex-col bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-xl w-full max-w-md border border-neutral-200 dark:border-neutral-700">
     <div class="flex flex-col">
@@ -91,7 +75,7 @@
     <app-upload></app-upload>
   </div>
 </div>
-}
+} -->
 
 @if(candidateService.candidateSig()?.resumeInDB){
   <div class="bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 flex flex-col items-center justify-center min-h-screen p-1 sm:p-4 font-sans">

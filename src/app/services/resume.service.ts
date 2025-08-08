@@ -66,6 +66,7 @@ export class ResumeService {
       email: resumeData['Email'] || null,
       phone: resumeData['Phone Number'] || null,
       summary: resumeData['Summary/Objective'] || null,
+      skills: resumeData['Skills'] || null,
 
       // Validamos si 'Work Experience' existe antes de mapear
       works: (resumeData['Work Experience'] || []).map((work: any) => ({
