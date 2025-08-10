@@ -9,6 +9,7 @@ import { CandidateRegisterComponent } from '@components/auth/candidate-register/
 import { CandidateService } from '@services/candidate.service';
 import { JobCrudService } from '@services/job-crud.service';
 import { CandidateAuthService } from '@services/candidate-auth.service';
+import { CandidateVisualService } from '@services/candidate-visual.service';
 
 import { CandidateEditComponent } from '@candidate/candidate-edit/candidate-edit.component';
 import { CandidateHeaderComponent } from '@candidate/candidate-header/candidate-header.component';
@@ -31,6 +32,7 @@ export class CandidatePageComponent {
   candidateService = inject(CandidateService);
   jobCrudService = inject(JobCrudService);
   candidateAuthService = inject(CandidateAuthService);
+  candidateVisualService = inject(CandidateVisualService);
 
   alreadyAccount: boolean = false;
   withJobId: boolean = false;
@@ -39,6 +41,8 @@ export class CandidatePageComponent {
   showRegister: boolean = true;
   showLogin: boolean = false;
 
+  // candidate!: Candidate;
+
   async ngOnInit() {
     // Extraer el jobPositionId
     const jobPositionId = this.route.snapshot.paramMap.get('jobId'); // Ruta /job/:jobId
@@ -46,10 +50,36 @@ export class CandidatePageComponent {
       console.log(jobPositionId);
       this.withJobId = true
       const thisJob: any = await this.jobCrudService.getJobByIdRaw(jobPositionId);
+      const ownerId: string | undefined =
+          await this.jobCrudService.getJobOwnerId(jobPositionId);
+      if(ownerId && thisJob && this.candidateService.candidateSig()) {
+        // alert('hay de SUPER TODOOOOO todooooooo')
+        console.log(this.candidateService.candidateSig()?.candidateUID);
+        const candidateUID = this.candidateService.candidateSig()?.candidateUID
+        console.log(ownerId);
+        console.log(jobPositionId);
+        if(candidateUID){
+          const tipoUpdateado = await this.candidateService.updateCandidateIfNeeded(
+            candidateUID,
+            jobPositionId,
+            ownerId
+          );
+          console.log(tipoUpdateado);
+        }
+      }
+      // if(ownerId && thisJob) {
+      //   alert('hay de todooooooo')
+      // }
+      // if(ownerId) {
+      //   alert(ownerId)
+      //   console.log('hay OWNER ! ! !');
+      // }
       if(thisJob) {
+        // alert(thisJob)
         console.log('hay job job job');
         this.job = thisJob
-      }else {
+      }
+      else {
         console.log(' NO JOB redirecciona a /job sin ID');
         this.router.navigateByUrl(`/job`);
       }
