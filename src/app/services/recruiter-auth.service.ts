@@ -7,6 +7,7 @@ import { Recruiter } from '@models/recruiter';
 import { RecruiterService } from '@services/recruiter.service';
 import { Router } from '@angular/router';
 
+import { CandidateService } from '@services/candidate.service'
 
 
 @Injectable({
@@ -19,6 +20,8 @@ export class RecruiterAuthService {
   recruiter$ = user(this.firebaseAuth);
   currentRecruiterSig = signal<Recruiter | null | undefined>(undefined);
   router = inject(Router);
+
+  candidateService = inject(CandidateService);
 
   recruiter!: Recruiter;
 
@@ -61,6 +64,21 @@ export class RecruiterAuthService {
     }
     this.recruiterService.addUserWithId(this.recruiter, userUid);
     this.recruiterService.setRecruiterSig(this.recruiter);
+    this.addRecruiterAsCandidate(this.recruiter)
+  }
+
+  addRecruiterAsCandidate(recruiter: Recruiter) {
+    const recruiterCandidate = {
+      candidateUID: recruiter.recruiterUID,
+      email: recruiter.email,
+      username: recruiter.username,
+      recruiters: [""],
+      jobs: [""],
+      lastJobId: "",
+      resumeInDB: false
+    }
+    console.log(recruiter);
+    this.candidateService.addUserWithId(recruiterCandidate, recruiter.recruiterUID)
   }
 
   login(email: string, password: string): Observable<void> {
