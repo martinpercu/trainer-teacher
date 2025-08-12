@@ -6,7 +6,8 @@ import { ChatComponent } from '@components/chat/chat.component';
 import { LeftMenuComponent } from '@components/left-menu/left-menu.component';
 // import { EthicSupervisorsComponent } from '@components/pdfs/ethic-supervisors/ethic-supervisors.component';
 import { PdfviewerComponent } from '@components/pdfviewer/pdfviewer.component';
-import { MainselectorPageComponent } from '@pages/mainselector-page/mainselector-page.component';
+// This is for Trainer Teacher
+// import { MainselectorPageComponent } from '@pages/mainselector-page/mainselector-page.component';
 import { SchoolMainPageComponent } from '@pages/school-main-page/school-main-page.component';
 import { TeachersCRUDComponent } from '@superadmin/teachers-crud/teachers-crud.component';
 import { SchoolsCrudComponent } from '@superadmin/schools-crud/schools-crud.component';
@@ -17,6 +18,7 @@ import { ExamComponent } from '@evaluation/exam/exam.component';
 
 import { LangSwitcherComponent } from '@shared/lang-switcher/lang-switcher.component';
 
+
 import { CandidatePageComponent } from '@pages/candidate-page/candidate-page.component';
 import { RecruiterPageComponent } from '@pages/recruiter-page/recruiter-page.component';
 import { JobsCrudComponent } from '@recruiter/jobs-crud/jobs-crud.component';
@@ -24,8 +26,14 @@ import { RecruiterDashboardComponent } from '@recruiter/recruiter-dashboard/recr
 import { UploadComponent } from '@components/candidate/upload/upload.component';
 import { PdfShowComponent } from '@shared/pdf-show/pdf-show.component';
 import { CandidateResumeEditComponent } from '@components/candidate/candidate-resume-edit/candidate-resume-edit.component';
+import { MainpageBridgetoworksComponent } from '@pages/mainpage-bridgetoworks/mainpage-bridgetoworks.component';
+
 
 export const routes: Routes = [
+  {
+    path:'',
+    component: MainpageBridgetoworksComponent
+  },
   {
     path:'caca',
     component: CandidateResumeEditComponent
@@ -45,6 +53,10 @@ export const routes: Routes = [
   {
     path:'recruiter',
     component: RecruiterDashboardComponent
+  },
+  {
+    path:'candidate',
+    component: CandidatePageComponent
   },
   {
     path:'job',
@@ -78,32 +90,10 @@ export const routes: Routes = [
     path:'exam/:id',
     component: ExamComponent
   },
-  // {
-  //   path: 'exam/:id',
-  //   component: ExamComponent,
-  //   children: [
-  //     { path: 'question/:index', component: QuestionComponent },
-  //     { path: 'summary', component: SummaryComponent }
-  //   ]
-  // },
-  // {
-  //   path:'',
-  //   component: ExamComponent
-  // },
   {
     path:'main',
     component: SchoolMainPageComponent
   },
-  {
-    path:'',
-    component: MainselectorPageComponent
-  },
-  // { path: 'teacher/supervisors',
-  //   component: TeacherMainPageComponent
-  // },
-  // { path: 'teacher/employee',
-  //   component: TeacherMainPageComponent
-  // },
   { path: 'teacher/:id',
     component: TeacherMainPageComponent
   },
@@ -124,5 +114,10 @@ export const routes: Routes = [
   {
     path:'leftmenu',
     component: LeftMenuComponent
-  }
+  },
+  // This is for Trainer Teacher OLD
+  // {
+  //   path:'',
+  //   component: MainselectorPageComponent
+  // },
 ];

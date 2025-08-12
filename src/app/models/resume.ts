@@ -20,6 +20,7 @@ export interface Education {
 export interface Resume {
   candidateUID: string;
   jobRelated: string;
+  scoreToPosition?: any;
   name?: string;
   email?: string;
   phone?: string;

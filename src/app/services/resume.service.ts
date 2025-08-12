@@ -97,7 +97,46 @@ export class ResumeService {
     console.log(`Resume data saved successfully with document ID: ${docRef.id}`);
 
     return docRef.id;
+  };
+
+
+  async getScore(resumeData: any, description: string): Promise<any> {
+
+    const experience = {
+      works: (resumeData['Work Experience'] || []).map((work: any) => ({
+        jobtitle: work['Job Title'] || null,
+        company: work['Company'] || null,
+        dates: work['Dates'] || null,
+        description: work['Description'] || null,
+      })),
+    };
+
+    // Convertir el array de experiencias a un único string
+    const experienceString = experience.works
+      .map((work: any) => {
+        // Une los campos de cada trabajo en una frase
+        const jobDetails = [work.jobtitle, work.company, work.dates, work.description]
+          .filter(Boolean) // Filtra valores nulos o vacíos
+          .join('. '); // Usa un punto para separar los detalles de cada trabajo
+
+        return jobDetails;
+      })
+      .join(' | '); // Usa un separador distintivo para cada trabajo
+
+    const summary = resumeData['Summary/Objective'] ?? ''; // This is to return something if Summary is NULL
+    const skills = resumeData['Skills'] ?? ''; // This is to return something if Summary is NULL
+
+    const body = {
+      candidate_summary: summary,
+      candidate_experience: experienceString,
+      candidate_skills:skills,
+      job_description: description
+    };
+
+    // return resumeData + description + experienceString + summary
+    return firstValueFrom(this.http.post(`${this.apiUrl}/calculate_embedding_score`, body));
   }
+
 
 
 
@@ -195,6 +234,50 @@ async updatedThisResume(
     throw error;
   }
 }
+
+// async updateOneResume(resumeUpdate: Partial<Resume>, resumeId: string) {
+//   const resumeDocRef = doc(this.resumesCollection, resumeId);
+//   return updateDoc(resumeDocRef, resumeUpdate)
+//     .then(() => {
+//       console.log('Documento del candidato actualizado correctamente.');
+//     })
+//     .catch((error) => {
+//       console.error('Error al actualizar el documento:', error);
+//       throw error; // Propaga el error para manejarlo en la función que llama
+//     });
+// }
+// async updateOneResume(resumeUpdate: Partial<Resume>, resumeId: string): Promise<void> {
+//   const resumeDocRef = doc(this.resumesCollection, resumeId);
+
+//   // Devuelve la promesa completa para que el código que llama pueda usarla
+//   return updateDoc(resumeDocRef, resumeUpdate);
+// }
+async updateOneResume(resumeUpdate: Partial<Resume>, resumeId: string): Promise<Resume | null> {
+  const resumeDocRef = doc(this.resumesCollection, resumeId);
+  try {
+    await updateDoc(resumeDocRef, resumeUpdate);
+    console.log('Documento del candidato actualizado correctamente.');
+
+    const docSnap = await getDoc(resumeDocRef);
+
+    if (docSnap.exists()) {
+      // ✅ Solución: Realiza el cast a `unknown` primero
+      // Esto le dice a TypeScript que confíe en la estructura de los datos que vienen de Firestore
+      const updatedResume = { id: docSnap.id, ...(docSnap.data() as unknown as Resume) };
+      return updatedResume;
+    } else {
+      console.warn('El documento no se encontró después de la actualización.');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error al actualizar y leer el documento:', error);
+    throw error;
+  }
+}
+
+
+
+
 
 
 

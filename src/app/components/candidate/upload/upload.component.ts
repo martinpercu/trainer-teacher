@@ -8,7 +8,9 @@ import { CandidateService } from '@services/candidate.service';
 import { AuthService } from '@services/auth.service';
 import { ResumeService } from '@services/resume.service';
 
-import { LoadingBarComponent } from '@shared/loading-bar/loading-bar.component'
+import { LoadingBarComponent } from '@shared/loading-bar/loading-bar.component';
+
+import { Resume } from '@models/resume'
 
 
 @Component({
@@ -18,6 +20,7 @@ import { LoadingBarComponent } from '@shared/loading-bar/loading-bar.component'
 })
 export class UploadComponent {
   @Input() jobId!: string;
+  @Input() jobDescription!: string;
   authService = inject(AuthService);
   storageService = inject(StorageService);
   candidateService = inject(CandidateService);
@@ -31,6 +34,8 @@ export class UploadComponent {
 
   // showLoadingBar: boolean = false;
   showLoadingBar = signal<boolean>(false);
+
+  resume!: Resume;
 
   constructor() {}
 
@@ -147,6 +152,20 @@ export class UploadComponent {
         console.log('Documento creado con ID:', resumeId);
         const candidateUpdate = { resumeInDB: true };
         await this.candidateService.updateOneUser(candidateUpdate, this.userId);
+        const cvScore = await this.resumeService.getScore(resumeRawJson, this.jobDescription);
+        if (cvScore && cvScore.compatibility_score) {
+          console.log('Este es el SCORE del CV : \n' + cvScore.compatibility_score);
+          const resumeUpdate = { scoreToPosition: cvScore.compatibility_score };
+          const resumeFinished = await this.resumeService.updateOneResume(resumeUpdate, resumeId);
+          if (resumeFinished) {
+            // resumeFinished ahora es el objeto completo del CV actualizado
+            console.log('Este es el documento actualizado del CV: \n', resumeFinished);
+            // También puedes acceder a sus propiedades
+            console.log('El nuevo score es:', resumeFinished.scoreToPosition);
+          } else {
+            console.log('No se pudo encontrar el documento actualizado.');
+          }
+        }
         // Aquí puedes hacer lo que quieras con el ID, como guardarlo en la variable del componente
         // this.resumeId = resumeId;
     } else {
