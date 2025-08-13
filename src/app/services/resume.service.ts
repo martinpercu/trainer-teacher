@@ -55,12 +55,13 @@ export class ResumeService {
    * @param candidateUID The UID of the candidate.
    * @returns A Promise that resolves when the data is saved.
    */
-  async saveResumeDataToFirestore(resumeData: any, candidateUID: string, jobId: string): Promise<string> {
+  async saveResumeDataToFirestore(resumeData: any, candidateUID: string, jobId: string, recruiterId: string): Promise<string> {
     console.log(`Saving resume data for user: ${candidateUID}`);
 
     const newResume: Resume = {
       candidateUID: candidateUID,
       jobRelated: jobId,
+      recruiterId: recruiterId,
 
       name: resumeData['Name'] || null,
       email: resumeData['Email'] || null,

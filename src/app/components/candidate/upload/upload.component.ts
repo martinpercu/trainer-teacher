@@ -21,6 +21,7 @@ import { Resume } from '@models/resume'
 export class UploadComponent {
   @Input() jobId!: string;
   @Input() jobDescription!: string;
+  @Input() recruiterId!: string;
   authService = inject(AuthService);
   storageService = inject(StorageService);
   candidateService = inject(CandidateService);
@@ -49,6 +50,7 @@ export class UploadComponent {
       }
     });
     console.log(this.jobId);
+    console.log(this.recruiterId);
   }
 
   onFileSelected(event: Event) {
@@ -146,7 +148,12 @@ export class UploadComponent {
 
   async loadResumeData(resumeRawJson: any) {
     console.log('In loadResumeData');
-    const resumeId = await this.resumeService.saveResumeDataToFirestore(resumeRawJson, this.userId, this.jobId);
+    const resumeId = await this.resumeService.saveResumeDataToFirestore(
+      resumeRawJson,
+      this.userId,
+      this.jobId,
+      this.recruiterId
+    );
     this.switchBarState(); // Should always close the loadingBar
     if (resumeId) {
         console.log('Documento creado con ID:', resumeId);

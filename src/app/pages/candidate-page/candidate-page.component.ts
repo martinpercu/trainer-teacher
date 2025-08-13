@@ -40,6 +40,7 @@ export class CandidatePageComponent {
   job!: Job;
   showRegister: boolean = true;
   showLogin: boolean = false;
+  recruiterId!: string;
 
   // candidate!: Candidate;
 
@@ -57,6 +58,7 @@ export class CandidatePageComponent {
         console.log(this.candidateService.candidateSig()?.candidateUID);
         const candidateUID = this.candidateService.candidateSig()?.candidateUID
         console.log(ownerId);
+        this.recruiterId = ownerId
         console.log(jobPositionId);
         if(candidateUID){
           const tipoUpdateado = await this.candidateService.updateCandidateIfNeeded(
@@ -70,10 +72,10 @@ export class CandidatePageComponent {
       // if(ownerId && thisJob) {
       //   alert('hay de todooooooo')
       // }
-      // if(ownerId) {
-      //   alert(ownerId)
-      //   console.log('hay OWNER ! ! !');
-      // }
+      if(ownerId) {
+        console.log('hay OWNER ! ! ! \n\n' + ownerId);
+        this.recruiterId = ownerId
+      }
       if(thisJob) {
         // alert(thisJob)
         console.log('hay job job job');
