@@ -339,6 +339,39 @@ export class ResumeService {
   }
 
 
+  // async getResumesForRecruiter(recruiterId: string): Promise<Resume[]> {
+  //   // Si el jobId no es válido, no hay nada que buscar.
+  //   if (!recruiterId) {
+  //     return [];
+  //   }
+
+  //   // Consulta que busca documentos donde `jobRelated` es IGUAL al jobId proporcionado.
+  //   const resumesQuery = query(
+  //     this.resumesCollection,
+  //     where('recruiterId', '==', recruiterId)
+  //   );
+
+  //   // Ejecuta la consulta.
+  //   const snapshot = await getDocs(resumesQuery);
+
+  //   // Mapea los resultados al modelo Resume, incluyendo el ID del documento.
+  //   const resumes: Resume[] = snapshot.docs.map((doc) => {
+  //     return { id: doc.id, ...doc.data() } as Resume;
+  //   });
+
+  //   return resumes;
+  // }
+
+
+
+  /**
+   * Obtiene todos los trabajos.
+   * @returns Un Observable de un array de Resumes.
+   */
+  getResumesForRecruiter(recruiterId: string): Observable<Resume[]> {
+    const q = query(this.resumesCollection, where('recruiterId', '==', recruiterId));
+    return collectionData(q, { idField: 'recruiterId' }) as Observable<Resume[]>;
+  }
 
 
 }

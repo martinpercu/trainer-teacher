@@ -114,6 +114,7 @@ export class RecruiterDashboardComponent {
 
           const recruiterUid = user!.uid; // Obtenemos el UID del reclutador aquí
           console.log('Recruiter UID:', recruiterUid);
+
           // `forkJoin` para buscar candidatos y trabajos en paralelo
           return forkJoin({
             candidates: this.candidateService.getCandidatesByRecruiter(recruiterUid).pipe(
@@ -139,6 +140,18 @@ export class RecruiterDashboardComponent {
                 return of([]); // Retornar un array vacío en caso de error
               })
             ),
+            // ✅ AÑADIMOS LA CARGA DE RESUMES AQUÍ
+            resumes: from(this.resumeService.getResumesForRecruiter(recruiterUid)).pipe(
+              take(1),
+              tap((resumes) => {
+                this.resumes = resumes; // Asignamos los resumes a la propiedad del componente
+                console.log('Retrieved resumes (inside forkJoin):', this.resumes);
+              }),
+              catchError((error) => {
+                console.error('Error fetching resumes (inside forkJoin):', error);
+                return of([]);
+              })
+            ),
             // Pasamos el `recruiterUid` directamente en el `forkJoin` para que esté disponible en el siguiente `switchMap`
             recruiterUid: of(recruiterUid)
           }).pipe(
@@ -146,31 +159,27 @@ export class RecruiterDashboardComponent {
           );
         }),
         // 3. `switchMap` para procesar los resultados de `forkJoin` (candidatesUIDs, jobs y recruiterUid)
-        switchMap(({ candidates, jobs, recruiterUid }) => {
-          // Obtenemos los IDs de los trabajos.
-          const jobIds = jobs.map(j => j.jobId);
-          console.log('estos JOBS IDSsss ==> \n ' + jobIds);
-          if(jobIds) {
-            this.getAllResumes(jobIds)
-          }
-
+        switchMap(({ candidates, jobs, resumes, recruiterUid }) => {
 
           // Si no hay candidatos, retornamos observables vacíos para `results`
           if (candidates.length === 0) {
             console.log('No candidate UIDs to fetch results for.');
-            return of({ results: [], jobs: jobs, recruiterUid: recruiterUid });
+            return of({ results: [], jobs: jobs, resumes: resumes, recruiterUid: recruiterUid });
           }
           // Llamamos al servicio para obtener los resultados de TODOS los UIDs de candidatos (sin filtrar aún por `examId`)
           return this.resultService.getResultsByUserUIDs(candidates).pipe(
-            map(results => ({ results, jobs, recruiterUid: recruiterUid })) // Combinamos con `jobs` y `recruiterUid`
+            map(results => ({ results, jobs, resumes: resumes, recruiterUid: recruiterUid })) // Combinamos con `jobs` y `recruiterUid`
           );
 
         })
       )
       .subscribe({
-        next: ({ results: fetchedResults, jobs, recruiterUid }) => {
+        next: ({ resumes, results: fetchedResults, jobs, recruiterUid }) => {
           this.jobs = jobs; // Asignamos los trabajos al componente
           console.log('Jobs for recruiter:', this.jobs);
+
+          this.resumes = resumes;
+          console.log('Resumes for recruiter:', this.resumes);
 
           // 1. **Filtro Crucial:** Obtener los `examId` de los trabajos creados por el reclutador actual
           const recruiterExamIds = new Set(
@@ -349,10 +358,10 @@ export class RecruiterDashboardComponent {
     return this.results.filter((result) => result.userUID === candidateUID);
   }
 
-  async getAllResumes(jobIds: any) {
-    this.resumes = await this.resumeService.getResumesForJobs(jobIds);
-    console.log(this.resumes);
-  }
+  // async getAllResumes(jobIds: any) {
+  //   this.resumes = await this.resumeService.getResumesForJobs(jobIds);
+  //   console.log(this.resumes);
+  // }
 
   // Y tu función auxiliar en el padre, que ahora solo filtra el array que ya tienes.
   getResumesForJob(jobId: string): Resume[] {
