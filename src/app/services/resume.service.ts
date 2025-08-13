@@ -191,49 +191,49 @@ export class ResumeService {
 //   }
 // }
 
-async updatedThisResume(
-  resume: Partial<Resume>,
-  candidateUID: string,
-  jobRelated: string
-): Promise<Resume | null> {
-  const q = query(
-    this.resumesCollection,
-    where('candidateUID', '==', candidateUID),
-    where('jobRelated', '==', jobRelated)
-  );
+  async updatedThisResume(
+    resume: Partial<Resume>,
+    candidateUID: string,
+    jobRelated: string
+  ): Promise<Resume | null> {
+    const q = query(
+      this.resumesCollection,
+      where('candidateUID', '==', candidateUID),
+      where('jobRelated', '==', jobRelated)
+    );
 
-  try {
-    const querySnapshot = await getDocs(q);
+    try {
+      const querySnapshot = await getDocs(q);
 
-    if (querySnapshot.empty) {
-      console.log('No se encontró ningún currículum con esos datos.');
-      throw new Error('Resume not found');
+      if (querySnapshot.empty) {
+        console.log('No se encontró ningún currículum con esos datos.');
+        throw new Error('Resume not found');
+      }
+
+      const resumeDocRef = querySnapshot.docs[0].ref;
+
+      // Primero, actualizamos el documento en Firestore
+      await updateDoc(resumeDocRef, resume);
+      console.log('Resume updated');
+
+      // Luego, obtenemos el documento actualizado para retornarlo
+      const updatedDoc = await getDoc(resumeDocRef);
+
+      if (updatedDoc.exists()) {
+        // Obtenemos los datos del documento y se los asignamos a la interfaz Resume.
+        // Firebase se encarga de que los datos coincidan.
+        const updatedResume = updatedDoc.data() as Resume;
+
+        return updatedResume;
+      } else {
+        console.log('Documento actualizado no encontrado.');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error updating or retrieving resume:', error);
+      throw error;
     }
-
-    const resumeDocRef = querySnapshot.docs[0].ref;
-
-    // Primero, actualizamos el documento en Firestore
-    await updateDoc(resumeDocRef, resume);
-    console.log('Resume updated');
-
-    // Luego, obtenemos el documento actualizado para retornarlo
-    const updatedDoc = await getDoc(resumeDocRef);
-
-    if (updatedDoc.exists()) {
-      // Obtenemos los datos del documento y se los asignamos a la interfaz Resume.
-      // Firebase se encarga de que los datos coincidan.
-      const updatedResume = updatedDoc.data() as Resume;
-
-      return updatedResume;
-    } else {
-      console.log('Documento actualizado no encontrado.');
-      return null;
-    }
-  } catch (error) {
-    console.error('Error updating or retrieving resume:', error);
-    throw error;
   }
-}
 
 // async updateOneResume(resumeUpdate: Partial<Resume>, resumeId: string) {
 //   const resumeDocRef = doc(this.resumesCollection, resumeId);
@@ -252,31 +252,90 @@ async updatedThisResume(
 //   // Devuelve la promesa completa para que el código que llama pueda usarla
 //   return updateDoc(resumeDocRef, resumeUpdate);
 // }
-async updateOneResume(resumeUpdate: Partial<Resume>, resumeId: string): Promise<Resume | null> {
-  const resumeDocRef = doc(this.resumesCollection, resumeId);
-  try {
-    await updateDoc(resumeDocRef, resumeUpdate);
-    console.log('Documento del candidato actualizado correctamente.');
+  async updateOneResume(resumeUpdate: Partial<Resume>, resumeId: string): Promise<Resume | null> {
+    const resumeDocRef = doc(this.resumesCollection, resumeId);
+    try {
+      await updateDoc(resumeDocRef, resumeUpdate);
+      console.log('Documento del candidato actualizado correctamente.');
 
-    const docSnap = await getDoc(resumeDocRef);
+      const docSnap = await getDoc(resumeDocRef);
 
-    if (docSnap.exists()) {
-      // ✅ Solución: Realiza el cast a `unknown` primero
-      // Esto le dice a TypeScript que confíe en la estructura de los datos que vienen de Firestore
-      const updatedResume = { id: docSnap.id, ...(docSnap.data() as unknown as Resume) };
-      return updatedResume;
-    } else {
-      console.warn('El documento no se encontró después de la actualización.');
-      return null;
+      if (docSnap.exists()) {
+        // ✅ Solución: Realiza el cast a `unknown` primero
+        // Esto le dice a TypeScript que confíe en la estructura de los datos que vienen de Firestore
+        const updatedResume = { id: docSnap.id, ...(docSnap.data() as unknown as Resume) };
+        return updatedResume;
+      } else {
+        console.warn('El documento no se encontró después de la actualización.');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error al actualizar y leer el documento:', error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Error al actualizar y leer el documento:', error);
-    throw error;
   }
-}
 
 
+  /**
+   * Obtiene todos los resumes que corresponden a una lista de IDs de trabajos.
+   *
+   * @param jobIds Un array de strings con los IDs de los trabajos.
+   * @returns Un Promise que resuelve con un array de objetos Resume.
+   */
+  async getResumesForJobs(jobIds: string[]): Promise<Resume[]> {
+    console.log('IN GET RESU FOR JOS SERVICE');
 
+    // Si la lista de jobIds está vacía, no hay nada que buscar.
+    if (jobIds.length === 0) {
+      return [];
+    }
+    // Usamos una consulta `where('jobRelated', 'in', jobIds)`
+    // para buscar todos los documentos que tengan el campo `jobRelated`
+    // en la lista de `jobIds` que proporcionamos.
+    // Nota: Firestore limita la cláusula 'in' a un máximo de 10 elementos.
+    // Si tu lista de trabajos puede ser más larga, necesitarías hacer
+    // múltiples consultas. Por ahora, asumimos que es 10 o menos.
+    const resumesQuery = query(
+      this.resumesCollection,
+      where('jobRelated', 'in', jobIds)
+    );
+
+    // `getDocs` devuelve una instantánea de la consulta.
+    const snapshot = await getDocs(resumesQuery);
+
+    // Mapeamos los documentos de la instantánea a nuestro modelo `Resume`.
+    const resumes: Resume[] = snapshot.docs.map((doc) => {
+      // Usamos `doc.data()` para obtener los datos del documento
+      // y `doc.id` para obtener el ID del documento.
+      return { id: doc.id, ...doc.data() } as Resume;
+    });
+
+    return resumes;
+  }
+
+
+  async getResumesForJob(jobId: string): Promise<Resume[]> {
+    // Si el jobId no es válido, no hay nada que buscar.
+    if (!jobId) {
+      return [];
+    }
+
+    // Consulta que busca documentos donde `jobRelated` es IGUAL al jobId proporcionado.
+    const resumesQuery = query(
+      this.resumesCollection,
+      where('jobRelated', '==', jobId)
+    );
+
+    // Ejecuta la consulta.
+    const snapshot = await getDocs(resumesQuery);
+
+    // Mapea los resultados al modelo Resume, incluyendo el ID del documento.
+    const resumes: Resume[] = snapshot.docs.map((doc) => {
+      return { id: doc.id, ...doc.data() } as Resume;
+    });
+
+    return resumes;
+  }
 
 
 

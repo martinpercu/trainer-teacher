@@ -1,9 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatIconModule } from '@angular/material/icon';
 
 import { Job } from '@models/job';
 import { Candidate } from '@models/candidate';
+import { Resume } from '@models/resume';
+
+import { ResumeService } from '@services/resume.service'
 
 import { environment } from '@env/environment';
 
@@ -18,6 +21,9 @@ export class JobsListComponent {
   @Input() candidatesForJob!: Candidate[];
   // @Input() results!: Result[];
   @Input() candidatesForJobAndExamPassed!: Candidate[];
+  @Input() resumesForJob!: Resume[];
+
+  resumeService = inject(ResumeService);
 
   magicLink: string = 'Este es el texto super importante que ya tengo en mi variable.';
   copiedSucces: boolean = false; // Para mostrar un mensaje de éxito
@@ -26,7 +32,7 @@ export class JobsListComponent {
   showCandidates!: boolean;
   showCandidatesExamPassed!: boolean;
 
-  ngOnInit() {
+  async ngOnInit() {
     console.log('START OnINIT Job-List');
     console.log(this.job);
     console.log(this.candidatesForJob);
@@ -36,6 +42,7 @@ export class JobsListComponent {
     this.magicLink = `${environment.BASEURL}/job/${this.job.jobId}`;
     console.log(this.magicLink);
     console.log('END OnINIT Job-List');
+    console.log(this.resumesForJob);
   };
 
   switchShowCandidates(){

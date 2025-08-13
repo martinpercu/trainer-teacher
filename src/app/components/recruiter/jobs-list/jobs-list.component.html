@@ -89,8 +89,9 @@
   @if(showCandidates && candidatesForJob.length >= 1){
     <div class="grid grid-cols-1 sm:grid-cols-2">
       @for(candidate of candidatesForJob; track $index) {
-        <div class="sm:flex-col-2 text-neutral-600 dark:text-neutral-400">
-        -  {{ candidate.username }} {{ candidate.lastname }}
+        <div class="sm:flex-row text-neutral-600 dark:text-neutral-400">
+          <div>-  {{ candidate.username }} {{ candidate.lastname }}</div>
+          <div>esto es lo otro</div>
         </div>
       }
     </div>

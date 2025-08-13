@@ -25,6 +25,7 @@ import { Result } from '@models/result';
 import { Exam } from '@models/exam';
 import { Job } from '@models/job';
 import { Recruiter } from '@models/recruiter';
+import { Resume } from '@models/resume';
 
 import { Observable } from 'rxjs';
 import { ExamResultListComponent } from '@school/exam-result-list/exam-result-list.component';
@@ -45,10 +46,11 @@ import { CandidateService } from '@services/candidate.service';
 import { RecruiterService } from '@services/recruiter.service';
 import { AuthService } from '@services/auth.service';
 import { ResultService } from '@services/result.service';
+import { ResumeService } from '@services/resume.service';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 
-import { of, forkJoin } from 'rxjs'; // Import 'of'
+import { of, forkJoin, from } from 'rxjs'; // Import 'of'
 import { switchMap, tap, filter, catchError, map, take } from 'rxjs/operators';
 // import { map } from 'rxjs/operators';
 
@@ -78,6 +80,8 @@ export class RecruiterDashboardComponent {
   recruiterService = inject(RecruiterService);
   resultService = inject(ResultService);
   jobCrudService = inject(JobCrudService);
+  resumeService = inject(ResumeService);
+
 
   // exams: Exam[] = [];
 
@@ -85,6 +89,7 @@ export class RecruiterDashboardComponent {
   results: Result[] = [];
   jobs: Job[] = [];
   jobsOrderedByCandidates: Job[] = [];
+  resumes: Resume[] = [];
 
   currentView:
     | 'teachers'
@@ -109,12 +114,6 @@ export class RecruiterDashboardComponent {
 
           const recruiterUid = user!.uid; // Obtenemos el UID del reclutador aquí
           console.log('Recruiter UID:', recruiterUid);
-          // const recruiter = this.recruiterService.getOneRecruiter(recruiterUid);
-          // console.log(recruiter);
-          // console.log('jsdjsjsjsjsjsjsdkljfqsd qsklfj qklsfklqsj dlfkqldsfj ' + this.recruiterService.recruiterSig());
-
-
-
           // `forkJoin` para buscar candidatos y trabajos en paralelo
           return forkJoin({
             candidates: this.candidateService.getCandidatesByRecruiter(recruiterUid).pipe(
@@ -148,6 +147,14 @@ export class RecruiterDashboardComponent {
         }),
         // 3. `switchMap` para procesar los resultados de `forkJoin` (candidatesUIDs, jobs y recruiterUid)
         switchMap(({ candidates, jobs, recruiterUid }) => {
+          // Obtenemos los IDs de los trabajos.
+          const jobIds = jobs.map(j => j.jobId);
+          console.log('estos JOBS IDSsss ==> \n ' + jobIds);
+          if(jobIds) {
+            this.getAllResumes(jobIds)
+          }
+
+
           // Si no hay candidatos, retornamos observables vacíos para `results`
           if (candidates.length === 0) {
             console.log('No candidate UIDs to fetch results for.');
@@ -157,6 +164,7 @@ export class RecruiterDashboardComponent {
           return this.resultService.getResultsByUserUIDs(candidates).pipe(
             map(results => ({ results, jobs, recruiterUid: recruiterUid })) // Combinamos con `jobs` y `recruiterUid`
           );
+
         })
       )
       .subscribe({
@@ -192,7 +200,10 @@ export class RecruiterDashboardComponent {
           console.log('All data subscriptions completed.');
         },
       });
+      console.log(' a ver si se llega');
+
   }
+
 
 
   setView(
@@ -229,97 +240,6 @@ export class RecruiterDashboardComponent {
     return this.results.filter((result) => result.userUID === candidateUID);
   }
 
-  // /**
-  //  * Filters the 'results' array to return only those belonging to a specific candidate.
-  //  * @param candidateUID The UID of the candidate to filter results for.
-  //  * @returns An array of Result objects for the given candidate.
-  //  */
-  // getCandidatesForJob(jobId: string): Candidate[] { // Return type should be Candidate[], not Result[]
-  //   return this.candidates.filter((candidate) =>
-  //     // Check if candidate.jobs exists and if the jobId is included in that array
-  //     candidate.jobs && candidate.jobs.includes(jobId)
-  //   );
-  // }
-
-  // /**
-  //  * Returns results associated with candidates of a specific job.
-  //  * @param jobId The ID of the job to filter results for.
-  //  * @returns An array of Result objects.
-  //  */
-  // getResultsForJobCandidates(jobId: string): Result[] {
-  //   // 1. Get the candidates for the current job
-  //   const candidatesForThisJob = this.getCandidatesForJob(jobId);
-  //   // 2. Extract their UIDs
-  //   const candidateUIDsForJob = candidatesForThisJob.map(
-  //     (candidate) => candidate.candidateUID
-  //   );
-  //   // 3. Filter the global 'results' array based on these UIDs
-  //   return this.results.filter((result) =>
-  //     candidateUIDsForJob.includes(result.userUID)
-  //   );
-  // }
-
-  // /**
-  //  * Obtiene una lista de candidatos que han aprobado el examen para un trabajo específico.
-  //  * Un candidato se considera "aprobado" si tiene un `Result` asociado a ese `jobId`
-  //  * donde `examPassed` es `true`.
-  //  * @param jobId El ID del trabajo.
-  //  * @returns Un array de objetos Candidate que han aprobado el examen para el trabajo dado.
-  //  */
-  // getApprovedCandidatesForJob(jobId: string): Candidate[] {
-  //   // 1. Encontrar el objeto Job para obtener su examId
-  //   const job = this.jobs.find(j => j.jobId === jobId);
-  //   if (!job || !job.examId) {
-  //     // Si el trabajo no existe o no tiene un examId, no hay candidatos aprobados por examen
-  //     return [];
-  //   }
-
-  //   // 2. Obtener todos los resultados asociados a los candidatos de este trabajo
-  //   const resultsForJobCandidates = this.getResultsForJobCandidates(jobId);
-
-  //   // 3. Filtrar los resultados para encontrar aquellos que pasaron el examen y corresponden al examId del trabajo
-  //   const approvedResultsForThisJob = resultsForJobCandidates.filter(result =>
-  //     result.examPassed === true && result.examId === job.examId
-  //   );
-
-  //   // 4. Extraer los userUID (IDs de candidatos) de los resultados aprobados
-  //   const approvedCandidateUIDs = new Set(approvedResultsForThisJob.map(result => result.userUID));
-
-  //   // 5. Filtrar la lista global de candidatos para obtener solo los que tienen un UID aprobado
-  //   // Se usa 'this.candidates' para obtener los objetos Candidate completos.
-  //   return this.candidates.filter(candidate =>
-  //     approvedCandidateUIDs.has(candidate.candidateUID)
-  //   );
-  // }
-
-  //   orderJobsByCandidateCount(): void {
-  //   // 1. Dividir los trabajos en activos e inactivos
-  //   const activeJobs = this.jobs.filter(job => job.active === true);
-  //   const inactiveJobs = this.jobs.filter(job => job.active === false);
-
-  //   // Función auxiliar para ordenar por cantidad de candidatos (descendente)
-  //   const sortByCandidateCount = (jobsArray: Job[]): Job[] => {
-  //     // Crear una copia para ordenar y no mutar el array original
-  //     return [...jobsArray].sort((a, b) => {
-  //       const candidatesA = this.getCandidatesForJob(a.jobId).length;
-  //       const candidatesB = this.getCandidatesForJob(b.jobId).length;
-  //       return candidatesB - candidatesA; // Orden descendente (más candidatos primero)
-  //     });
-  //   };
-
-  //   // 2. Ordenar los trabajos activos
-  //   const sortedActiveJobs = sortByCandidateCount(activeJobs);
-
-  //   // 3. Ordenar los trabajos inactivos
-  //   const sortedInactiveJobs = sortByCandidateCount(inactiveJobs);
-
-  //   // 4. Combinar las listas: activos primero, luego inactivos
-  //   this.jobsOrderedByCandidates = [...sortedActiveJobs, ...sortedInactiveJobs];
-
-  //   console.log('Jobs ordered (Active first, then Inactive, both by candidate count):', this.jobsOrderedByCandidates);
-  // }
-
-  /////// //// /// // // /////
 
   /**
    * Retorna los candidatos asociados a un trabajo específico.
@@ -428,4 +348,16 @@ export class RecruiterDashboardComponent {
     // Por lo tanto, solo necesitamos filtrar por `candidateUID`.
     return this.results.filter((result) => result.userUID === candidateUID);
   }
+
+  async getAllResumes(jobIds: any) {
+    this.resumes = await this.resumeService.getResumesForJobs(jobIds);
+    console.log(this.resumes);
+  }
+
+  // Y tu función auxiliar en el padre, que ahora solo filtra el array que ya tienes.
+  getResumesForJob(jobId: string): Resume[] {
+    return this.resumes.filter(resume => resume.jobRelated === jobId);
+  }
+
+
 }
