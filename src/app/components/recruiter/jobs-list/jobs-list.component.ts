@@ -10,9 +10,12 @@ import { ResumeService } from '@services/resume.service'
 
 import { environment } from '@env/environment';
 
+import { ResumeViewerComponent } from '@recruiter/resume-viewer/resume-viewer.component'
+
+
 @Component({
   selector: 'app-jobs-list',
-  imports: [TranslocoPipe, MatIconModule],
+  imports: [TranslocoPipe, MatIconModule, ResumeViewerComponent],
   templateUrl: './jobs-list.component.html',
   styleUrl: './jobs-list.component.css'
 })
@@ -31,6 +34,9 @@ export class JobsListComponent {
 
   showCandidates!: boolean;
   showCandidatesExamPassed!: boolean;
+  candidatesWithScores: any[] = [];
+
+  selectedResume: Resume | null = null; // Esta variable guardará el currículum a mostrar
 
   async ngOnInit() {
     console.log('START OnINIT Job-List');
@@ -43,7 +49,24 @@ export class JobsListComponent {
     console.log(this.magicLink);
     console.log('END OnINIT Job-List');
     console.log(this.resumesForJob);
+    this.combineCandidateData();
   };
+
+  private combineCandidateData(): void {
+    this.candidatesWithScores = this.candidatesForJob.map(candidate => {
+      // Usamos 'find' para buscar el resume correspondiente
+      const resume = this.resumesForJob.find(
+        (r) => r.candidateUID === candidate.candidateUID
+      );
+
+      // Devolvemos un nuevo objeto que combine ambos datos
+      return {
+        ...candidate, // Copia todas las propiedades del candidato
+        scoreToPosition: resume ? resume.scoreToPosition : 'N/A', // Añade el score, o 'N/A' si no se encuentra
+      };
+    });
+  }
+
 
   switchShowCandidates(){
     this.showCandidates = !this.showCandidates
@@ -84,4 +107,24 @@ export class JobsListComponent {
     }
   }
 
+  // Esta función ahora recibe un objeto Candidate
+  showResume(candidate: Candidate): void {
+    // 1. Busca el currículum (resume) correspondiente en la lista de resumesForJob
+    const resumeToShow = this.resumesForJob.find(resume => resume.candidateUID === candidate.candidateUID);
+
+    // 2. Si se encontró un currículum
+    if (resumeToShow) {
+      // 3. Compara si el currículum encontrado es el mismo que el que se está mostrando actualmente.
+      // Si son el mismo, significa que el usuario está haciendo "toggle" para ocultarlo.
+      if (this.selectedResume === resumeToShow) {
+        this.selectedResume = null; // Oculta el componente.
+      } else {
+        // Si es diferente, lo asigna para que se muestre.
+        this.selectedResume = resumeToShow;
+      }
+    } else {
+      // En caso de que no haya un currículum para el candidato, lo ocultamos por si acaso.
+      this.selectedResume = null;
+    }
+  }
 }

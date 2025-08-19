@@ -1,5 +1,5 @@
 <div
-  class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-lg mb-2 p-5 border border-neutral-200 dark:border-neutral-700"
+  class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-lg mb-2 p-2 sm:p-5 border border-neutral-200 dark:border-neutral-700"
 >
   <!-- Header -->
   <div class="relative flex-col sm:flex-row sm:items-center align-middle">
@@ -53,7 +53,7 @@
   </div>
 
 
-  <!-- Button expand Candidates -->
+  <!-- Button to expand Candidates -->
   @if(candidatesForJob.length >= 1) {
   <div class="flex flex-col sm:flex-row gap-3 mt-2">
     <div
@@ -68,7 +68,7 @@
       <div class="flex pl-2">
         {{ "recruiter.candidates" | transloco }} ({{ candidatesForJob.length }})
       </div>
-      <div class="flex pl-2">
+      <div class="flex pl-2 ml-auto">
         @if(!showCandidates) {
         <mat-icon
           class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
@@ -87,20 +87,31 @@
 
   <!-- Candidates showing -->
   @if(showCandidates && candidatesForJob.length >= 1){
-    <div class="grid grid-cols-1 sm:grid-cols-2">
-      @for(candidate of candidatesForJob; track $index) {
-        <div class="sm:flex-row text-neutral-600 dark:text-neutral-400">
-          <div>-  {{ candidate.username }} {{ candidate.lastname }}</div>
-          @for(resume of resumesForJob; track $index) {
-            @if(resume.candidateUID == candidate.candidateUID ){
-            <div>
-              SCORE: {{ resume.scoreToPosition }}
+    <div class="grid grid-cols-1 sm:grid-cols-2 mt-2">
+      @for(candidate of candidatesWithScores; track candidate.candidateUID) {
+        <div class="sm:flex-row text-neutral-600 dark:text-neutral-400 py-2 px-1 border-b last:border-b-0 sm:border-0 border-neutral-200 dark:border-neutral-700">
+          <div class="flex items-center justify-between">
+            <div class="flex-grow sm:flex-grow-0 truncate overflow-hidden whitespace-nowrap pr-2 font-semibold">
+              • {{ candidate.username }} {{ candidate.lastname }}
             </div>
-            }
-          }
+            <div
+              (click)="showResume(candidate)"
+              class="flex cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 ml-auto"
+            >
+              <mat-icon class="text-neutral-600 dark:text-neutral-300">clinical_notes</mat-icon>
+              <span class="pl-2 pr-2">Resume</span><span class="">{{ candidate.scoreToPosition }}%</span>
+            </div>
+            <div class="sm:grow"></div>
+          </div>
         </div>
       }
     </div>
+    @if (selectedResume) {
+    <app-resume-viewer
+      [resumeForJob]="selectedResume"
+      (closeViewer)="selectedResume = null"
+    ></app-resume-viewer>
+  }
   }
 
 
@@ -120,7 +131,7 @@
       <div class="flex pl-2">
         {{ "recruiter.with_test_ok" | transloco }} ({{ candidatesForJobAndExamPassed.length }})
       </div>
-      <div class="flex pl-2">
+      <div class="flex pl-2 ml-auto">
         @if(!showCandidatesExamPassed) {
         <mat-icon
           class="text-neutral-600 dark:text-neutral-300 items-center align-middle"

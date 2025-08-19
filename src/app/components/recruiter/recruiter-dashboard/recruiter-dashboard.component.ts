@@ -99,7 +99,7 @@ export class RecruiterDashboardComponent {
     | 'exams'
     | 'jobs'
     | 'jobs_edit'
-    | 'candidates' = 'jobs_edit'; // Default to courses
+    | 'candidates' = 'jobs'; // Default to courses
 
   showSettingMenu: boolean = false;
 
