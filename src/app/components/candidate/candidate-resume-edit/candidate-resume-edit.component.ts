@@ -98,6 +98,8 @@ export class CandidateResumeEditComponent {
       name: [this.resume.name ?? null, [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
       email: [this.resume.email ?? null, [Validators.required, Validators.email, Validators.maxLength(80)]],
       phone: [this.resume.phone ?? null, [Validators.required, Validators.minLength(9), Validators.maxLength(15)]],
+      city: [this.resume.city ?? null, [Validators.minLength(3), Validators.maxLength(38)]],
+      zipcode: [this.resume.zipcode ?? null, [Validators.minLength(3), Validators.maxLength(10)]],
       summary: [this.resume.summary ?? null, [Validators.minLength(7)]],
 
       // Creamos los FormArray para las listas

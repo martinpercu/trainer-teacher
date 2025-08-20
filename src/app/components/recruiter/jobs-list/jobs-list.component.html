@@ -99,7 +99,10 @@
               class="flex cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 ml-auto"
             >
               <mat-icon class="text-neutral-600 dark:text-neutral-300">clinical_notes</mat-icon>
-              <span class="pl-2 pr-2">Resume</span><span class="">{{ candidate.scoreToPosition }}%</span>
+              <span class="pl-2 pr-2">Resume</span>
+              @if(candidate.scoreToPosition != "N/A"){
+                <span class="">{{ candidate.scoreToPosition / 10 | number:'1.1-1'}}%</span>
+              }
             </div>
             <div class="sm:grow"></div>
           </div>

@@ -26,7 +26,7 @@
         <!-- <div class="flex-grow"></div> -->
         @if(resumeForJob.scoreToPosition){
           <div class="rounded-full px-3 py-1 text-sm font-bold bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-200">
-            Score: {{ resumeForJob.scoreToPosition | number: '1.0-0' }}%
+            Score: {{ resumeForJob.scoreToPosition / 10 | number: '1.1-1' }}%
           </div>
         }
       </div>
@@ -43,6 +43,18 @@
       <div class="flex items-center space-x-2">
         <mat-icon class="text-neutral-600 dark:text-neutral-300">phone</mat-icon>
         <span>{{ resumeForJob.phone }}</span>
+      </div>
+      }
+      @if (resumeForJob.city) {
+      <div class="flex items-center space-x-2">
+        <mat-icon class="text-neutral-600 dark:text-neutral-300">location_city</mat-icon>
+        <span>{{ resumeForJob.city }}</span>
+      </div>
+      }
+      @if (resumeForJob.zipcode) {
+      <div class="flex items-center space-x-2">
+        <mat-icon class="text-neutral-600 dark:text-neutral-300">location_on</mat-icon>
+        <span>{{ resumeForJob.zipcode }}</span>
       </div>
       }
     </div>
@@ -190,7 +202,7 @@
       (click)="toggleSection('certifications')"
     >
       <div class="flex">
-        <mat-icon class="text-neutral-600 dark:text-neutral-300">school</mat-icon>
+        <mat-icon class="text-neutral-600 dark:text-neutral-300">verified</mat-icon>
       </div>
       <div class="flex pl-2">Certificaciones ({{ resumeForJob.certifications.length }})</div>
       <div class="flex pl-2 ml-auto">

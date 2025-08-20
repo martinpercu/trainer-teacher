@@ -40,6 +40,29 @@
             placeholder="{{ 'candidate_resume.phone_number_placeholder' | transloco}}">
           }
         </div>
+
+        <!-- Zip Code -->
+        <div>
+          <label for="zipcode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">{{ 'candidate_resume.zipcode' | transloco}}:</label>
+          @if(!isInfoEditing){<div>{{ resume.zipcode }}</div>}
+          @if(isInfoEditing){
+          <input type="text" id="zipcode" formControlName="zipcode"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="{{ 'candidate_resume.zipcode_placeholder' | transloco}}">
+          }
+        </div>
+
+        <!-- City -->
+        <div>
+          <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">{{ 'candidate_resume.city' | transloco}}:</label>
+          @if(!isInfoEditing){<div>{{ resume.city }}</div>}
+          @if(isInfoEditing){
+          <input type="text" id="city" formControlName="city"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="{{ 'candidate_resume.city_placeholder' | transloco}}">
+          }
+        </div>
+
       </div>
       <!-- <div>
         @if(!isInfoEditing){

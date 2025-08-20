@@ -1,4 +1,5 @@
 import { Component, Input, inject } from '@angular/core';
+import { CommonModule } from '@angular/common'; // Ya lo tienes, pero es el módulo que contiene los pipes
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -15,7 +16,7 @@ import { ResumeViewerComponent } from '@recruiter/resume-viewer/resume-viewer.co
 
 @Component({
   selector: 'app-jobs-list',
-  imports: [TranslocoPipe, MatIconModule, ResumeViewerComponent],
+  imports: [TranslocoPipe, MatIconModule, ResumeViewerComponent, CommonModule],
   templateUrl: './jobs-list.component.html',
   styleUrl: './jobs-list.component.css'
 })
@@ -50,6 +51,7 @@ export class JobsListComponent {
     console.log('END OnINIT Job-List');
     console.log(this.resumesForJob);
     this.combineCandidateData();
+    console.log(this.candidatesWithScores);
   };
 
   private combineCandidateData(): void {

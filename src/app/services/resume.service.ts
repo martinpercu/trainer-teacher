@@ -66,6 +66,9 @@ export class ResumeService {
       name: resumeData['Name'] || null,
       email: resumeData['Email'] || null,
       phone: resumeData['Phone Number'] || null,
+      zipcode: resumeData['Postal Code'] || null,
+      city: resumeData['City'] || null,
+
       summary: resumeData['Summary/Objective'] || null,
       skills: resumeData['Skills'] || null,
 
@@ -88,7 +91,7 @@ export class ResumeService {
       education: (resumeData['Education'] || []).map((edu: any) => ({
         degree: edu['Degree'] || null,
         institution: edu['Institution'] || null,
-        year: edu['Graduation Year'] || null,
+        graduationYear: edu['Graduation Year'] || null,
       })),
     };
 

@@ -26,6 +26,8 @@ export interface Resume {
   name?: string;
   email?: string;
   phone?: string;
+  city?: string;
+  zipcode?: string;
   summary?: string;
   skills?: string[];
   works?: Works[]; // Texto de la pregunta
