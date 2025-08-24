@@ -104,6 +104,7 @@
     "lastname" : "Last name",
     "fullname" : "Full name",
     "email" : "Email",
+    "email_placeholder" : "joe_doe@email.com",
     "contact_email" : "Contact Email",
     "zipcode" : "Zip Code",
     "zipcode_placeholder" : "12345",
@@ -112,9 +113,26 @@
     "summary": "Create and Continue",
     "phone_number": "Phone number",
     "phone_number_placeholder": "123-345-6789",
-    "work_experience" : "Experience",
-    "certifications" : "Certifications",
-    "education" : "Education"
+    "work_experience": "Experience",
+    "certifications": "Certifications",
+    "education": "Education",
+    "save_confirm": "Confirm",
+    "confirm_basic_info": "Please confirm your details",
+    "resume_sent_success": "Your resume has been sent successfully"
+  },
+  "resume_error": {
+    "minimum2": "At least 2 characters",
+    "max60": "Maximum 60 characters",
+    "minimum3": "Minimum 3 characters",
+    "need_valid_email": "Need a valid email",
+    "max40": "Maximum 40 characters",
+    "minimum7": "At least 7 characters",
+    "min7_numbers": "At least 7 numbers",
+    "max17": "Maximum 17 characters",
+    "only_numbers": "Only numbers",
+    "minimum4": "At least 4 characters",
+    "max10": "Maximum 10 characters",
+    "required_field": "Required field"
   },
   "position_edit": {
     "select_job": "Select Position",

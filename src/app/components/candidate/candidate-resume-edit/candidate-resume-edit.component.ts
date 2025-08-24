@@ -95,9 +95,9 @@ export class CandidateResumeEditComponent {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      name: [this.resume.name ?? null, [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
+      name: [this.resume.name ?? null, [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
       email: [this.resume.email ?? null, [Validators.required, Validators.email, Validators.maxLength(80)]],
-      phone: [this.resume.phone ?? null, [Validators.required, Validators.minLength(9), Validators.maxLength(15)]],
+      phone: [this.resume.phone ?? null, [Validators.required, Validators.minLength(7), Validators.maxLength(17), Validators.pattern(/^[0-9\s()+-]*$/)]],
       city: [this.resume.city ?? null, [Validators.minLength(3), Validators.maxLength(38)]],
       zipcode: [this.resume.zipcode ?? null, [Validators.minLength(3), Validators.maxLength(10)]],
       summary: [this.resume.summary ?? null, [Validators.minLength(7)]],
@@ -180,9 +180,11 @@ export class CandidateResumeEditComponent {
 
   private buildEmptyForm(): void {
     this.form = this.formBuilder.group({
-      name: [null, [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
+      name: [null, [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
       email: [null, [Validators.required, Validators.email, Validators.maxLength(80)]],
-      phone: [null, [Validators.required, Validators.minLength(9), Validators.maxLength(15)]],
+      phone: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(17), Validators.pattern(/^[0-9\s()+-]*$/)]],
+      city: [null, [Validators.minLength(3), Validators.maxLength(38)]],
+      zipcode: [null, [Validators.minLength(3), Validators.maxLength(10)]],
       summary: [null, [Validators.minLength(7)]],
       works: this.formBuilder.array([]),
       certifications: this.formBuilder.array([]),

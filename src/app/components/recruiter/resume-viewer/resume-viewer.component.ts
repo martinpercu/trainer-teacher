@@ -21,6 +21,7 @@ export class ResumeViewerComponent {
   showWorks: boolean = false;
   showEducation: boolean = false;
   showCertifications: boolean = false;
+  showLanguages: boolean = false;
 
     async ngOnInit() {
       console.log(this.resumeForJob);
@@ -28,7 +29,7 @@ export class ResumeViewerComponent {
     }
 
   // Puedes usar una función genérica o una por cada sección
-  toggleSection(section: 'summary' | 'skills' | 'works' | 'education' | 'certifications') {
+  toggleSection(section: 'summary' | 'skills' | 'works' | 'education' | 'certifications' | 'languages') {
     switch(section) {
       case 'summary':
         this.showSummary = !this.showSummary;
@@ -44,6 +45,9 @@ export class ResumeViewerComponent {
         break;
       case 'certifications':
         this.showCertifications = !this.showCertifications;
+        break;
+      case 'languages':
+        this.showLanguages = !this.showLanguages;
         break;
     }
   }

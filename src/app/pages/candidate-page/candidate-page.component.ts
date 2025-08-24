@@ -14,6 +14,7 @@ import { CandidateVisualService } from '@services/candidate-visual.service';
 import { CandidateEditComponent } from '@candidate/candidate-edit/candidate-edit.component';
 import { CandidateHeaderComponent } from '@candidate/candidate-header/candidate-header.component';
 import { CandidateResumeEditComponent } from '@candidate/candidate-resume-edit/candidate-resume-edit.component';
+import { CandidateResumeBasicConfirmationComponent } from '@candidate/candidate-resume-basic-confirmation/candidate-resume-basic-confirmation.component';
 
 import { UploadComponent } from '@components/candidate/upload/upload.component';
 
@@ -23,7 +24,7 @@ import { Candidate } from '@models/candidate';
 
 @Component({
   selector: 'app-candidate-page',
-  imports: [TranslocoPipe, CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent, CandidateHeaderComponent, CandidateResumeEditComponent],
+  imports: [TranslocoPipe, CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent, CandidateHeaderComponent, CandidateResumeEditComponent, CandidateResumeBasicConfirmationComponent],
   templateUrl: './candidate-page.component.html'
 })
 export class CandidatePageComponent {

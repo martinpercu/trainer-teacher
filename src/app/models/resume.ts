@@ -30,6 +30,7 @@ export interface Resume {
   zipcode?: string;
   summary?: string;
   skills?: string[];
+  languages?: string[];
   works?: Works[]; // Texto de la pregunta
   certifications?: Certification[]; // Texto de la pregunta
   education?: Education[]; // Texto de la pregunta

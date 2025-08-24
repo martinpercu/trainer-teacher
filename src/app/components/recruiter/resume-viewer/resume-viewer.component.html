@@ -224,5 +224,35 @@
       </div>
     }
   }
+
+  @if(resumeForJob.languages && resumeForJob.languages.length > 0) {
+    <div
+      class="mt-4 flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100"
+      (click)="toggleSection('languages')"
+    >
+      <div class="flex">
+        <mat-icon class="text-neutral-600 dark:text-neutral-300">language</mat-icon>
+      </div>
+      <div class="flex pl-2">Languages</div>
+      <div class="flex pl-2 ml-auto">
+        @if(!showLanguages) {
+        <mat-icon class="text-neutral-600 dark:text-neutral-300">expand_circle_down</mat-icon>
+        } @else {
+        <mat-icon class="text-neutral-600 dark:text-neutral-300">expand_circle_up</mat-icon>
+        }
+      </div>
+    </div>
+    @if(showLanguages) {
+      <div class="mt-2 p-2 flex flex-wrap text-neutral-600 dark:text-neutral-400">
+          {{ resumeForJob.languages }}
+        <!-- @for(skill of resumeForJob.skills; track $index) {
+          <div class="bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 px-2 py-1 rounded-full text-sm">
+            {{ skill }}
+          </div>
+        } -->
+      </div>
+    }
+  }
+
 </div>
 </div>

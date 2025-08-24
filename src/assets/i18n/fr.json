@@ -75,7 +75,7 @@
     "description": "See Docs",
     "unique_id": "Take the Exam",
     "exam_id": "English",
-    "welcome_to_process": "Benvenu au process de selection pour",
+    "welcome_to_process": "Bienvenu au process de selection pour",
     "your_application_for": "votre candidature pour le poste de",
     "been_ok_received": "a été reçue avec succès",
     "sincerely_interest": "Nous apprécions sincèrement votre intérêt",
@@ -104,6 +104,7 @@
     "lastname" : "Nom",
     "fullname" : "Nom complet",
     "email" : "E-mail",
+    "email_placeholder" : "mon_courriel@email.com",
     "contact_email" : "E-mail de contact",
     "zipcode" : "Code postal",
     "zipcode_placeholder" : "75001",
@@ -114,7 +115,24 @@
     "phone_number_placeholder": "06.12.34.56.78",
     "work_experience" : "Expérience",
     "certifications" : "Certifications",
-    "education" : "Éducation"
+    "education" : "Éducation",
+    "save_confirm" : "Confirmer",
+    "confirm_basic_info": "Confirmez les informations suivantes",
+    "resume_sent_success": "Votre CV a été envoyé avec succès"
+  },
+  "resume_error": {
+    "minimum2": "Au moins 2 caractères",
+    "max60": "Maximum 60 caractères",
+    "minimum3": "Au moins 3 caractères",
+    "need_valid_email": "Besoin d'une adresse e-mail valide",
+    "max40": "Maximum 40 caractères",
+    "minimum7": "Au moins 7 caractères",
+    "min7_numbers" : "Au moins 7 chiffres",
+    "max17": "Maximum 17 caractères",
+    "only_numbers": "Seulement des chiffres",
+    "minimum4" : "Au moins 4 caractères",
+    "max10": "Maximum 10 caractères",
+    "required_field" : "Champ requis"
   },
   "position_edit": {
     "select_job": "Sélectionner un poste",

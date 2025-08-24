@@ -71,6 +71,7 @@ export class ResumeService {
 
       summary: resumeData['Summary/Objective'] || null,
       skills: resumeData['Skills'] || null,
+      languages: resumeData['Languages'] || null,
 
       // Validamos si 'Work Experience' existe antes de mapear
       works: (resumeData['Work Experience'] || []).map((work: any) => ({
