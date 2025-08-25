@@ -92,7 +92,7 @@
       <div class="flex">
         <mat-icon class="text-neutral-600 dark:text-neutral-300">description</mat-icon>
       </div>
-      <div class="flex pl-2">Summary</div>
+      <div class="flex pl-2">{{ "candidate_resume.summary_title" | transloco }}</div>
       <div class="flex pl-2 ml-auto">
         @if(!showSummary) {
         <mat-icon class="text-neutral-600 dark:text-neutral-300">expand_circle_down</mat-icon>
@@ -116,7 +116,7 @@
       <div class="flex">
         <mat-icon class="text-neutral-600 dark:text-neutral-300">work</mat-icon>
       </div>
-      <div class="flex pl-2">Experiencia Laboral ({{ resumeForJob.works.length }})</div>
+      <div class="flex pl-2">{{ "candidate_resume.work_experience" | transloco }} ({{ resumeForJob.works.length }})</div>
       <div class="flex pl-2 ml-auto">
         @if(!showWorks) {
         <mat-icon class="text-neutral-600 dark:text-neutral-300">expand_circle_down</mat-icon>
@@ -146,7 +146,7 @@
       <div class="flex">
         <mat-icon class="text-neutral-600 dark:text-neutral-300">psychology</mat-icon>
       </div>
-      <div class="flex pl-2">Skills</div>
+      <div class="flex pl-2">{{ "candidate_resume.skills" | transloco }}</div>
       <div class="flex pl-2 ml-auto">
         @if(!showSkills) {
         <mat-icon class="text-neutral-600 dark:text-neutral-300">expand_circle_down</mat-icon>
@@ -175,7 +175,7 @@
       <div class="flex">
         <mat-icon class="text-neutral-600 dark:text-neutral-300">school</mat-icon>
       </div>
-      <div class="flex pl-2">Educación ({{ resumeForJob.education.length }})</div>
+      <div class="flex pl-2">{{ "candidate_resume.education" | transloco }} ({{ resumeForJob.education.length }})</div>
       <div class="flex pl-2 ml-auto">
         @if(!showEducation) {
         <mat-icon class="text-neutral-600 dark:text-neutral-300">expand_circle_down</mat-icon>
@@ -204,7 +204,7 @@
       <div class="flex">
         <mat-icon class="text-neutral-600 dark:text-neutral-300">verified</mat-icon>
       </div>
-      <div class="flex pl-2">Certificaciones ({{ resumeForJob.certifications.length }})</div>
+      <div class="flex pl-2">{{ "candidate_resume.certifications" | transloco }} ({{ resumeForJob.certifications.length }})</div>
       <div class="flex pl-2 ml-auto">
         @if(!showCertifications) {
         <mat-icon class="text-neutral-600 dark:text-neutral-300">expand_circle_down</mat-icon>
@@ -233,7 +233,7 @@
       <div class="flex">
         <mat-icon class="text-neutral-600 dark:text-neutral-300">language</mat-icon>
       </div>
-      <div class="flex pl-2">Languages</div>
+      <div class="flex pl-2">{{ "candidate_resume.languages" | transloco }}</div>
       <div class="flex pl-2 ml-auto">
         @if(!showLanguages) {
         <mat-icon class="text-neutral-600 dark:text-neutral-300">expand_circle_down</mat-icon>

@@ -29,9 +29,9 @@ import { Resume } from '@models/resume';
 
 import { Observable } from 'rxjs';
 import { ExamResultListComponent } from '@school/exam-result-list/exam-result-list.component';
-import { Teacher } from '@models/teacher';
-import { TeacherListComponent } from '@school/teacher-list/teacher-list.component';
-import { ExamsListComponent } from '@school/exams-list/exams-list.component';
+// import { Teacher } from '@models/teacher';
+// import { TeacherListComponent } from '@school/teacher-list/teacher-list.component';
+// import { ExamsListComponent } from '@school/exams-list/exams-list.component';
 
 import { MenuSettingsComponent } from '@recruiter/menu-settings/menu-settings.component';
 import { JobsCrudComponent } from '@recruiter/jobs-crud/jobs-crud.component';
@@ -64,10 +64,10 @@ import { switchMap, tap, filter, catchError, map, take } from 'rxjs/operators';
     MenuSettingsComponent,
     TranslocoPipe,
     CandidatesListComponent,
-    StudentListComponent,
     ExamResultListComponent,
-    TeacherListComponent,
-    ExamsListComponent,
+    // StudentListComponent,
+    // TeacherListComponent,
+    // ExamsListComponent,
     JobsListComponent,
   ],
   templateUrl: './recruiter-dashboard.component.html',
@@ -177,6 +177,10 @@ export class RecruiterDashboardComponent {
         next: ({ resumes, results: fetchedResults, jobs, recruiterUid }) => {
           this.jobs = jobs; // Asignamos los trabajos al componente
           console.log('Jobs for recruiter:', this.jobs);
+
+          if(this.jobs.length == 0){
+            this.setView('jobs_edit')
+          }
 
           this.resumes = resumes;
           console.log('Resumes for recruiter:', this.resumes);

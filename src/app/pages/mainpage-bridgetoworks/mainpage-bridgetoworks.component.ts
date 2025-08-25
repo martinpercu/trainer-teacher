@@ -19,9 +19,23 @@ export class MainpageBridgetoworksComponent {
     this.router.navigate([`/recruiter`]);
   }
 
-  goToCandidate() {
-    // window.open(url, "_blank");
-    this.router.navigate([`/candidate`]);
+  // goToCandidate() {
+  //   // window.open(url, "_blank");
+  //   this.router.navigate([`/candidate`]);
+  // }
+
+  goToNotRecruiter() {
+    const confirmRedirect = window.confirm('Estás a punto de ser redirigido a otra página. ¿Deseas continuar?');
+
+    if (confirmRedirect) {
+      window.location.href = 'https://blabla.com';
+      window.open('https://blabla.com', '_blank');
+
+    } else {
+      // Aquí puedes poner cualquier lógica si el usuario cancela,
+      // por ejemplo, mostrar un mensaje en la consola.
+      console.log('Redirección cancelada por el usuario.');
+    }
   }
 
 

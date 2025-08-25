@@ -142,7 +142,8 @@
       >
     </button>
     }
-    @if(candidates.length >=1){
+
+    @if(candidates.length >=150){
     <button
       (click)="setView('candidates')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
@@ -161,6 +162,9 @@
       >
     </button>
     }
+
+
+
     <!-- <button (click)="setView('students')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
       [ngClass]="{'bg-neutral-100 dark:bg-neutral-800': currentView === 'students'}">

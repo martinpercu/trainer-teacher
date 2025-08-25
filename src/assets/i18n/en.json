@@ -14,7 +14,11 @@
     "each_course": "Each course is divided into \"sections,\" which you can select to focus your learning.",
     "teacher_start": "The teacher will start explaining the content of the selected section.",
     "teacher_ask_1_question": "The teacher will ask you a basic question related to the chosen topic.",
-    "teacher_test_you": "The teacher will test you with more targeted and difficult questions based on the selected section."
+    "teacher_test_you": "The teacher will test you with more targeted and difficult questions based on the selected section.",
+    "this_recruiter_system": "This is the AI-powered ATS platform, designed for ",
+    "im_recruiter": "I'm an HR professional",
+    "im_candidate": "I DON'T work in HR",
+    "human_resourses": "Human Resources Professionals"
   },
   "top_right": {
     "return" : "Return Main",
@@ -81,7 +85,8 @@
     "sincerely_interest": "We sincerely appreciate your interest",
     "what_next": "What's next?",
     "our_recruitment": "Our recruitment team will carefully review your profile",
-    "if_you_match": "We will contact you to inform you about the next steps in the selection process"
+    "if_you_match": "We will contact you to inform you about the next steps in the selection process",
+    "profil_evaluating_for": "Your profile is being evaluated for the position of"
   },
   "candidate_profile": {
     "firstname" : "First name",
@@ -118,7 +123,10 @@
     "education": "Education",
     "save_confirm": "Confirm",
     "confirm_basic_info": "Please confirm your details",
-    "resume_sent_success": "Your resume has been sent successfully"
+    "resume_sent_success": "Your resume has been sent successfully",
+    "summary_title": "Summary",
+    "skills": "Skills",
+    "languages": "Languages"
   },
   "resume_error": {
     "minimum2": "At least 2 characters",

@@ -14,7 +14,11 @@
     "each_course": "Each course is divided into \"sections,\" which you can select to focus your learning.",
     "teacher_start": "The teacher will start explaining the content of the selected section.",
     "teacher_ask_1_question": "The teacher will ask you a basic question related to the chosen topic.",
-    "teacher_test_you": "The teacher will test you with more targeted and difficult questions based on the selected section."
+    "teacher_test_you": "The teacher will test you with more targeted and difficult questions based on the selected section.",
+    "this_recruiter_system": "C'est la plateforme ATS pilotée par IA, dédiée aux professionnels des ",
+    "im_recruiter": "Je suis un professionnel des RH",
+    "im_candidate": "Je NE travaille pas dans les RH",
+    "human_resourses": "Ressources Humaines"
   },
   "top_right": {
     "return" : "Retourner",
@@ -81,7 +85,8 @@
     "sincerely_interest": "Nous apprécions sincèrement votre intérêt",
     "what_next": "Quelle est la prochaine étape ?",
     "our_recruitment": "Notre équipe de recrutement examinera attentivement votre profil",
-    "if_you_match": "Nous vous contacterons pour vous informer des prochaines étapes du processus de sélection"
+    "if_you_match": "Nous vous contacterons pour vous informer des prochaines étapes du processus de sélection",
+    "profil_evaluating_for": "Votre profil est en cours d'évaluation pour le poste de"
   },
   "candidate_profile": {
     "firstname" : "Prénom",
@@ -118,7 +123,10 @@
     "education" : "Éducation",
     "save_confirm" : "Confirmer",
     "confirm_basic_info": "Confirmez les informations suivantes",
-    "resume_sent_success": "Votre CV a été envoyé avec succès"
+    "resume_sent_success": "Votre CV a été envoyé avec succès",
+    "summary_title": "Résumé",
+    "skills": "Compétences",
+    "languages": "Langues"
   },
   "resume_error": {
     "minimum2": "Au moins 2 caractères",

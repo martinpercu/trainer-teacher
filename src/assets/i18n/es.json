@@ -14,7 +14,11 @@
     "each_course": "Cada curso está dividido en \"secciones,\" las cuales puedes seleccionar para enfocar tu aprendizaje.",
     "teacher_start": "El profesor comenzará a explicar el contenido de la sección seleccionada.",
     "teacher_ask_1_question": "El profesor te hará una pregunta básica relacionada con el tema elegido.",
-    "teacher_test_you": "El profesor te evaluará con preguntas más específicas y difíciles basadas en la sección seleccionada."
+    "teacher_test_you": "El profesor te evaluará con preguntas más específicas y difíciles basadas en la sección seleccionada.",
+    "this_recruiter_system": "Este es la plataforma de ATS con IA. Dedicada a personas de ",
+    "im_recruiter": "Soy profesional en el area de RRHH",
+    "im_candidate": "No estoy en el departamento de RRHH",
+    "human_resourses": "Recursos Humanos"
   },
   "top_right": {
     "return" : "Volver",
@@ -81,7 +85,8 @@
     "sincerely_interest": "Agradecemos sinceramente tu interés",
     "what_next": "¿Qué sigue ahora?",
     "our_recruitment": "Nuestro equipo de reclutamiento revisará cuidadosamente tu perfil",
-    "if_you_match": "Nos pondremos en contacto contigo para informarte sobre los siguientes pasos en el proceso de selección"
+    "if_you_match": "Nos pondremos en contacto contigo para informarte sobre los siguientes pasos en el proceso de selección",
+    "profil_evaluating_for": "Tu perfil está siendo evaluado para el puesto de"
   },
   "candidate_profile": {
     "firstname" : "Nombre",
@@ -118,7 +123,10 @@
     "education" : "Educación",
     "save_confirm" : "Confirmar",
     "confirm_basic_info": "Confirma estos datos",
-    "resume_sent_success": "Tu currículum se ha enviado con éxito"
+    "resume_sent_success": "Tu currículum se ha enviado con éxito",
+    "summary_title": "Resumen",
+    "skills": "Habilidades / Aptitudes",
+    "languages": "Idiomas"
   },
   "resume_error": {
     "minimum2": "Al menos 2 caracteres",

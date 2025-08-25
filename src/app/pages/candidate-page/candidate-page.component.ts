@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -43,9 +43,41 @@ export class CandidatePageComponent {
   showLogin: boolean = false;
   recruiterId!: string;
 
+  lastCandidateJob!: Job | undefined;
+
   // candidate!: Candidate;
+  constructor() {
+    effect(() => {
+      console.log('estoy aca EFFECT no hay JOB position');
+      // 1. Obtenemos el UID del Signal.
+      const candidateUID = this.candidateService.candidateSig()?.candidateUID;
+      // 2. Si el UID existe, llamamos a la función asíncrona.
+      if (candidateUID) {
+        // Usamos .then() para manejar la promesa, ya que `effect` no es `async`.
+        this.candidateService.getThisCandidate(candidateUID).then(candidate => {
+          // Aquí puedes hacer algo con el objeto 'candidate'
+          console.log('Candidato cargado:', candidate);
+          // Verificamos si `jobs` existe y si tiene al menos un elemento.
+        if (candidate && candidate.jobs && candidate.jobs.length > 0) {
+            const firstJobId = candidate.jobs[0];
+
+            // Encadenamos otra promesa para obtener el trabajo
+            this.jobCrudService.getJobByIdRaw(firstJobId).then(theJob => {
+              // Ahora 'job' es el objeto de tipo Job o undefined
+              this.lastCandidateJob = theJob;
+              console.log('Último trabajo del candidato:', this.lastCandidateJob);
+            });
+          } else {
+            console.log('El candidato no tiene trabajos o el arreglo está vacío.');
+          }
+        });
+
+      }
+    });
+  }
 
   async ngOnInit() {
+
     // Extraer el jobPositionId
     const jobPositionId = this.route.snapshot.paramMap.get('jobId'); // Ruta /job/:jobId
     if (jobPositionId) {
@@ -53,23 +85,23 @@ export class CandidatePageComponent {
       this.withJobId = true
       const thisJob: any = await this.jobCrudService.getJobByIdRaw(jobPositionId);
       const ownerId: string | undefined =
-          await this.jobCrudService.getJobOwnerId(jobPositionId);
-      if(ownerId && thisJob && this.candidateService.candidateSig()) {
-        // alert('hay de SUPER TODOOOOO todooooooo')
-        console.log(this.candidateService.candidateSig()?.candidateUID);
-        const candidateUID = this.candidateService.candidateSig()?.candidateUID
-        console.log(ownerId);
-        this.recruiterId = ownerId
-        console.log(jobPositionId);
-        if(candidateUID){
-          const tipoUpdateado = await this.candidateService.updateCandidateIfNeeded(
-            candidateUID,
-            jobPositionId,
-            ownerId
-          );
-          console.log(tipoUpdateado);
+      await this.jobCrudService.getJobOwnerId(jobPositionId);
+        if(ownerId && thisJob && this.candidateService.candidateSig()) {
+          // alert('hay de SUPER TODOOOOO todooooooo')
+          console.log(this.candidateService.candidateSig()?.candidateUID);
+          const candidateUID = this.candidateService.candidateSig()?.candidateUID
+          console.log(ownerId);
+          this.recruiterId = ownerId
+          console.log(jobPositionId);
+          if(candidateUID){
+            const tipoUpdateado = await this.candidateService.updateCandidateIfNeeded(
+              candidateUID,
+              jobPositionId,
+              ownerId
+            );
+            console.log(tipoUpdateado);
+          }
         }
-      }
       // if(ownerId && thisJob) {
       //   alert('hay de todooooooo')
       // }
@@ -87,6 +119,20 @@ export class CandidatePageComponent {
         this.router.navigateByUrl(`/job`);
       }
     }
+    // else {
+    //   console.log('estoy aca no hay JOB position');
+    //   const candidateUID = this.candidateService.candidateSig()?.candidateUID;
+    //   if (candidateUID) {
+    //     const candidate = await this.candidateService.getThisCandidate(candidateUID);
+
+    //     // Aquí puedes hacer algo con el objeto 'candidate'
+    //     console.log(candidate);
+    //     alert("eeeee")
+    //   }
+
+    // }
+      // `effect` se ejecutará cada vez que candidateSig() cambie.
+
   }
 
   switchLoginRegister() {

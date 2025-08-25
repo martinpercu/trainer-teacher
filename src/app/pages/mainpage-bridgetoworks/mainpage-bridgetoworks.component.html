@@ -1,15 +1,7 @@
-<p>mainpage-bridgetoworks works!</p>
 <div
   class="z-[51] absolute flex flex-col w-screen h-full bg-neutral-700 bg-opacity-90 dark:bg-neutral-900 dark:bg-opacity-95">
-
-  <div (click)="goToCandidate()"
-    class="w-72 mt-4 mx-auto p-2 text-center text-base bg-white dark:bg-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-100 rounded-md cursor-pointer shadow-md ">
-    {{ 'main.go_admin' | transloco }}
-  </div>
-
   <div
     class="m-auto max-w-[90%] sm:max-w-screen-sm md:max-w-screen-md py-4 px-1 sm:p-10 bg-white border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-2xl shadow">
-
 
 
     <div class="flex flex-col items-center text-center text-xs sm:text-sm text-neutral-700 dark:text-neutral-200">
@@ -19,14 +11,11 @@
         {{ 'main.welcome' | transloco }}
       </div>
 
-      <div class="pb-6 w-11/12 text-left">
+      <div class="pb-6 w-11/12">
         <div class="pb-4">
-          {{ 'main.this_teacher_help' | transloco }}
-          <strong>"{{ 'main.chat_tools' | transloco }}"</strong>.
+          {{ 'main.this_recruiter_system' | transloco }}<br>
+          <strong>"{{ 'main.human_resourses' | transloco }}"</strong>.
           <!-- <mat-icon class="pt-1">speaker_notes</mat-icon> -->
-        </div>
-        <div class="pb-2">
-          {{ 'main.each_course' | transloco }}
         </div>
       </div>
 
@@ -36,26 +25,14 @@
 
         <div (click)="goToRecruiter()"
           class="flex items-center p-2 sm:p-3 sm:gap-2 text-sm font-semibold bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 rounded-lg cursor-pointer border shadow-md">
-          <mat-icon class="!hidden sm:!block">rocket_launch</mat-icon>
-          Ethics for Employees
+          <mat-icon class="!hidden sm:!block">person_raised_hand</mat-icon>
+          {{ 'main.im_recruiter' | transloco }}
         </div>
 
-        <div (click)="goToRecruiter()"
+        <!-- <div (click)="goToNotRecruiter()"
           class="flex items-center p-2 sm:p-3 sm:gap-2 text-sm font-semibold bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 rounded-lg cursor-pointer border shadow-md">
           <mat-icon class="!hidden sm:!block">rocket_launch</mat-icon>
-          Washington BIO
-        </div>
-
-        <div (click)="goToRecruiter()"
-          class="flex items-center p-2 sm:p-3 sm:gap-2 text-sm font-semibold bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 rounded-lg cursor-pointer border shadow-md">
-          <mat-icon class="!hidden sm:!block">rocket_launch</mat-icon>
-          Vertical Seal
-        </div>
-
-        <!-- <div (click)="goToLink('employee')"
-          class="flex items-center p-2 sm:p-3 sm:gap-2 text-sm font-semibold bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 rounded-lg cursor-pointer border shadow-md">
-          <mat-icon class="!hidden sm:!block">rocket_launch</mat-icon>
-          Ethics for Employees
+          {{ 'main.im_candidate' | transloco }}
         </div> -->
 
       </div>
@@ -63,7 +40,7 @@
 
 
       <!-- Explicación de los tres botones en el chat -->
-      <div class="pb-4 w-11/12 mt-8">
+      <!-- <div class="pb-4 w-11/12 mt-8">
         <div class="pb-4 font-semibold text-sm">
           {{ 'main.chat_tools' | transloco }}
         </div>
@@ -87,7 +64,7 @@
             <span class="ml-4">{{ 'main.teacher_test_you' | transloco }}.</span>
           </div>
         </div>
-      </div>
+      </div> -->
 
 
     </div>

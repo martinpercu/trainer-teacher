@@ -27,6 +27,7 @@ import { UploadComponent } from '@components/candidate/upload/upload.component';
 import { PdfShowComponent } from '@shared/pdf-show/pdf-show.component';
 import { CandidateResumeEditComponent } from '@components/candidate/candidate-resume-edit/candidate-resume-edit.component';
 import { MainpageBridgetoworksComponent } from '@pages/mainpage-bridgetoworks/mainpage-bridgetoworks.component';
+import { UserCandidatePageComponent } from '@pages/user-candidate-page/user-candidate-page.component';
 
 
 export const routes: Routes = [
@@ -56,7 +57,7 @@ export const routes: Routes = [
   },
   {
     path:'candidate',
-    component: CandidatePageComponent
+    component: UserCandidatePageComponent
   },
   {
     path:'job',
