@@ -23,6 +23,7 @@ export interface Resume {
   jobRelated: string;
   recruiterId: string;
   scoreToPosition?: any;
+  thumbUp?: boolean;
   name?: string;
   email?: string;
   phone?: string;

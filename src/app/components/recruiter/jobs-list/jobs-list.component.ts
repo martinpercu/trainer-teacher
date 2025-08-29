@@ -11,7 +11,7 @@ import { ResumeService } from '@services/resume.service'
 
 import { environment } from '@env/environment';
 
-import { ResumeViewerComponent } from '@recruiter/resume-viewer/resume-viewer.component'
+import { ResumeViewerComponent } from '@recruiter/resume-viewer/resume-viewer.component';
 
 
 @Component({
@@ -35,7 +35,11 @@ export class JobsListComponent {
 
   showCandidates!: boolean;
   showCandidatesExamPassed!: boolean;
+  showCandidatesThumbUp!: boolean;
+
   candidatesWithScores: any[] = [];
+  candidatesWithThumbUp: any[] = [];
+
 
   selectedResume: Resume | null = null; // Esta variable guardará el currículum a mostrar
 
@@ -48,24 +52,71 @@ export class JobsListComponent {
     this.showCandidatesExamPassed = false
     this.magicLink = `${environment.BASEURL}/job/${this.job.jobId}`;
     console.log(this.magicLink);
-    console.log('END OnINIT Job-List');
     console.log(this.resumesForJob);
     this.combineCandidateData();
     console.log(this.candidatesWithScores);
+    console.log(this.candidatesWithThumbUp);
+    this.combineCandidateForThumbUp()
+    console.log(this.candidatesWithThumbUp);
+    console.log('END OnINIT Job-List');
   };
 
+
   private combineCandidateData(): void {
+    // 1. Mapea y combina los datos
     this.candidatesWithScores = this.candidatesForJob.map(candidate => {
-      // Usamos 'find' para buscar el resume correspondiente
       const resume = this.resumesForJob.find(
         (r) => r.candidateUID === candidate.candidateUID
       );
 
-      // Devolvemos un nuevo objeto que combine ambos datos
+      // Si no se encuentra un 'resume' o 'scoreToPosition', el valor es null.
+      const score = resume ? resume.scoreToPosition : null;
+
       return {
-        ...candidate, // Copia todas las propiedades del candidato
-        scoreToPosition: resume ? resume.scoreToPosition : 'N/A', // Añade el score, o 'N/A' si no se encuentra
+        ...candidate,
+        scoreToPosition: score,
       };
+    });
+
+    // 2. Ordena la lista de candidatos de mayor a menor puntuación
+    this.candidatesWithScores.sort((a, b) => {
+      // Si la puntuación es null, la tratamos como -1 para que se vaya al final.
+      const scoreA = a.scoreToPosition !== null ? a.scoreToPosition : -1;
+      const scoreB = b.scoreToPosition !== null ? b.scoreToPosition : -1;
+
+      // Ordena de forma descendente (de mayor a menor)
+      return scoreB - scoreA;
+    });
+  }
+
+
+  private combineCandidateForThumbUp(): void {
+    this.candidatesWithThumbUp = this.candidatesForJob
+    .map(candidate => {
+      const resume = this.resumesForJob.find(
+        (r) => r.candidateUID === candidate.candidateUID
+      );
+
+      // Si no se encuentra un 'resume' o 'scoreToPosition', el valor es null.
+      const score = resume ? resume.scoreToPosition : null;
+
+      return {
+        ...candidate,
+        scoreToPosition: score,
+        thumbUp: resume ? resume.thumbUp : false, // Aseguramos que la propiedad thumbUp exista para el filtrado
+      };
+    })
+    .filter(candidate => candidate.thumbUp === true);
+
+
+    // 2. Ordena la lista de candidatos de mayor a menor puntuación
+    this.candidatesWithThumbUp.sort((a, b) => {
+      // Si la puntuación es null, la tratamos como -1 para que se vaya al final.
+      const scoreA = a.scoreToPosition !== null ? a.scoreToPosition : -1;
+      const scoreB = b.scoreToPosition !== null ? b.scoreToPosition : -1;
+
+      // Ordena de forma descendente (de mayor a menor)
+      return scoreB - scoreA;
     });
   }
 
@@ -76,6 +127,10 @@ export class JobsListComponent {
 
   switchShowCandidatesExamPassed(){
     this.showCandidatesExamPassed = !this.showCandidatesExamPassed
+  };
+
+  switchShowCandidatesResumeThumbUp(){
+    this.showCandidatesThumbUp = !this.showCandidatesThumbUp
   };
 
   async copyMagicString(): Promise<void> {
@@ -129,4 +184,63 @@ export class JobsListComponent {
       this.selectedResume = null;
     }
   }
+
+
+  updateFromViewer() {
+    console.log("updateFromViewer recibido en el padre!"); // ¿Sale este log?
+    // alert("¡Llegamos al padre!");
+    console.log("¡CHE, LLEGAMOS AL PADRE!");
+
+    console.log("updateFromViewer recibido en el padre!");
+
+    // Recalcula la lista de candidatos con thumbUp
+    this.combineCandidateForThumbUp();
+
+    // También podrías recalcular los scores por si cambió algo más
+    this.combineCandidateData();
+
+    console.log("Listas actualizadas:", this.candidatesWithThumbUp);
+  }
+
+
 }
+
+
+  // private combineCandidateData(): void {
+  //   this.candidatesWithScores = this.candidatesForJob.map(candidate => {
+  //     // Usamos 'find' para buscar el resume correspondiente
+  //     const resume = this.resumesForJob.find(
+  //       (r) => r.candidateUID === candidate.candidateUID
+  //     );
+
+  //     // Devolvemos un nuevo objeto que combine ambos datos
+  //     return {
+  //       ...candidate, // Copia todas las propiedades del candidato
+  //       scoreToPosition: resume ? resume.scoreToPosition : 'N/A', // Añade el score, o 'N/A' si no se encuentra
+  //     };
+  //   });
+  // }
+
+  // private combineCandidateData(): void {
+  //   // 1. Mapea y combina los datos como lo estabas haciendo
+  //   this.candidatesWithScores = this.candidatesForJob.map(candidate => {
+  //     const resume = this.resumesForJob.find(
+  //       (r) => r.candidateUID === candidate.candidateUID
+  //     );
+  //     return {
+  //       ...candidate,
+  //       scoreToPosition: resume ? resume.scoreToPosition : null, // Cambiado a `null` para facilitar el ordenamiento
+  //     };
+  //   });
+
+  //   // 2. Ordena la lista de candidatos
+  //   // Se ordena de mayor a menor puntuación (scoreToPosition)
+  //   this.candidatesWithScores.sort((a, b) => {
+  //     // Maneja los casos en que la puntuación es nula
+  //     const scoreA = a.scoreToPosition || -1;
+  //     const scoreB = b.scoreToPosition || -1;
+
+  //     // Ordena de mayor a menor
+  //     return scoreB - scoreA;
+  //   });
+  // }

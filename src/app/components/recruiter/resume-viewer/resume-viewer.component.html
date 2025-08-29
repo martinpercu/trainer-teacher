@@ -7,28 +7,95 @@
     (click)="$event.stopPropagation()"
   >
     <!-- <div
-      class="sticky top-0 z-10 bg-white dark:bg-neutral-800 w-full flex justify-end p-2"
+      class="sticky top-0 z-10 bg-white dark:bg-neutral-800 w-full flex p-2"
       (click)="close()"
     > -->
-    <div
-      class="sticky top-0 z-10 w-full flex justify-end p-2"
-      (click)="close()"
-    >
-      <mat-icon class="cursor-pointer text-neutral-600 dark:text-neutral-300">cancel</mat-icon>
+    <div class="sticky top-0 z-10 bg-white w-full flex flex-row p-2">
+      <div (click)="close()">
+        <mat-icon class="cursor-pointer text-neutral-600 dark:text-neutral-300">cancel</mat-icon>
+      </div>
+      <div class="grow"></div>
+      <div>
+        @if(resumeForJob.thumbUp){
+
+          <div  (click)="thumbUpHandleResume(false)"
+          class="flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+            {{ "recruiter.unhighlight" | transloco }}
+            <mat-icon class="ml-2 cursor-pointer text-neutral-600 dark:text-neutral-300">
+              thumb_down
+            </mat-icon>
+          </div>
+        }@else {
+          <div (click)="thumbUpHandleResume(true)"
+          class="flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+            <mat-icon class="mr-2 cursor-pointer text-neutral-600 dark:text-neutral-300">
+              thumb_up
+            </mat-icon>
+            {{ "recruiter.highlight" | transloco }}
+          </div>
+        }
+      </div>
     </div>
 
     <div class="p-4 pt-0">
       <div class="flex items-center space-x-2">
         <!-- <mat-icon class="text-neutral-600 dark:text-neutral-300">person</mat-icon> -->
-        <h2 class="text-xl font-semibold text-neutral-900 dark:text-neutral-100 flex-grow truncate overflow-hidden whitespace-nowrap">
+        <h2 class="text-xl font-semibold text-neutral-900 dark:text-neutral-100 flex truncate overflow-hidden whitespace-nowrap">
           {{ resumeForJob.name }}
         </h2>
+
         <!-- <div class="flex-grow"></div> -->
-        @if(resumeForJob.scoreToPosition){
+        @if(resumeForJob.thumbUp){
+
+          <!-- <div  (click)="thumbUpHandleResume(false)"
+          class="flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+            Quitar de Destacados
+          </div> -->
+          <div class="rounded-full px-2 py-1 text-sm font-bold bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-200 flex justify-center items-center">
+            <mat-icon class="text-neutral-600 dark:text-neutral-300">
+                thumb_up
+            </mat-icon>
+          </div>
+        }@else {
+          <!-- <div (click)="thumbUpHandleResume(true)"
+          class="flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+            Me gusta este CV
+            <mat-icon class="cursor-pointer text-neutral-600 dark:text-neutral-300">
+                thumb_up
+            </mat-icon>
+          </div> -->
+        }
+
+        <div class="flex-grow"></div>
+        <!-- @if(resumeForJob.thumbUp){
+
+          <div  (click)="thumbUpHandleResume(false)"
+          class="flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+            Quitar de Destacados
+            <mat-icon class="ml-2 cursor-pointer text-neutral-600 dark:text-neutral-300">
+              thumb_down
+            </mat-icon>
+          </div>
+
+        } -->
+
+
+        <!-- @if(resumeForJob.scoreToPosition){
           <div class="rounded-full px-3 py-1 text-sm font-bold bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-200">
             Score: {{ resumeForJob.scoreToPosition / 10 | number: '1.1-1' }}%
           </div>
-        }
+          <div class="rounded-full px-3 py-1 text-sm font-bold border border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+            Score: {{ resumeForJob.scoreToPosition / 10 | number: '1.1-1' }}%
+          </div>
+        } -->
+
+
+        <!-- @if(resumeForJob.scoreToPosition && resumeForJob.thumbUp ){
+          <div class="rounded-full px-3 py-1 text-sm font-bold border border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+            Score: {{ resumeForJob.scoreToPosition / 10 | number: '1.1-1' }}%
+          </div>
+        } -->
+
       </div>
 
   <div class="mt-4 border-t pt-4 border-neutral-200 dark:border-neutral-700">
@@ -255,4 +322,7 @@
   }
 
 </div>
+
+</div>
+
 </div>

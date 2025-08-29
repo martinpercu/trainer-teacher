@@ -99,22 +99,99 @@
               class="flex cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 ml-auto"
             >
               <mat-icon class="text-neutral-600 dark:text-neutral-300">clinical_notes</mat-icon>
-              <span class="pl-2 pr-2">Resume</span>
-              @if(candidate.scoreToPosition != "N/A"){
+              <span class="pl-2 pr-2">{{ 'recruiter.resume' | transloco }}</span>
+              @if(candidate.scoreToPosition !== null){
                 <span class="">{{ candidate.scoreToPosition / 10 | number:'1.1-1'}}%</span>
+              } @else {
+                <span class="">"?"</span>
               }
+              <!-- @if(candidate.scoreToPosition != "N/A"){
+                <span class="">{{ candidate.scoreToPosition / 10 | number:'1.1-1'}}%</span>
+              } -->
             </div>
             <div class="sm:grow"></div>
           </div>
         </div>
       }
     </div>
-    @if (selectedResume) {
+    <!-- @if (selectedResume) {
     <app-resume-viewer
       [resumeForJob]="selectedResume"
       (closeViewer)="selectedResume = null"
     ></app-resume-viewer>
+  } -->
   }
+
+
+
+  <!-- Button to expand ThumbUp -->
+  @if(candidatesWithThumbUp.length >= 1) {
+  <div class="flex flex-col sm:flex-row gap-3 mt-2">
+    <div
+      class="flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100"
+      (click)="switchShowCandidatesResumeThumbUp()"
+    >
+      <div class="flex">
+        <mat-icon class="text-neutral-600 dark:text-neutral-300"
+        >thumb_up
+        </mat-icon>
+      </div>
+      <div class="flex pl-2">
+        {{ "recruiter.candidates_thumbUp" | transloco }} ({{ candidatesWithThumbUp.length }})
+      </div>
+      <div class="flex pl-2 ml-auto">
+        @if(!showCandidatesThumbUp) {
+        <mat-icon
+          class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
+          >expand_circle_down</mat-icon
+        >
+        } @else {
+        <mat-icon
+          class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
+          >expand_circle_up</mat-icon
+        >
+        }
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- ThumbUp showing -->
+  @if(showCandidatesThumbUp && candidatesWithThumbUp.length >= 1){
+    <div class="grid grid-cols-1 sm:grid-cols-2 mt-2">
+      @for(candidate of candidatesWithThumbUp; track candidate.candidateUID) {
+        <div class="sm:flex-row text-neutral-600 dark:text-neutral-400 py-2 px-1 border-b last:border-b-0 sm:border-0 border-neutral-200 dark:border-neutral-700">
+          <div class="flex items-center justify-between">
+            <div class="flex-grow sm:flex-grow-0 truncate overflow-hidden whitespace-nowrap pr-2 font-semibold">
+              • {{ candidate.username }} {{ candidate.lastname }}
+            </div>
+            <div
+              (click)="showResume(candidate)"
+              class="flex cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 ml-auto"
+            >
+              <mat-icon class="text-neutral-600 dark:text-neutral-300">clinical_notes</mat-icon>
+              <span class="pl-2 pr-2">{{ 'recruiter.resume' | transloco }}</span>
+              @if(candidate.scoreToPosition !== null){
+                <span class="">{{ candidate.scoreToPosition / 10 | number:'1.1-1'}}%</span>
+              } @else {
+                <span class="">"?"</span>
+              }
+              <!-- @if(candidate.scoreToPosition != "N/A"){
+                <span class="">{{ candidate.scoreToPosition / 10 | number:'1.1-1'}}%</span>
+              } -->
+            </div>
+            <div class="sm:grow"></div>
+          </div>
+        </div>
+      }
+    </div>
+    <!-- @if (selectedResume) {
+    <app-resume-viewer
+      [resumeForJob]="selectedResume"
+      (testEvent)="updateFromViewer()"
+      (closeViewer)="selectedResume = null"
+    ></app-resume-viewer>
+  } -->
   }
 
 
@@ -164,3 +241,17 @@
 
 
 </div>
+
+<!-- <app-resume-viewer
+  [hidden]="!selectedResume"
+  [resumeForJob]="resumesForJob[0]"
+  (updateResumeList)="updateFromViewer()"
+  (closeViewer)="selectedResume = null"
+></app-resume-viewer> -->
+@if (selectedResume) {
+    <app-resume-viewer
+      [resumeForJob]="selectedResume"
+      (updateResumeList)="updateFromViewer()"
+      (closeViewer)="selectedResume = null"
+    ></app-resume-viewer>
+  }

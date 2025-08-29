@@ -40,6 +40,9 @@
     "exams": "Examenes",
     "exams_edit": "Examenes editar",
     "candidates": "Candidatos",
+    "candidates_thumbUp": "Destacados",
+    "highlight": "Destacar CV",
+    "unhighlight": "Quitar de destacados",
     "no_candidates": "No hay candidatos para esta posición",
     "candidates_test_ok": "Candidatos Examen Aprobado",
     "with_test_ok": "Examen OK",
@@ -54,7 +57,8 @@
     "name": "Nombre",
     "last_name": "Apellido",
     "email": "Email",
-    "no_result": "No hay resultados para este candidato."
+    "no_result": "No hay resultados para este candidato.",
+    "resume": "CV"
   },
   "recruiter_auth": {
     "login": "Iniciar sesión",

@@ -40,6 +40,9 @@
     "exams": "Exams",
     "exams_edit": "Exams edit",
     "candidates": "Candidates",
+    "candidates_thumbUp": "Top Candidates",
+    "highlight": "Highlight Resume",
+    "unhighlight": "Unhighlight",
     "no_candidates": "No candidates for this position",
     "candidates_test_ok": "Candidates Exam Passed",
     "with_test_ok": "Exam Passed",
@@ -54,7 +57,8 @@
     "name": "Name",
     "last_name": "Last Name",
     "email": "Email",
-    "no_result": "No result for this candidate."
+    "no_result": "No result for this candidate.",
+    "resume": "Resume"
   },
   "recruiter_auth": {
     "login" : "Log in",
