@@ -60,7 +60,9 @@
     "email": "Email",
     "no_result": "No result for this candidate.",
     "resume": "Resume",
-    "post_with_exam": "Post with exam"
+    "post_with_exam": "Post with exam",
+    "browser_not_copy": "Automatic copying not support. Please copy the link manually.",
+    "error_not_copy": "Automatic copying not support."
   },
   "recruiter_auth": {
     "login" : "Log in",
@@ -109,7 +111,12 @@
     "state": "State",
     "zipcode": "Zip Code",
     "continue": "Continue",
-    "send_email": "Send email to "
+    "send_email": "Send email to ",
+    "send_email_subjet_A": "Update in your application",
+    "send_email_subjet_B": "Update in your application",
+    "send_email_body": "Hello ",
+    "send_sms": "Send SMS to ",
+    "call_to": "Call "
   },
   "candidate_resume": {
     "name" : "First name",

@@ -53,7 +53,7 @@
         <mat-icon>wand_stars</mat-icon>
       </div>
       } @if(errorInCopy){
-      <span style="margin-left: 10px; color: red">Error al copiar.</span>
+      <span style="margin-left: 10px; color: red">{{ "recruiter.error_not_copy" | transloco }}</span>
       }
 
       </div>
@@ -275,6 +275,7 @@
 @if (selectedResume) {
     <app-resume-viewer
       [resumeForJob]="selectedResume"
+      [jobForResume]="job"
       (updateResumeList)="updateFromViewer()"
       (closeViewer)="selectedResume = null"
     ></app-resume-viewer>

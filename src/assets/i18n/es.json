@@ -60,7 +60,9 @@
     "email": "Email",
     "no_result": "No hay resultados para este candidato.",
     "resume": "CV",
-    "post_with_exam": "Puesto con examen"
+    "post_with_exam": "Puesto con examen",
+    "browser_not_copy": "Tu navegador no soporta la copia automática. Por favor, copia manualmente el link.",
+    "error_not_copy": "No soporta la copia automática."
   },
   "recruiter_auth": {
     "login": "Iniciar sesión",
@@ -109,7 +111,12 @@
     "state": "Provincia",
     "zipcode": "Codigo Postal",
     "continue": "Continuar",
-    "send_email": "Enviar email a "
+    "send_email": "Enviar email a ",
+    "send_email_subjet_A": "Información en tu candidatura",
+    "send_email_subjet_B": "Update in your application",
+    "send_email_body": "Hola ",
+    "send_sms": "Enviar SMS a ",
+    "call_to": "Llamar a "
   },
   "candidate_resume": {
     "name" : "Nombre",

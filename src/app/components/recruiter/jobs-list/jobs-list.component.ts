@@ -1,6 +1,6 @@
 import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Ya lo tienes, pero es el módulo que contiene los pipes
-import { TranslocoPipe } from '@jsverse/transloco';
+// import { TranslocoPipe } from '@jsverse/transloco';
 import { MatIconModule } from '@angular/material/icon';
 
 import { Job } from '@models/job';
@@ -13,6 +13,8 @@ import { ResumeService } from '@services/resume.service'
 import { environment } from '@env/environment';
 
 import { ResumeViewerComponent } from '@recruiter/resume-viewer/resume-viewer.component';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+
 
 
 @Component({
@@ -43,6 +45,10 @@ export class JobsListComponent {
   candidatesWithThumbUp: any[] = [];
 
   selectedResume: Resume | null = null; // Esta variable guardará el currículum a mostrar
+
+
+  constructor(private translocoService: TranslocoService){}
+
 
   async ngOnInit() {
     console.log('START OnINIT Job-List');
@@ -162,7 +168,8 @@ export class JobsListComponent {
       // Show warning if API is not available (very old browsers)
       console.warn('API Clipboard not compatible with this browser.');
       this.errorInCopy = true; // Podrías usar un mensaje diferente aquí si quieres
-      alert('Tu navegador no soporta la copia automática. Por favor, copia manualmente el texto: \n\n' + this.magicLink);
+      const messageBrowserNotCopy = this.translocoService.translate('recruiter.browser_not_copy');
+      alert(messageBrowserNotCopy + '\n\n' + this.magicLink);
     }
   }
 

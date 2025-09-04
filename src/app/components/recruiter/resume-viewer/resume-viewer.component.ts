@@ -3,6 +3,7 @@ import { Component, inject, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Resume } from '@models/resume'; // Asegúrate de tener el modelo en el mismo directorio o importar la ruta correcta
+import { Job } from '@models/job'
 
 import { ResumeService } from '@services/resume.service';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -15,6 +16,7 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 })
 export class ResumeViewerComponent {
   @Input() resumeForJob!: Resume;
+  @Input() jobForResume!: Job;
 
   @Output() updateResumeList = new EventEmitter<void>();
   @Output() closeViewer = new EventEmitter<void>();
@@ -41,6 +43,7 @@ export class ResumeViewerComponent {
   console.log(this.resumeForJob);
   console.log("Componente hijo inicializado");
   console.log("updateResumeList observers al init:", this.updateResumeList.observers?.length || 'no observers property');
+  console.log(this.jobForResume);
 }
 
   // Puedes usar una función genérica o una por cada sección
@@ -135,54 +138,83 @@ export class ResumeViewerComponent {
   //   alert("llamamos ?")
   // }
   emailToCandidate() {
-    // Obtiene la traducción para la clave "email"
     const emailTranslation = this.translocoService.translate('candidate_profile.send_email');
-    alert(emailTranslation + "?"); // Mostrará "correo electrónico?" o "email?" dependiendo del idioma
+    const yesSend = confirm(emailTranslation + this.resumeForJob.name +"?");
+    if (yesSend) {
+      this.sendEmailToCandidate()
+    } else {
+      alert('ok perfect no hace naranja');
+    }
+  }
+
+  sendEmailToCandidate() {
+    const name = this.resumeForJob.name;
+    const emailAddress = this.resumeForJob.email;
+    const subjetFromTranlation_A = this.translocoService.translate('candidate_profile.send_email_subjet_A');
+    const subjetFromTranlation_B = this.translocoService.translate('candidate_profile.send_email_subjet_B');
+    const bodyFromTranlation = this.translocoService.translate('candidate_profile.send_email_body');
 
     // Si quieres usarla en la lógica de envío de email:
-    const emailAddress = this.resumeForJob.email;
-    const subject = `${emailTranslation}?`; // Usando la traducción en el asunto
-    const body = `${emailTranslation}:\n\n`; // Usando la traducción en el cuerpo
+    const subject = `${subjetFromTranlation_A}`; // Usando la traducción en el asunto
+    const body = `${bodyFromTranlation} ${name},`; // Usando la traducción en el cuerpo
 
     const encodedSubject = encodeURIComponent(subject);
     const encodedBody = encodeURIComponent(body);
 
-    console.log(emailAddress + '\n' + encodedSubject + '\n' + encodedBody);
-
+    console.log(emailAddress + '\n\n' + encodedSubject + '\n\n' + encodedBody);
 
     window.location.href = `mailto:${emailAddress}?subject=${encodedSubject}&body=${encodedBody}`;
   }
 
+
   smsToCandidate() {
-    // Obtiene la traducción para la clave "sms"
-    const smsTranslation = this.translocoService.translate('sms');
-    alert(smsTranslation + "?"); // Mostrará "SMS?" o "mensaje de texto?" dependiendo del idioma
-
-    // Si quieres usarla en la lógica de envío de SMS:
-    const phoneNumber = '+1234567890'; // Reemplaza con el número de teléfono deseado
-    const messagePrefix = `${smsTranslation}:\n\n`; // Usando la traducción como prefijo del mensaje
-
-    const encodedMessage = encodeURIComponent(messagePrefix);
-
-    // El esquema `sms:` permite especificar el número y, opcionalmente, el mensaje.
-    // La sintaxis puede variar ligeramente entre dispositivos, pero `?body=` es común.
-    window.location.href = `sms:${phoneNumber}?body=${encodedMessage}`;
+    const smsTranslation = this.translocoService.translate('candidate_profile.send_sms');
+    const yesSend = confirm(smsTranslation + this.resumeForJob.name +"?");
+    if (yesSend) {
+      this.sendSmsToCandidate()
+    } else {
+      // alert('ok perfect no hace naranja');
+    }
+  }
+  normalizePhoneNumber(number: string | undefined): string {
+    // Keep only numbers and '+'
+    if(number) {
+      let numberClean = number.replace(/[^\d+]/g, '');
+      return numberClean
+    }
+    return '';
+  }
+  sendSmsToCandidate() {
+    const phoneNumber = this.normalizePhoneNumber(this.resumeForJob.phone)
+    console.log(phoneNumber);
+    window.location.href = `sms:${phoneNumber}`;
   }
 
+
   callToCandidate() {
+    const smsTranslation = this.translocoService.translate('candidate_profile.call_to');
+    const yesSend = confirm(smsTranslation + this.resumeForJob.name +"?");
+    if (yesSend) {
+      this.sendCallToCandidate()
+    } else {
+      // alert('ok perfect no hace naranja');
+    }
+  }
+  sendCallToCandidate() {
     // Definimos el número de teléfono
-    const phoneNumber = '+1234567890';
+    const phoneNumber = this.normalizePhoneNumber(this.resumeForJob.phone)
 
     // Obtenemos la traducción del texto del botón o mensaje, si es necesario.
     // Aunque para esta función solo necesitas el número.
-    const callTranslation = this.translocoService.translate('call_button');
+    // const callTranslation = this.translocoService.translate('candidate_profile.send_sms');
 
     // La parte clave: usar window.location.href con el esquema tel:
     window.location.href = `tel:${phoneNumber}`;
 
-    // Opcionalmente, puedes mostrar una alerta con la traducción
-    alert(callTranslation + ` al ${phoneNumber}?`);
+    // // Opcionalmente, puedes mostrar una alerta con la traducción
+    // alert(callTranslation + ` al ${phoneNumber}?`);
   }
+
 
 
 
