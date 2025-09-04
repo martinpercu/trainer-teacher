@@ -15,6 +15,7 @@ import { UserService } from '@services/user.service';
 import { CourseCrudService } from '@services/course-crud.service';
 // import { ResultService } from '@services/result.service';
 import { TeacherCrudService } from '@services/teacher-crud.service';
+
 import { ExamCrudService } from '@services/exam-crud.service';
 import { JobCrudService } from '@services/job-crud.service';
 
@@ -90,6 +91,7 @@ export class RecruiterDashboardComponent {
   jobs: Job[] = [];
   jobsOrderedByCandidates: Job[] = [];
   resumes: Resume[] = [];
+  exams: Exam[] = [];
 
   currentView:
     | 'teachers'
@@ -102,6 +104,8 @@ export class RecruiterDashboardComponent {
     | 'candidates' = 'jobs'; // Default to courses
 
   showSettingMenu: boolean = false;
+
+  allowedExamsShow: boolean = true;
 
   async ngOnInit() {
     this.authService.user$
@@ -152,6 +156,18 @@ export class RecruiterDashboardComponent {
                 return of([]);
               })
             ),
+            // ✅ AÑADIMOS LA CARGA DE RESUMES AQUÍ
+            exams: from(this.examCrudService.getExamsByRecruiterId(recruiterUid)).pipe(
+              take(1),
+              tap((exams) => {
+                this.exams = exams; // Asignamos los exams a la propiedad del componente
+                console.log('Retrieved exams (inside forkJoin):', this.exams);
+              }),
+              catchError((error) => {
+                console.error('Error fetching resumes (inside forkJoin):', error);
+                return of([]);
+              })
+            ),
             // Pasamos el `recruiterUid` directamente en el `forkJoin` para que esté disponible en el siguiente `switchMap`
             recruiterUid: of(recruiterUid)
           }).pipe(
@@ -180,6 +196,7 @@ export class RecruiterDashboardComponent {
 
           if(this.jobs.length == 0){
             this.setView('jobs_edit')
+            this.allowedExamsShow = false
           }
 
           this.resumes = resumes;
@@ -370,6 +387,15 @@ export class RecruiterDashboardComponent {
   // Y tu función auxiliar en el padre, que ahora solo filtra el array que ya tienes.
   getResumesForJob(jobId: string): Resume[] {
     return this.resumes.filter(resume => resume.jobRelated === jobId);
+  }
+
+  getExamForJob(examId: string | undefined) {
+    // Si examId es undefined o nulo, la función devuelve undefined.
+    if (!examId) {
+      return undefined;
+    }
+    // Utiliza el método .find() para buscar el primer examen que coincida con el id.
+    return this.exams.find(exam => exam.id === examId);
   }
 
 

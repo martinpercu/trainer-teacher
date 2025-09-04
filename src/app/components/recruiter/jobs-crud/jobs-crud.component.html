@@ -73,7 +73,7 @@
         <span class="ml-2 text-gray-700 dark:text-gray-300">{{ newJob.active ? ('position_edit.enable' | transloco) : ('position_edit.disable' | transloco) }}</span>
       </div>
     </div>
-    @if(theRecruiter.subscriptionLevel >= 5){
+    @if(theRecruiter.subscriptionLevel >= 3){
     <div>
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ "position_edit.exam_associate" | transloco }}</label>
       <select

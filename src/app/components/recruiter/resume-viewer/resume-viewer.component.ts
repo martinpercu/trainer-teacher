@@ -1,10 +1,12 @@
 import { Component, inject, Input, Output, EventEmitter } from '@angular/core';
-import { TranslocoPipe } from '@jsverse/transloco';
+// import { TranslocoPipe } from '@jsverse/transloco';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Resume } from '@models/resume'; // Asegúrate de tener el modelo en el mismo directorio o importar la ruta correcta
 
 import { ResumeService } from '@services/resume.service';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+
 
 @Component({
   selector: 'app-resume-viewer',
@@ -30,6 +32,11 @@ export class ResumeViewerComponent {
     //   console.log(this.resumeForJob);
 
     // }
+
+  constructor(private translocoService: TranslocoService){
+
+  }
+
   async ngOnInit() {
   console.log(this.resumeForJob);
   console.log("Componente hijo inicializado");
@@ -117,6 +124,66 @@ export class ResumeViewerComponent {
       // this.resumeForJob.thumbUp = false;
     }
   }
+
+  // emailToCandidate() {
+  //   alert("email ?")
+  // }
+  // smsToCandidate() {
+  //   alert("SMS ?")
+  // }
+  // callToCandidate() {
+  //   alert("llamamos ?")
+  // }
+  emailToCandidate() {
+    // Obtiene la traducción para la clave "email"
+    const emailTranslation = this.translocoService.translate('candidate_profile.send_email');
+    alert(emailTranslation + "?"); // Mostrará "correo electrónico?" o "email?" dependiendo del idioma
+
+    // Si quieres usarla en la lógica de envío de email:
+    const emailAddress = this.resumeForJob.email;
+    const subject = `${emailTranslation}?`; // Usando la traducción en el asunto
+    const body = `${emailTranslation}:\n\n`; // Usando la traducción en el cuerpo
+
+    const encodedSubject = encodeURIComponent(subject);
+    const encodedBody = encodeURIComponent(body);
+
+    console.log(emailAddress + '\n' + encodedSubject + '\n' + encodedBody);
+
+
+    window.location.href = `mailto:${emailAddress}?subject=${encodedSubject}&body=${encodedBody}`;
+  }
+
+  smsToCandidate() {
+    // Obtiene la traducción para la clave "sms"
+    const smsTranslation = this.translocoService.translate('sms');
+    alert(smsTranslation + "?"); // Mostrará "SMS?" o "mensaje de texto?" dependiendo del idioma
+
+    // Si quieres usarla en la lógica de envío de SMS:
+    const phoneNumber = '+1234567890'; // Reemplaza con el número de teléfono deseado
+    const messagePrefix = `${smsTranslation}:\n\n`; // Usando la traducción como prefijo del mensaje
+
+    const encodedMessage = encodeURIComponent(messagePrefix);
+
+    // El esquema `sms:` permite especificar el número y, opcionalmente, el mensaje.
+    // La sintaxis puede variar ligeramente entre dispositivos, pero `?body=` es común.
+    window.location.href = `sms:${phoneNumber}?body=${encodedMessage}`;
+  }
+
+  callToCandidate() {
+    // Definimos el número de teléfono
+    const phoneNumber = '+1234567890';
+
+    // Obtenemos la traducción del texto del botón o mensaje, si es necesario.
+    // Aunque para esta función solo necesitas el número.
+    const callTranslation = this.translocoService.translate('call_button');
+
+    // La parte clave: usar window.location.href con el esquema tel:
+    window.location.href = `tel:${phoneNumber}`;
+
+    // Opcionalmente, puedes mostrar una alerta con la traducción
+    alert(callTranslation + ` al ${phoneNumber}?`);
+  }
+
 
 
   // thumbUpResume(): void {

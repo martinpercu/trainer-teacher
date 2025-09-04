@@ -16,6 +16,7 @@
       }
     </div>
 
+
     <div class="flex flex-col sm:flex-row sm:items-center gap-3">
 
       <div class="flex flex-row items-center ">
@@ -26,9 +27,14 @@
           {{ job.name }}
         </h2>
       </div>
-      <div class="hidden sm:block sm:grow"></div>
+      <div class="hidden sm:block sm:grow">
+        <!-- @if(this.examForJob){
+          <div>{{this.examForJob.title}}</div>
+        } -->
+      </div>
 
       <!-- <p>El string que quiero copiar es: <strong>{{ miVariableConString }}</strong></p> -->
+      <div class="">
       @if(!copiedSucces){
       <div
         class="flex flex-row cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100"
@@ -49,13 +55,32 @@
       } @if(errorInCopy){
       <span style="margin-left: 10px; color: red">Error al copiar.</span>
       }
+
+      </div>
+
     </div>
   </div>
+  @if(this.examForJob){
+    <div class="flex items-center flex-col sm:flex-row mt-2 text-neutral-600 dark:text-neutral-300">
+      <div class="flex items-center">
+        <mat-icon class="">
+          quiz
+        </mat-icon>
+        <div class="pl-2">
+        Examen:
+        </div>
+      </div>
+      <div class="sm:pl-2">
+        "{{this.examForJob.title}}"
+      </div>
+    </div>
+
+  }
 
 
   <!-- Button to expand Candidates -->
   @if(candidatesForJob.length >= 1) {
-  <div class="flex flex-col sm:flex-row gap-3 mt-2">
+  <div class="flex flex-col sm:flex-row gap-3 mt-2 font-light">
     <div
       class="flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100"
       (click)="switchShowCandidates()"
@@ -124,22 +149,66 @@
 
 
 
-  <!-- Button to expand ThumbUp -->
-  @if(candidatesWithThumbUp.length >= 1) {
+  <!-- Button expand EXAM OK -->
+  @if(candidatesForJobAndExamPassed.length >= 1) {
   <div class="flex flex-col sm:flex-row gap-3 mt-2">
     <div
       class="flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100"
-      (click)="switchShowCandidatesResumeThumbUp()"
+      (click)="switchShowCandidatesExamPassed()"
     >
       <div class="flex">
         <mat-icon class="text-neutral-600 dark:text-neutral-300"
-        >thumb_up
+        >person_play
         </mat-icon>
       </div>
       <div class="flex pl-2">
-        {{ "recruiter.candidates_thumbUp" | transloco }} ({{ candidatesWithThumbUp.length }})
+        {{ "recruiter.with_test_ok" | transloco }} ({{ candidatesForJobAndExamPassed.length }})
       </div>
       <div class="flex pl-2 ml-auto">
+        @if(!showCandidatesExamPassed) {
+        <mat-icon
+          class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
+          >expand_circle_down</mat-icon
+        >
+        } @else {
+        <mat-icon
+          class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
+          >expand_circle_up</mat-icon
+        >
+        }
+      </div>
+    </div>
+  </div>
+  }
+  <!-- EXAM OK showing -->
+  @if(showCandidatesExamPassed && candidatesForJob.length >= 1){
+    <div class="grid grid-cols-1 sm:grid-cols-2">
+      @for(candidateOk of candidatesForJobAndExamPassed; track $index) {
+        <div class="sm:flex-col-2 text-neutral-600 dark:text-neutral-400">
+        -  {{ candidateOk.username }} {{ candidateOk.lastname }}
+        </div>
+      }
+    </div>
+  }
+
+
+
+  <!-- Button to expand ThumbUp -->
+  @if(candidatesWithThumbUp.length >= 1) {
+  <div class="flex flex-col sm:flex-row gap-3 mt-2 font-medium">
+    <div
+      class="flex items-center cursor-pointer rounded-lg border py-2 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100"
+      (click)="switchShowCandidatesResumeThumbUp()"
+    >
+      <div class="flex">
+        <mat-icon class="text-neutral-700 dark:text-neutral-300"
+        >thumb_up
+        </mat-icon>
+      </div>
+      <div class="flex pl-3 ">
+        {{ "recruiter.candidates_thumbUp" | transloco }} ({{ candidatesWithThumbUp.length }})
+      </div>
+      <div class="flex pl-3 ml-auto">
         @if(!showCandidatesThumbUp) {
         <mat-icon
           class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
@@ -155,7 +224,6 @@
     </div>
   </div>
   }
-
   <!-- ThumbUp showing -->
   @if(showCandidatesThumbUp && candidatesWithThumbUp.length >= 1){
     <div class="grid grid-cols-1 sm:grid-cols-2 mt-2">
@@ -194,50 +262,6 @@
   } -->
   }
 
-
-
-  <!-- Button expand Candidates Exam OK -->
-  @if(candidatesForJobAndExamPassed.length >= 1) {
-  <div class="flex flex-col sm:flex-row gap-3 mt-2">
-    <div
-      class="flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100"
-      (click)="switchShowCandidatesExamPassed()"
-    >
-      <div class="flex">
-        <mat-icon class="text-neutral-600 dark:text-neutral-300"
-        >person_play
-        </mat-icon>
-      </div>
-      <div class="flex pl-2">
-        {{ "recruiter.with_test_ok" | transloco }} ({{ candidatesForJobAndExamPassed.length }})
-      </div>
-      <div class="flex pl-2 ml-auto">
-        @if(!showCandidatesExamPassed) {
-        <mat-icon
-          class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
-          >expand_circle_down</mat-icon
-        >
-        } @else {
-        <mat-icon
-          class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
-          >expand_circle_up</mat-icon
-        >
-        }
-      </div>
-    </div>
-  </div>
-  }
-
-  <!-- Candidates Exam OK showing -->
-  @if(showCandidatesExamPassed && candidatesForJob.length >= 1){
-    <div class="grid grid-cols-1 sm:grid-cols-2">
-      @for(candidateOk of candidatesForJobAndExamPassed; track $index) {
-        <div class="sm:flex-col-2 text-neutral-600 dark:text-neutral-400">
-        -  {{ candidateOk.username }} {{ candidateOk.lastname }}
-        </div>
-      }
-    </div>
-  }
 
 
 </div>

@@ -1,24 +1,24 @@
-<div class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-lg mb-2 p-6 border border-neutral-200 dark:border-neutral-700">
+<div class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-md mb-1 p-2 border border-neutral-200 dark:border-neutral-700">
   <!-- Header -->
   <div class="flex flex-row items-center align-middle space-x-2 h-7 gap-1">
     <div class="flex grow items-center space-x-2">
       <mat-icon class="text-neutral-600 dark:text-neutral-300">person</mat-icon>
-      <h2 class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">{{ candidate.username }}</h2>
+      <h2 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ candidate.username }}</h2>
     </div>
     @if (candidate.resumePath ) {
       @if (candidate.resumeDocName?.endsWith('.pdf')) {
-        <div (click)="getResume()" class="cursor-pointer rounded-lg border p-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+        <div (click)="getResume()" class="cursor-pointer rounded-lg border px-2 py-1 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
           {{ 'recruiter.see_cv' | transloco }}
         </div>
       }
       @if (!candidate.resumeDocName?.endsWith('.pdf')) {
-        <div (click)="getResume()" class="cursor-pointer rounded-lg border p-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+        <div (click)="getResume()" class="cursor-pointer rounded-lg border px-2 py-1 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
           {{ 'recruiter.download_cv' | transloco }}
         </div>
       }
     }
 
-    <div (click)="switchShowDetails()" class="cursor-pointer rounded-lg border p-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+    <div (click)="switchShowDetails()" class="cursor-pointer rounded-lg border px-2 py-1 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
       {{ 'recruiter.details' | transloco }}
     </div>
 

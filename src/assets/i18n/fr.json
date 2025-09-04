@@ -35,10 +35,11 @@
     "login_or_signup": "Se connecter"
   },
   "recruiter": {
-    "posts": "Postes",
-    "posts_edit" : "Postes editer",
+    "posts": "Profils",
+    "profils_in_posts" : "Profils dans Postes",
+    "posts_edit" : "Postes",
     "exams": "Examens",
-    "exams_edit": "Examens editer",
+    "exams_edit": "Examens",
     "candidates": "Candidats",
     "candidates_thumbUp": "en Vedette",
     "highlight": "Mettre en avant",
@@ -58,7 +59,8 @@
     "last_name": "Nom",
     "email": "Email",
     "no_result": "Aucun résultat pour ce candidat.",
-    "resume": "CV"
+    "resume": "CV",
+    "post_with_exam": "Poste avec examen"
   },
   "recruiter_auth": {
     "login": "Se connecter",
@@ -106,7 +108,8 @@
     "city": "Ville",
     "state": "Province",
     "zipcode": "Code postal",
-    "continue": "Continuer"
+    "continue": "Continuer",
+    "send_email": "Envoyer email a "
   },
   "candidate_resume": {
     "name" : "Prénom",
@@ -164,5 +167,25 @@
     "update_job": "Mettre à jour",
     "cancel_job": "Annuler",
     "delete_job": "Supprimer le poste"
+  },
+  "exam_crud": {
+    "select_exam": "Sélectionner un examen",
+    "new_exam": "Nouvel examen",
+    "exam_title": "Titre",
+    "exam_title_placeholder": "Titre du examen",
+    "percentage_pass": "Pourcentage pour réussite",
+    "waitning_time": "Temps d'attente (min)",
+    "time_to_complete": "Temps pour compléter l'examen (min)",
+    "exam_status": "Statut de l'examen :",
+    "enable": "Active",
+    "questions": "Questions",
+    "add_question": "Ajouter une question",
+    "no_question_added": "Aucune question ajoutée",
+    "question": "Question",
+    "options": "Options",
+    "clean": "Nettoyer",
+    "delete": "Supprimer",
+    "update": "Mettre à jour",
+    "save": "Enregistrer"
   }
 }

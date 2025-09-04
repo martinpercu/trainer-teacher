@@ -10,7 +10,7 @@
       class="sticky top-0 z-10 bg-white dark:bg-neutral-800 w-full flex p-2"
       (click)="close()"
     > -->
-    <div class="sticky top-0 z-10 bg-white w-full flex flex-row p-2">
+    <div class="sticky top-0 z-10 bg-white dark:bg-neutral-800 w-full flex flex-row p-2">
       <div (click)="close()">
         <mat-icon class="cursor-pointer text-neutral-600 dark:text-neutral-300">cancel</mat-icon>
       </div>
@@ -104,12 +104,24 @@
       <div class="flex items-center space-x-2">
         <mat-icon class="text-neutral-600 dark:text-neutral-300">mail</mat-icon>
         <span>{{ resumeForJob.email }}</span>
+        <div (click)="emailToCandidate()"
+          class="flex items-center cursor-pointer py-1 px-1 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+          <mat-icon>forward_to_inbox</mat-icon> <div class="pl-2 pr-1">email</div>
+        </div>
       </div>
       }
       @if (resumeForJob.phone) {
       <div class="flex items-center space-x-2">
         <mat-icon class="text-neutral-600 dark:text-neutral-300">phone</mat-icon>
         <span>{{ resumeForJob.phone }}</span>
+        <div (click)="smsToCandidate()"
+          class="flex items-center cursor-pointer py-1 px-1 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+          <mat-icon>sms</mat-icon> <div class="pl-2 pr-1">sms</div>
+        </div>
+        <div (click)="callToCandidate()"
+          class="flex items-center cursor-pointer py-1 px-1 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+          <mat-icon>phone_forwarded</mat-icon> <div class="pl-2 pr-1">call</div>
+        </div>
       </div>
       }
       @if (resumeForJob.city) {

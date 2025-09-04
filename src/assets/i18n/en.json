@@ -35,10 +35,11 @@
     "login_or_signup": "Login or SignUp"
   },
   "recruiter": {
-    "posts" : "Positions",
-    "posts_edit" : "Positions edit",
+    "posts" : "Profiles",
+    "profils_in_posts" : "Profiles in Positions",
+    "posts_edit" : "Positions",
     "exams": "Exams",
-    "exams_edit": "Exams edit",
+    "exams_edit": "Exams",
     "candidates": "Candidates",
     "candidates_thumbUp": "Top Candidates",
     "highlight": "Highlight Resume",
@@ -58,7 +59,8 @@
     "last_name": "Last Name",
     "email": "Email",
     "no_result": "No result for this candidate.",
-    "resume": "Resume"
+    "resume": "Resume",
+    "post_with_exam": "Post with exam"
   },
   "recruiter_auth": {
     "login" : "Log in",
@@ -106,7 +108,8 @@
     "city": "City",
     "state": "State",
     "zipcode": "Zip Code",
-    "continue": "Continue"
+    "continue": "Continue",
+    "send_email": "Send email to "
   },
   "candidate_resume": {
     "name" : "First name",
@@ -164,5 +167,25 @@
     "update_job": "Update",
     "cancel_job": "Cancel",
     "delete_job": "Delete Position"
+  },
+  "exam_crud": {
+    "select_exam" : "Select Exam",
+    "new_exam" : "New Exam",
+    "exam_title" : "Title",
+    "exam_title_placeholder" : "Exam title",
+    "percentage_pass" : "Percentage to pass",
+    "waitning_time": "Waiting time (min)",
+    "time_to_complete" : "Time to complete the exam (min)",
+    "exam_status": "Exam status:",
+    "enable": "Enable",
+    "questions" : "Questions",
+    "add_question": "Add Question",
+    "no_question_added" : "There are no questions added",
+    "question" : "Question",
+    "options" : "Options",
+    "clean" : "Clean",
+    "delete" : "Delete",
+    "update" : "Update",
+    "save": "Save"
   }
 }

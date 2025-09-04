@@ -13,10 +13,12 @@ import { Teacher } from '@models/teacher';
 
 import { MatIcon } from '@angular/material/icon';
 
+import { TranslocoPipe } from '@jsverse/transloco';
+
 
 @Component({
   selector: 'app-exam-crud',
-  imports: [FormsModule, CommonModule, AsyncPipe, MatIcon],
+  imports: [FormsModule, CommonModule, AsyncPipe, MatIcon, TranslocoPipe],
   templateUrl: './exam-crud.component.html',
   styleUrl: './exam-crud.component.css'
 })

@@ -1,8 +1,8 @@
 @if(recruiterService.recruiterSig(); as theRecruiter){
 
-<div (click)="switchExpand()" class="z-10 absolute right-0 top-0 p-2 flex flex-col items-end">
+<div (click)="switchExpand()" class="z-10 absolute right-0 top-0 p-2 pr-4 flex flex-col items-end">
     <button
-      class="flex items-center gap-2 px-4 py-2 bg-transparent dark:bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-xl border border-gray-200 dark:border-neutral-700"
+      class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-xl border border-gray-200 dark:border-neutral-700"
     >
       <span class="hidden sm:block">{{
         "recruiter.menu" | transloco
@@ -45,7 +45,7 @@
 <div class="flex h-[100dvh] bg-white dark:bg-neutral-850">
   <!-- Sidebar -->
   <div
-    class="sm:w-64 font-light bg-neutral-50 dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-700 p-0 pt-4 sm:p-4 flex flex-col gap-2"
+    class="sm:w-48 font-light bg-neutral-50 dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-700 p-0 pt-4 sm:p-4 flex flex-col gap-2"
   >
     <!-- <div class="mt-2 mb-6">
       <button
@@ -123,7 +123,8 @@
         >{{ "recruiter.posts_edit" | transloco }}</span
       >
     </button>
-    @if(theRecruiter.subscriptionLevel >= 8){
+
+    @if(allowedExamsShow){
     <button
       (click)="setView('exams')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
@@ -143,7 +144,7 @@
     </button>
     }
 
-    @if(candidates.length >=1){
+    @if(candidates.length >=20){
     <button
       (click)="setView('candidates')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
@@ -232,8 +233,8 @@
   <div class="flex-1 p-4 overflow-auto">
 
     @if (currentView === 'jobs') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
-      {{ "recruiter.posts" | transloco }}
+    <h1 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
+      {{ "recruiter.profils_in_posts" | transloco }}
     </h1>
       @for (job of jobsOrderedByCandidates; track job.jobId) {
       <app-jobs-list
@@ -241,27 +242,28 @@
         [candidatesForJob]="getCandidatesForJob(job.jobId)"
         [candidatesForJobAndExamPassed]="getApprovedCandidatesForJob(job.jobId)"
         [resumesForJob]="getResumesForJob(job.jobId)"
+        [examForJob]="getExamForJob(job.examId)"
       >
       </app-jobs-list>
       }
     }
 
     @if (currentView === 'jobs_edit') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
+    <h1 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
       {{ "recruiter.posts_edit" | transloco }}
     </h1>
     <app-jobs-crud></app-jobs-crud>
     }
 
     @if (currentView === 'exams') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
+    <h1 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
       {{ "recruiter.exams_edit" | transloco }}
     </h1>
     <app-exam-crud></app-exam-crud>
     }
 
     @if (currentView === 'candidates') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
+    <h1 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
       {{ "recruiter.candidates" | transloco }}
     </h1>
       @for (candidate of candidates; track candidate.candidateUID) {
@@ -275,7 +277,7 @@
     }
 
     @if (currentView === 'results') {
-    <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">
+    <h1 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
       Exams Results
     </h1>
       <!-- @for (result of results; track result.id) {

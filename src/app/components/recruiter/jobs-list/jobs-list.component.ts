@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Job } from '@models/job';
 import { Candidate } from '@models/candidate';
 import { Resume } from '@models/resume';
+import { Exam } from '@models/exam';
 
 import { ResumeService } from '@services/resume.service'
 
@@ -26,6 +27,7 @@ export class JobsListComponent {
   // @Input() results!: Result[];
   @Input() candidatesForJobAndExamPassed!: Candidate[];
   @Input() resumesForJob!: Resume[];
+  @Input() examForJob!: Exam | undefined;
 
   resumeService = inject(ResumeService);
 
@@ -39,7 +41,6 @@ export class JobsListComponent {
 
   candidatesWithScores: any[] = [];
   candidatesWithThumbUp: any[] = [];
-
 
   selectedResume: Resume | null = null; // Esta variable guardará el currículum a mostrar
 
@@ -58,6 +59,7 @@ export class JobsListComponent {
     console.log(this.candidatesWithThumbUp);
     this.combineCandidateForThumbUp()
     console.log(this.candidatesWithThumbUp);
+    console.log(this.examForJob + 'eeee');
     console.log('END OnINIT Job-List');
   };
 

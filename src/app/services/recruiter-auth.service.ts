@@ -60,7 +60,7 @@ export class RecruiterAuthService {
       email: email,
       username: username,
       recruiterUID: userUid,
-      subscriptionLevel: 3
+      subscriptionLevel: 9
     }
     this.recruiterService.addUserWithId(this.recruiter, userUid);
     this.recruiterService.setRecruiterSig(this.recruiter);
