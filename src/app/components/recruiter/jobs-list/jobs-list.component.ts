@@ -49,7 +49,7 @@ export class JobsListComponent {
 
   constructor(private translocoService: TranslocoService){}
 
-  testerA: boolean = false
+  // testerA: boolean = false
 
   async ngOnInit() {
     console.log('START OnINIT Job-List');
@@ -145,7 +145,7 @@ export class JobsListComponent {
   async copyMagicString(): Promise<void> {
     this.copiedSucces = false;
     this.errorInCopy = false;
-    this.testerA = !this.testerA;
+    // this.testerA = !this.testerA;
     // Check if API Clipboard is ready on Browser
     if (navigator.clipboard && navigator.clipboard.writeText) {
       try {
@@ -214,7 +214,7 @@ export class JobsListComponent {
   }
 
   turnOffManualLink() {
-    this.testerA = !this.testerA
+    // this.testerA = !this.testerA
     this.errorInCopy = !this.errorInCopy
   }
 

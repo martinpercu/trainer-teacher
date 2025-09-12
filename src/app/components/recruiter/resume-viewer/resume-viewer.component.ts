@@ -143,7 +143,6 @@ export class ResumeViewerComponent {
     if (yesSend) {
       this.sendEmailToCandidate()
     } else {
-      alert('ok perfect no hace naranja');
     }
   }
 
