@@ -4,7 +4,9 @@
   "go_admin": "Ir Area Administrador",
   "auth": {
     "error_already_use": "Email ya en uso.",
-    "go_login": "Click en \"Ya tengo cuenta\""
+    "go_login": "Click en \"Ya tengo cuenta\"",
+    "already_account": "Ya tengo una cuenta",
+    "no_account_create_one": "¿No tienes cuenta? Regístrate"
   },
   "main": {
     "go_admin": "Ir Area Administrador",
@@ -61,8 +63,10 @@
     "no_result": "No hay resultados para este candidato.",
     "resume": "CV",
     "post_with_exam": "Puesto con examen",
-    "browser_not_copy": "Tu navegador no soporta la copia automática. Por favor, copia manualmente el link.",
-    "error_not_copy": "No soporta la copia automática."
+    "browser_not_copy_A": "Tu navegador no soporta la copia automática.",
+    "browser_not_copy_B": "Por favor, copia manualmente el link.",
+    "error_not_copy": "No soporta la copia automática.",
+    "i_alredy_copiy_link": "Ya he copiado el link"
   },
   "recruiter_auth": {
     "login": "Iniciar sesión",

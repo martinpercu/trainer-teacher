@@ -4,7 +4,9 @@
   "go_admin": "Aller vers Admin",
   "auth": {
     "error_already_use": "Courriel dejà registré",
-    "go_login": "allez vers Login!"
+    "go_login": "allez vers Login!",
+    "already_account": "J'ai déjà un compte",
+    "no_account_create_one": "Pas encore de compte ? S'inscrire"
   },
   "main": {
     "go_admin": "Aller vers Admin",
@@ -61,8 +63,10 @@
     "no_result": "Aucun résultat pour ce candidat.",
     "resume": "CV",
     "post_with_exam": "Poste avec examen",
-    "browser_not_copy": "Votre navigateur ne prend pas en charge la copie automatique. Veuillez copier le lien manuellement.",
-    "error_not_copy": "Ne prend pas en charge la copie."
+    "browser_not_copy_A": "Votre navigateur ne prend pas en charge la copie automatique.",
+    "browser_not_copy_B": "Veuillez copier le lien manuellement.",
+    "error_not_copy": "Ne prend pas en charge la copie.",
+    "i_alredy_copiy_link": "J'ai déjà copié le lien"
   },
   "recruiter_auth": {
     "login": "Se connecter",

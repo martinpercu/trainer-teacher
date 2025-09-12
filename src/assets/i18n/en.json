@@ -4,7 +4,9 @@
   "go_admin": "Go to Admin Zone",
   "auth": {
     "error_already_use": "Email already in use.",
-    "go_login": "Click in \"I have an account\""
+    "go_login": "Click in \"I have an account\"",
+    "already_account": "I already have an account",
+    "no_account_create_one": "Not an account? Sign Up"
   },
   "main": {
     "go_admin": "Go to Admin Zone",
@@ -61,8 +63,10 @@
     "no_result": "No result for this candidate.",
     "resume": "Resume",
     "post_with_exam": "Post with exam",
-    "browser_not_copy": "Automatic copying not support. Please copy the link manually.",
-    "error_not_copy": "Automatic copying not support."
+    "browser_not_copy_A": "Automatic copying not support.",
+    "browser_not_copy_B": "Please copy the link manually.",
+    "error_not_copy": "Automatic copying not support.",
+    "i_alredy_copiy_link": "I've already copied the link"
   },
   "recruiter_auth": {
     "login" : "Log in",

@@ -29,11 +29,18 @@ import { CandidateResumeEditComponent } from '@components/candidate/candidate-re
 import { MainpageBridgetoworksComponent } from '@pages/mainpage-bridgetoworks/mainpage-bridgetoworks.component';
 import { UserCandidatePageComponent } from '@pages/user-candidate-page/user-candidate-page.component';
 
+import { PaymentsPageComponent } from '@pages/payments-page/payments-page.component';
+import { StripeCardComponent } from '@components/stripe-card/stripe-card.component';
+
 
 export const routes: Routes = [
   {
     path:'',
     component: MainpageBridgetoworksComponent
+  },
+  {
+    path:'stripe',
+    component: StripeCardComponent
   },
   {
     path:'caca',

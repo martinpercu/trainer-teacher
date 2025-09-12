@@ -42,6 +42,8 @@ import { RecruiterAuthService } from '@services/recruiter-auth.service';
 import { CandidatesListComponent } from '@recruiter/candidates-list/candidates-list.component';
 import { JobsListComponent } from '@recruiter/jobs-list/jobs-list.component';
 
+import { LoginAndRegisterComponent } from '@recruiter/login-and-register/login-and-register.component'
+
 import { Candidate } from '@models/candidate';
 import { CandidateService } from '@services/candidate.service';
 import { RecruiterService } from '@services/recruiter.service';
@@ -53,6 +55,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 
 import { of, forkJoin, from } from 'rxjs'; // Import 'of'
 import { switchMap, tap, filter, catchError, map, take } from 'rxjs/operators';
+import { LoadingBarComponent } from "@shared/loading-bar/loading-bar.component";
 // import { map } from 'rxjs/operators';
 
 @Component({
@@ -70,7 +73,9 @@ import { switchMap, tap, filter, catchError, map, take } from 'rxjs/operators';
     // TeacherListComponent,
     // ExamsListComponent,
     JobsListComponent,
-  ],
+    LoginAndRegisterComponent,
+    LoadingBarComponent
+],
   templateUrl: './recruiter-dashboard.component.html',
 })
 export class RecruiterDashboardComponent {

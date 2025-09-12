@@ -49,6 +49,7 @@ export class JobsListComponent {
 
   constructor(private translocoService: TranslocoService){}
 
+  testerA: boolean = false
 
   async ngOnInit() {
     console.log('START OnINIT Job-List');
@@ -144,6 +145,7 @@ export class JobsListComponent {
   async copyMagicString(): Promise<void> {
     this.copiedSucces = false;
     this.errorInCopy = false;
+    this.testerA = !this.testerA;
     // Check if API Clipboard is ready on Browser
     if (navigator.clipboard && navigator.clipboard.writeText) {
       try {
@@ -168,8 +170,8 @@ export class JobsListComponent {
       // Show warning if API is not available (very old browsers)
       console.warn('API Clipboard not compatible with this browser.');
       this.errorInCopy = true; // Podrías usar un mensaje diferente aquí si quieres
-      const messageBrowserNotCopy = this.translocoService.translate('recruiter.browser_not_copy');
-      alert(messageBrowserNotCopy + '\n\n' + this.magicLink);
+      // const messageBrowserNotCopy = this.translocoService.translate('recruiter.browser_not_copy');
+      // alert(messageBrowserNotCopy + '\n\n' + this.magicLink);
     }
   }
 
@@ -211,6 +213,10 @@ export class JobsListComponent {
     console.log("Listas actualizadas:", this.candidatesWithThumbUp);
   }
 
+  turnOffManualLink() {
+    this.testerA = !this.testerA
+    this.errorInCopy = !this.errorInCopy
+  }
 
 }
 
