@@ -38,6 +38,16 @@
       </div>
     </div>
 
+    <div class="flex flex-row px-2 py-1 mt-1">
+      <div
+        class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
+        (click)="visualStatesService.handleRecruiterAccountShow()"
+      >
+        <mat-icon>settings</mat-icon>
+        <div class="flex pl-3">{{ "top_right.settings" | transloco }}</div>
+      </div>
+    </div>
+
     @if(!themeService.isDarkModeSig()) {
     <div
       class="flex flex-row px-2 py-1 border-b border-gray-200 dark:border-gray-600"

@@ -34,7 +34,8 @@
     "logout": "Déconnexion",
     "to_login": "aller à la connexion",
     "to_signup": "aller à l'inscription",
-    "login_or_signup": "Se connecter"
+    "login_or_signup": "Se connecter",
+    "settings": "Paramètres"
   },
   "recruiter": {
     "posts": "Profils",
@@ -120,7 +121,8 @@
     "send_email_subjet_B": "Nouvelles avec votre candidature",
     "send_email_body": "Bonjour ",
     "send_sms": "Envoyer SMS a ",
-    "call_to": "Appeler "
+    "call_to": "Appeler ",
+    "save": "Enregistrer"
   },
   "candidate_resume": {
     "name" : "Prénom",

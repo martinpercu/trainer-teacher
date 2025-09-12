@@ -6,4 +6,9 @@ export interface Recruiter {
   lastname?: string;
   id?: string;
   subscriptionLevel: number;
+  cellphone?: string;
+  whatsapp?: string;
+  businessName?: string;
+  allowSMS?: boolean;
+  allowWhatsapp?: boolean;
 }

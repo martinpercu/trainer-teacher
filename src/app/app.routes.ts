@@ -23,6 +23,7 @@ import { CandidatePageComponent } from '@pages/candidate-page/candidate-page.com
 import { RecruiterPageComponent } from '@pages/recruiter-page/recruiter-page.component';
 import { JobsCrudComponent } from '@recruiter/jobs-crud/jobs-crud.component';
 import { RecruiterDashboardComponent } from '@recruiter/recruiter-dashboard/recruiter-dashboard.component';
+import { RecruiterAccountComponent } from '@recruiter/recruiter-account/recruiter-account.component';
 import { UploadComponent } from '@components/candidate/upload/upload.component';
 import { PdfShowComponent } from '@shared/pdf-show/pdf-show.component';
 import { CandidateResumeEditComponent } from '@components/candidate/candidate-resume-edit/candidate-resume-edit.component';
@@ -61,6 +62,10 @@ export const routes: Routes = [
   {
     path:'recruiter',
     component: RecruiterDashboardComponent
+  },
+  {
+    path:'recruiter-account',
+    component: RecruiterAccountComponent
   },
   {
     path:'candidate',

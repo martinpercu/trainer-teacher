@@ -42,7 +42,8 @@ import { RecruiterAuthService } from '@services/recruiter-auth.service';
 import { CandidatesListComponent } from '@recruiter/candidates-list/candidates-list.component';
 import { JobsListComponent } from '@recruiter/jobs-list/jobs-list.component';
 
-import { LoginAndRegisterComponent } from '@recruiter/login-and-register/login-and-register.component'
+import { LoginAndRegisterComponent } from '@recruiter/login-and-register/login-and-register.component';
+import { RecruiterAccountComponent } from '@recruiter/recruiter-account/recruiter-account.component';
 
 import { Candidate } from '@models/candidate';
 import { CandidateService } from '@services/candidate.service';
@@ -50,6 +51,7 @@ import { RecruiterService } from '@services/recruiter.service';
 import { AuthService } from '@services/auth.service';
 import { ResultService } from '@services/result.service';
 import { ResumeService } from '@services/resume.service';
+import { VisualStatesService } from '@services/visual-states.service';
 
 import { TranslocoPipe } from '@jsverse/transloco';
 
@@ -74,7 +76,8 @@ import { LoadingBarComponent } from "@shared/loading-bar/loading-bar.component";
     // ExamsListComponent,
     JobsListComponent,
     LoginAndRegisterComponent,
-    LoadingBarComponent
+    LoadingBarComponent,
+    RecruiterAccountComponent
 ],
   templateUrl: './recruiter-dashboard.component.html',
 })
@@ -87,6 +90,7 @@ export class RecruiterDashboardComponent {
   resultService = inject(ResultService);
   jobCrudService = inject(JobCrudService);
   resumeService = inject(ResumeService);
+  visualStatesService = inject(VisualStatesService);
 
 
   // exams: Exam[] = [];
@@ -111,6 +115,8 @@ export class RecruiterDashboardComponent {
   showSettingMenu: boolean = false;
 
   allowedExamsShow: boolean = true;
+
+
 
   async ngOnInit() {
     this.authService.user$

@@ -83,6 +83,17 @@ export class RecruiterService {
     }
   }
 
+  async getThisRecruiter(userId: string) {
+    // const clientDocRef = doc(this.firestore, `users/${clientId}`);
+    const userDocRef = doc(this.firestore, 'recruiters', userId);
+    console.log(userDocRef);
+    const recruiter = (await getDoc(userDocRef)).data();
+    console.log(recruiter);
+    return recruiter as Recruiter;
+  }
+
+
+
   /**
    * Elimina un usuario por su ID
    * @param user Recruiter a eliminar
@@ -97,7 +108,7 @@ export class RecruiterService {
    * @param user Datos parciales del usuario
    * @param userId ID del usuario
    */
-  updateOneRecruiter(user: Partial<Recruiter>, userId: string) {
+  async updateOneRecruiter(user: Partial<Recruiter>, userId: string) {
     const userDocRef = doc(this.recruitersCollection, userId);
     return updateDoc(userDocRef, user)
       .then(() => {
@@ -108,5 +119,27 @@ export class RecruiterService {
         throw error;
       });
   }
+
+
+    // async updateOneUser(user: Partial<Candidate>, userId: string) {
+    // const userDocRef = doc(this.candidatesCollection, userId);
+    // return updateDoc(userDocRef, user)
+    //   .then(() => {
+    //     console.log('Candidate updated');
+    //     // Merge partial updates with current signal value
+    //     const currentCandidate = this.candidateSig();
+    //     if (currentCandidate) {
+    //       const updatedCandidate = { ...currentCandidate, ...user };
+    //       this.setUserSig(updatedCandidate);
+    //     } else {
+    //       console.warn('No current candidate in signal');
+    //       this.setUserSig(null);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error al actualizar usuario:', error);
+    //     throw error;
+    //   });
+    // }
 
 }

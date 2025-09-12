@@ -34,7 +34,8 @@
     "logout": "Logout",
     "to_login": "Go to Login",
     "to_signup": "Go to SignUp",
-    "login_or_signup": "Login or SignUp"
+    "login_or_signup": "Login or SignUp",
+    "settings": "Settings"
   },
   "recruiter": {
     "posts" : "Profiles",
@@ -120,7 +121,8 @@
     "send_email_subjet_B": "Update in your application",
     "send_email_body": "Hello ",
     "send_sms": "Send SMS to ",
-    "call_to": "Call "
+    "call_to": "Call ",
+    "save": "Save"
   },
   "candidate_resume": {
     "name" : "First name",
