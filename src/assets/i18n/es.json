@@ -6,7 +6,11 @@
     "error_already_use": "Email ya en uso.",
     "go_login": "Click en \"Ya tengo cuenta\"",
     "already_account": "Ya tengo una cuenta",
-    "no_account_create_one": "¿No tienes cuenta? Regístrate"
+    "no_account_create_one": "¿No tienes cuenta? Regístrate",
+    "continuing": "Al continuar, aceptas nuestros ",
+    "terms_coditions": "Términos y Condiciones ",
+    "and_our": "y nuestra ",
+    "privacy": "Política de Privacidad."
   },
   "main": {
     "go_admin": "Ir Area Administrador",
@@ -67,7 +71,11 @@
     "browser_not_copy_A": "Tu navegador no soporta la copia automática.",
     "browser_not_copy_B": "Por favor, copia manualmente el link.",
     "error_not_copy": "No soporta la copia automática.",
-    "i_alredy_copiy_link": "Ya he copiado el link"
+    "i_alredy_copiy_link": "Ya he copiado el link",
+    "allow_sms": "Permitir SMS",
+    "allow_sms_info": "Cuando un candidato sube su currículum, puedes recibir una notificación por SMS.",
+    "allow_whatsapp": "Permitir mensajes de Whatsapp",
+    "allow_whatsapp_info": "Cuando un candidato sube su currículum, puedes recibir una notificación por mensaje de Whatsapp."
   },
   "recruiter_auth": {
     "login": "Iniciar sesión",

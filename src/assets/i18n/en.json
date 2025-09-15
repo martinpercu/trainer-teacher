@@ -6,7 +6,11 @@
     "error_already_use": "Email already in use.",
     "go_login": "Click in \"I have an account\"",
     "already_account": "I already have an account",
-    "no_account_create_one": "Not an account? Sign Up"
+    "no_account_create_one": "Not an account? Sign Up",
+    "continuing": "By continuing, you agree to our ",
+    "terms_coditions": "Terms and Conditions ",
+    "and_our": "and our ",
+    "privacy": "Privacy Policy."
   },
   "main": {
     "go_admin": "Go to Admin Zone",
@@ -67,7 +71,11 @@
     "browser_not_copy_A": "Automatic copying not support.",
     "browser_not_copy_B": "Please copy the link manually.",
     "error_not_copy": "Automatic copying not support.",
-    "i_alredy_copiy_link": "I've already copied the link"
+    "i_alredy_copiy_link": "I've already copied the link",
+    "allow_sms": "Allow SMS",
+    "allow_sms_info": "When a candidate uploads their resume, you can receive an SMS notification",
+    "allow_whatsapp": "Allow Whatsapp messages",
+    "allow_whatsapp_info": "When a candidate uploads their resume, you can receive a Whatsapp messages notification"
   },
   "recruiter_auth": {
     "login" : "Log in",

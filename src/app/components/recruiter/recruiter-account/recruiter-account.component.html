@@ -155,10 +155,10 @@
     </div>
 
 
-  <div class="flex mt-4 mb-4 py-1">
+  <div class="flex mt-4 mb-4 py-1 text-gray-900 dark:text-gray-200">
     <div class="flex items-center me-4">
-      <label for="inline-checked-checkbox" class="ms-2 text-sm font-medium text-gray-900">
-        Allow SMS
+      <label for="inline-checked-checkbox" class="ms-2 text-sm font-medium ">
+        {{ "recruiter.allow_sms" | transloco }}
       </label>
     </div>
     <div class="flex items-center me-4">
@@ -239,7 +239,7 @@
       type="submit"
       class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
     >
-      Save Changes{{ "candidate_profile.save" | transloco }}
+      {{ "candidate_profile.save" | transloco }}
     </button>
   </div>
 

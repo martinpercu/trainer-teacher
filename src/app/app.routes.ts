@@ -52,6 +52,10 @@ export const routes: Routes = [
     component: PdfShowComponent
   },
   {
+    path:'termsandprivacy/:pdfname',
+    component: PdfShowComponent
+  },
+  {
     path:'upload',
     component: UploadComponent
   },

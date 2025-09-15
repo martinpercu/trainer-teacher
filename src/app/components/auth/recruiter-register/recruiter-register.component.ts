@@ -4,7 +4,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Recruiter } from '@models/recruiter';
 import { RecruiterAuthService } from '@services/recruiter-auth.service';
 import { Router } from '@angular/router';
-import { TranslocoPipe } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-recruiter-register',
@@ -16,6 +17,7 @@ export class RecruiterRegisterComponent {
   http = inject(HttpClient);
   recruiterAuthService = inject(RecruiterAuthService);
   router = inject(Router);
+  private translocoService = inject(TranslocoService);
 
   form = this.fb.nonNullable.group({
     username: ['', Validators.required],
@@ -35,6 +37,28 @@ export class RecruiterRegisterComponent {
           this.errorMessage = err.code;
         }
     })
+  }
+
+  getLang(){
+    return this.translocoService.getActiveLang()
+  }
+
+  toTerms() {
+    const languageNow = this.getLang();
+    console.log(languageNow);
+    const url = environment.BASEURL; // our baseURL
+    const urlReal = `${url}/termsandprivacy/terms-${languageNow}`
+    console.log(urlReal);
+    window.open(urlReal, '_blank');
+  }
+
+  toPrivacy() {
+    const languageNow = this.getLang();
+    console.log(languageNow);
+    const url = environment.BASEURL; // our baseURL
+    const urlReal = `${url}/termsandprivacy/privacy-${languageNow}`
+    console.log(urlReal);
+    window.open(urlReal, '_blank');
   }
 
 }

@@ -6,7 +6,11 @@
     "error_already_use": "Courriel dejà registré",
     "go_login": "allez vers Login!",
     "already_account": "J'ai déjà un compte",
-    "no_account_create_one": "Pas encore de compte ? S'inscrire"
+    "no_account_create_one": "Pas encore de compte ? S'inscrire",
+    "continuing": "En continuant, vous acceptez nos ",
+    "terms_coditions": "Conditions Générales d'Utilisation ",
+    "and_our": "et notre ",
+    "privacy": "Politique de Confidentialité."
   },
   "main": {
     "go_admin": "Aller vers Admin",
@@ -67,7 +71,11 @@
     "browser_not_copy_A": "Votre navigateur ne prend pas en charge la copie automatique.",
     "browser_not_copy_B": "Veuillez copier le lien manuellement.",
     "error_not_copy": "Ne prend pas en charge la copie.",
-    "i_alredy_copiy_link": "J'ai déjà copié le lien"
+    "i_alredy_copiy_link": "J'ai déjà copié le lien",
+    "allow_sms": "Autoriser les SMS",
+    "allow_sms_info": "Lorsqu'un candidat télécharge son CV, vous pouvez recevoir une notification par SMS.",
+    "allow_whatsapp": "Autoriser les messages Whatsapp",
+    "allow_whatsapp_info": "Lorsqu'un candidat télécharge son CV, vous pouvez recevoir une notification par message Whatsapp."
   },
   "recruiter_auth": {
     "login": "Se connecter",
