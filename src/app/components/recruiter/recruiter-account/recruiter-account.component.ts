@@ -71,13 +71,15 @@ export class RecruiterAccountComponent {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      firstname: [this.recruiter.username, [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
-      lastname: [this.recruiter.lastname, [Validators.minLength(2), Validators.maxLength(30)]],
+      firstname: [this.recruiter.username, [Validators.required, Validators.minLength(2), Validators.maxLength(40)]],
+      lastname: [this.recruiter.lastname, [Validators.minLength(2), Validators.maxLength(40)]],
       email: [this.recruiter.email, [Validators.required, Validators.email, Validators.maxLength(80)]],
       cellphone: [this.recruiter.cellphone, [Validators.minLength(9), Validators.maxLength(15), Validators.pattern("^[0-9]*$")]],
       birthdate: [this.recruiter.whatsapp, [Validators.minLength(7)]],
+      businessName: [this.recruiter.businessName, [Validators.minLength(2), Validators.maxLength(40)]],
       allowSMS: [this.recruiter.allowSMS],
       allowWhatsapp: [this.recruiter.allowWhatsapp],
+      useExams: [this.recruiter.useExams],
       // state: [this.recruiter.state],
       // zipCode: [this.recruiter.zipCode, [Validators.minLength(5), Validators.maxLength(8)]],
       // // country: [this.candidate.country],
@@ -90,9 +92,12 @@ export class RecruiterAccountComponent {
     if (this.form.valid) {
     console.log(this.form.value);
     console.log(this.recruiter.recruiterUID);
+    console.log(this.recruiterService.recruiterSig());
+    // recruiterSig
 
     const updatedRecruiter = await this.recruiterService.updateOneRecruiter(this.form.value, this.recruiter.recruiterUID);
     console.log(updatedRecruiter);
+    this.recruiterService.updateRecruiterSig(this.form.value)
     this.visualStatesService.handleRecruiterAccountShow()
     } else {
       this.form.markAllAsTouched();
@@ -117,6 +122,9 @@ export class RecruiterAccountComponent {
   };
   get addressField() {
     return this.form.get('address')
+  };
+  get businessNameField() {
+    return this.form.get('businessName')
   };
   // get cityField() {
   //   return this.form.get('city')
@@ -172,6 +180,14 @@ export class RecruiterAccountComponent {
   };
   get isaddressFieldInvalid() {
     return this.addressField!.touched && this.addressField!.invalid
+  };
+
+  // BUSINESS NAME
+  get isbusinessNameFieldValid() {
+    return this.businessNameField!.touched && this.businessNameField!.valid
+  };
+  get isbusinessNameFieldInvalid() {
+    return this.businessNameField!.touched && this.businessNameField!.invalid
   };
 
   // // CITY

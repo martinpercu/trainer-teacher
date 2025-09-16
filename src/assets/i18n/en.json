@@ -75,7 +75,9 @@
     "allow_sms": "Allow SMS",
     "allow_sms_info": "When a candidate uploads their resume, you can receive an SMS notification",
     "allow_whatsapp": "Allow Whatsapp messages",
-    "allow_whatsapp_info": "When a candidate uploads their resume, you can receive a Whatsapp messages notification"
+    "allow_whatsapp_info": "When a candidate uploads their resume, you can receive a Whatsapp messages notification",
+    "useExams": "Use exam in positions",
+    "businessName": "Business Name"
   },
   "recruiter_auth": {
     "login" : "Log in",

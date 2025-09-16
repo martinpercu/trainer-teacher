@@ -3,7 +3,7 @@
   (click)="visualStatesService.handleRecruiterAccountShow()"
 >
   <div
-    class="max-w-4xl w-full max-h-[98dvh] p-4 overflow-y-auto bg-white dark:bg-neutral-800 rounded-lg shadow-lg relative flex flex-col"
+    class="max-w-4xl max-h-[98dvh] p-4 overflow-y-auto bg-white dark:bg-neutral-800 rounded-lg shadow-lg relative flex flex-col"
     (click)="$event.stopPropagation()"
   >
 
@@ -61,11 +61,11 @@
       />
       <div class="text-xs text-red-600 dark:text-red-400">
         @if (firstnameField?.hasError('maxlength')){
-        <span>No more than 30 letters</span> } @if
+        <span>{{ "resume_error.max40" | transloco }}</span> } @if
         (firstnameField?.hasError('required')){
         <span>You must write something</span> } @if
         (firstnameField?.hasError('minlength')){
-        <span>At least 2 letters please</span> }
+        <span>{{ "resume_error.minimum2" | transloco }}</span> }
       </div>
     </div>
 
@@ -87,9 +87,33 @@
       />
       <div class="text-xs text-red-600 dark:text-red-400">
         @if (lastnameField?.hasError('maxlength')){
-        <span>No more than 30 letters</span> } @if
+        <span>{{ "resume_error.max40" | transloco }}</span> } @if
         (lastnameField?.hasError('minlength')){
-        <span>At Least 1 letter please</span> }
+        <span>{{ "resume_error.minimum2" | transloco }}</span> }
+      </div>
+    </div>
+
+    <!-- Last Name -->
+    <div class="">
+      <label
+        for="businessName"
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200"
+        >{{ "recruiter.businessName" | transloco }}:</label
+      >
+      <input
+        type="text"
+        id="businessName"
+        formControlName="businessName"
+        placeholder="{{ 'recruiter.businessName' | transloco }}"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        [class.border-green-500]="isbusinessNameFieldValid"
+        [class.border-red-500]="isbusinessNameFieldInvalid"
+      />
+      <div class="text-xs text-red-600 dark:text-red-400">
+        @if (businessNameField?.hasError('maxlength')){
+        <span>{{ "resume_error.max40" | transloco }}</span> } @if
+        (businessNameField?.hasError('minlength')){
+        <span>{{ "resume_error.minimum2" | transloco }}</span> }
       </div>
     </div>
 
@@ -165,6 +189,23 @@
       <input
         type="checkbox"
         formControlName="allowSMS"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+      />
+      <!-- <label class="ms-2 text-sm font-medium text-gray-900">  </label> -->
+    </div>
+  </div>
+
+
+  <div class="flex mt-4 mb-4 py-1 text-gray-900 dark:text-gray-200">
+    <div class="flex items-center me-4">
+      <label for="inline-checked-checkbox" class="ms-2 text-sm font-medium ">
+        {{ "recruiter.useExams" | transloco }}
+      </label>
+    </div>
+    <div class="flex items-center me-4">
+      <input
+        type="checkbox"
+        formControlName="useExams"
         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
       />
       <!-- <label class="ms-2 text-sm font-medium text-gray-900">  </label> -->

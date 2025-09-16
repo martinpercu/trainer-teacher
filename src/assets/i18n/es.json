@@ -75,7 +75,9 @@
     "allow_sms": "Permitir SMS",
     "allow_sms_info": "Cuando un candidato sube su currículum, puedes recibir una notificación por SMS.",
     "allow_whatsapp": "Permitir mensajes de Whatsapp",
-    "allow_whatsapp_info": "Cuando un candidato sube su currículum, puedes recibir una notificación por mensaje de Whatsapp."
+    "allow_whatsapp_info": "Cuando un candidato sube su currículum, puedes recibir una notificación por mensaje de Whatsapp.",
+    "useExams": "Usar examen in puestos",
+    "businessName": "Nombre del negocio"
   },
   "recruiter_auth": {
     "login": "Iniciar sesión",

@@ -75,7 +75,9 @@
     "allow_sms": "Autoriser les SMS",
     "allow_sms_info": "Lorsqu'un candidat télécharge son CV, vous pouvez recevoir une notification par SMS.",
     "allow_whatsapp": "Autoriser les messages Whatsapp",
-    "allow_whatsapp_info": "Lorsqu'un candidat télécharge son CV, vous pouvez recevoir une notification par message Whatsapp."
+    "allow_whatsapp_info": "Lorsqu'un candidat télécharge son CV, vous pouvez recevoir une notification par message Whatsapp.",
+    "useExams": "Utiliser des examen dans le postes",
+    "businessName": "Nom du Business"
   },
   "recruiter_auth": {
     "login": "Se connecter",

@@ -10,6 +10,7 @@ export class VisualStatesService {
   showModalInfo = signal<Boolean | undefined>(undefined);
 
   showRecruiterAccountEdit = signal<Boolean>(false);
+  showMenuTopRight = signal<Boolean>(false);
 
 
   constructor() { }
@@ -17,6 +18,11 @@ export class VisualStatesService {
   togleShowLeftMenu() {
     this.leftMenuCondition.update(prevState => !prevState)
     console.log(this.leftMenuCondition());
+  }
+
+  handleMenuTopRightShow() {
+    this.showMenuTopRight.update(prevState => !prevState)
+    console.log(this.showMenuTopRight());
   }
 
   handleRecruiterAccountShow() {

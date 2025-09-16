@@ -52,6 +52,23 @@ export class RecruiterService {
     console.log(this.recruiterSig());
   }
 
+  updateRecruiterSig(user: Recruiter | null) {
+  // Si user no es null, actualiza el signal
+  if (user) {
+    this.recruiterSig.update(currentRecruiter => ({
+      // Copia todas las propiedades del objeto actual
+      ...currentRecruiter,
+      // Sobrescribe o añade las propiedades del nuevo objeto 'user'
+      ...user
+    }));
+  } else {
+    // Si user es null, puedes decidir si quieres limpiar el signal
+    // En este caso, lo establecemos en null
+    this.recruiterSig.set(null);
+  }
+  console.log(this.recruiterSig());
+}
+
   /**
    * Regresa el  el usuario actual en la señal
    */
