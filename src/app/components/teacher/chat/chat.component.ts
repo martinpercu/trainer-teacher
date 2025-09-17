@@ -55,7 +55,7 @@ export class ChatComponent {
   startLessonFull: string = `Can you explain "${this.pagesService.defaultTitle()}" to me using the documents you have? Please give me a general overview of what the course is about, starting with no more than 110 words. After that, just ask me if I’d like to continue the lesson or if I want you to repeat the same explanation. Try to teach me in the most helpful way.`
 
   // start Voice
-  speakIsEnabled: boolean = true; // Controla si TTS está activado
+  speakIsEnabled: boolean = false; // Controla si TTS está activado
 
   // End Voice
 
