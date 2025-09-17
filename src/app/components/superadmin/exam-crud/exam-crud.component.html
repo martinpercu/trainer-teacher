@@ -2,123 +2,196 @@
   Manage Exams
 </div>
 
-<div class="max-w-4xl mx-auto p-6 bg-white dark:bg-neutral-800 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700">
-  <!-- Error Message -->
-  @if (errorMessage) {
-    <p class="text-red-500 dark:text-red-400 mb-4">{{ errorMessage }}</p>
-  }
+<div class="container mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4">Manage Exams</h1>
 
-  <!-- Form -->
-  <form class="space-y-6">
-    <!-- Select Exam -->
-    <div>
-      <label class="block text-sm font-medium text-neutral-800 dark:text-neutral-200">Select Exam</label>
-      <select
-        class="w-full p-2 border border-neutral-300 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200"
-        (change)="loadExam($event)" [disabled]="isSaving">
-        <option value="">-- Select an Exam --</option>
-        @for (exam of exams$ | async; track exam.id) {
-          <option [value]="exam.id" [selected]="exam.id === selectedExamId">{{ exam.title }}</option>
-        }
-      </select>
+  <!-- Mensaje de error -->
+  <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Selección de examen existente -->
+  <div class="mb-4">
+    <label class="block text-gray-700 mb-2">Seleccionar Examen</label>
+    <select
+      class="w-full px-3 py-2 border rounded-md"
+      [ngModel]="selectedExamId"
+      (change)="loadExam($event)">
+      <option value="">Nuevo examen</option>
+      <option *ngFor="let exam of exams$ | async" [value]="exam.id">{{ exam.title }}</option>
+    </select>
+  </div>
+
+  <!-- Formulario de examen -->
+  <div class="bg-white shadow-md rounded-md p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <!-- Título del examen -->
+      <div>
+        <label class="block text-gray-700 mb-2">Título *</label>
+        <input
+          type="text"
+          [(ngModel)]="newExam.title"
+          class="w-full px-3 py-2 border rounded-md"
+          placeholder="Título del examen">
+      </div>
+
+      <!-- Profesor -->
+      <div>
+        <label class="block text-gray-700 mb-2">Profesor *</label>
+        <select
+          [(ngModel)]="newExam.teacherId"
+          (change)="updateTeacherName($event)"
+          class="w-full px-3 py-2 border rounded-md">
+          <option value="">Seleccionar profesor</option>
+          <option *ngFor="let teacher of teachers$ | async" [value]="teacher.id">{{ teacher.name }}</option>
+        </select>
+      </div>
     </div>
 
-    <!-- Title -->
-    <div>
-      <label class="block text-sm font-medium text-neutral-800 dark:text-neutral-200">Exam Title</label>
-      <input type="text"
-        class="w-full p-2 border border-neutral-300 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200"
-        [(ngModel)]="newExam.title" name="title" required [disabled]="isSaving">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <!-- Porcentaje para aprobar -->
+      <div>
+        <label class="block text-gray-700 mb-2">Porcentaje para aprobar</label>
+        <input
+          type="number"
+          [(ngModel)]="newExam.passingPercentage"
+          class="w-full px-3 py-2 border rounded-md"
+          min="0"
+          max="100">
+      </div>
+
+      <!-- Tiempo de espera para reintentar -->
+      <div>
+        <label class="block text-gray-700 mb-2">Tiempo de espera (horas)</label>
+        <input
+          type="number"
+          [(ngModel)]="newExam.timeToWait"
+          class="w-full px-3 py-2 border rounded-md"
+          min="0">
+      </div>
     </div>
 
-    <!-- Teacher -->
-    <div>
-      <label class="block text-sm font-medium text-neutral-800 dark:text-neutral-200">Teacher</label>
-      <select
-        class="w-full p-2 border border-neutral-300 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200"
-        [(ngModel)]="newExam.teacherId" name="teacherId" (change)="updateTeacherName($event)" required [disabled]="isSaving">
-        <option value="">-- Select a Teacher --</option>
-        @for (teacher of teachers$ | async; track teacher.id) {
-          <option [value]="teacher.id">{{ teacher.name }}</option>
-        }
-      </select>
+    <!-- Nuevos campos -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <!-- Habilitado -->
+      <div>
+        <label class="block text-gray-700 mb-2">Estado del examen</label>
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            [(ngModel)]="newExam.enable"
+            class="w-5 h-5 text-blue-600">
+          <span class="ml-2">Habilitado</span>
+        </div>
+      </div>
+
+      <!-- Tiempo para hacer el examen -->
+      <div>
+        <label class="block text-gray-700 mb-2">Tiempo para realizar el examen (minutos)</label>
+        <input
+          type="number"
+          [(ngModel)]="newExam.timeToDoTheExam"
+          class="w-full px-3 py-2 border rounded-md"
+          min="1">
+      </div>
     </div>
 
-    <!-- Passing Percentage -->
-    <div>
-      <label class="block text-sm font-medium text-neutral-800 dark:text-neutral-200">Passing Percentage</label>
-      <input type="number"
-        class="w-full p-2 border border-neutral-300 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200"
-        [(ngModel)]="newExam.passingPercentage" name="passingPercentage" min="0" max="100" required [disabled]="isSaving">
-    </div>
+    <!-- Preguntas -->
+    <div class="mb-6">
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="text-lg font-semibold">Preguntas</h2>
+        <button
+          type="button"
+          (click)="addQuestion()"
+          class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">
+          Agregar Pregunta
+        </button>
+      </div>
 
-    <!-- Time to Wait -->
-    <div>
-      <label class="block text-sm font-medium text-neutral-800 dark:text-neutral-200">Time to Wait (minutes)</label>
-      <input type="number"
-        class="w-full p-2 border border-neutral-300 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200"
-        [(ngModel)]="newExam.timeToWait" name="timeToWait" min="0" required [disabled]="isSaving">
-    </div>
+      <div *ngIf="!newExam.questions?.length" class="text-gray-500 text-center py-4">
+        No hay preguntas agregadas
+      </div>
 
-    <!-- Questions -->
-    <div>
-      <label class="block text-sm font-medium text-neutral-800 dark:text-neutral-200 mb-2">Questions</label>
-      @for (question of newExam.questions; track $index; let questionIndex = $index) {
-        <div class="mb-4 p-4 border border-neutral-300 dark:border-neutral-600 rounded-md bg-neutral-50 dark:bg-neutral-900">
-          <!-- Question Text -->
-          <div class="flex items-center justify-between mb-2">
-            <input type="text"
-              class="w-full p-2 border border-neutral-300 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200"
-              [(ngModel)]="question.text" [name]="'question_' + questionIndex" placeholder="Enter question text" required [disabled]="isSaving">
-            <button type="button" class="ml-2 text-red-500 hover:text-red-700" (click)="removeQuestion(questionIndex)" [disabled]="isSaving">
-              <mat-icon>delete</mat-icon>
+      <div *ngFor="let question of newExam.questions; let i = index" class="border p-4 rounded-md mb-4">
+        <div class="flex justify-between items-start mb-3">
+          <h3 class="font-medium">Pregunta {{ i + 1 }}</h3>
+          <button
+            type="button"
+            (click)="removeQuestion(i)"
+            class="text-red-500 hover:text-red-700">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+
+        <div class="mb-3">
+          <input
+            type="text"
+            [(ngModel)]="question.text"
+            class="w-full px-3 py-2 border rounded-md"
+            placeholder="Texto de la pregunta">
+        </div>
+
+        <div class="mb-2">
+          <div class="flex justify-between items-center">
+            <h4 class="font-medium">Opciones</h4>
+            <button
+              *ngIf="question.options.length < 6"
+              type="button"
+              (click)="addOption(i)"
+              class="text-blue-500 hover:text-blue-700">
+              <mat-icon>add_circle</mat-icon>
             </button>
           </div>
-
-          <!-- Options -->
-          <div class="ml-4">
-            @for (option of question.options; track $index) {
-              <div class="flex items-center mb-2">
-                <input type="radio" [name]="'correct_' + questionIndex" [checked]="option.isCorrect"
-                  (change)="updateOptionCorrectness(questionIndex, $index)" class="mr-2" [disabled]="isSaving">
-                <input type="text"
-                  class="w-full p-2 border border-neutral-300 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200"
-                  [(ngModel)]="option.text" [name]="'option_' + questionIndex + '_' + $index" placeholder="Enter option text" required [disabled]="isSaving">
-                @if (question.options.length > 2) {
-                  <button type="button" class="ml-2 text-red-500 hover:text-red-700" (click)="removeOption(questionIndex, $index)" [disabled]="isSaving">
-                    <mat-icon>remove_circle</mat-icon>
-                  </button>
-                }
-              </div>
-            }
-            @if (question.options.length < 6) {
-              <button type="button" class="text-blue-500 hover:text-blue-700" (click)="addOption(questionIndex)" [disabled]="isSaving">
-                <mat-icon>add_circle</mat-icon> Add Option
-              </button>
-            }
-          </div>
         </div>
-      }
-      <button type="button" class="text-blue-500 hover:text-blue-700" (click)="addQuestion()" [disabled]="isSaving">
-        <mat-icon>add_circle</mat-icon> Add Question
-      </button>
+
+        <div *ngFor="let option of question.options; let j = index" class="flex items-center mb-2">
+          <input
+            type="radio"
+            [checked]="option.isCorrect"
+            (change)="updateOptionCorrectness(i, j)"
+            class="mr-2">
+          <input
+            type="text"
+            [(ngModel)]="option.text"
+            class="flex-grow px-3 py-2 border rounded-md"
+            placeholder="Texto de la opción">
+          <button
+            *ngIf="question.options.length > 2"
+            type="button"
+            (click)="removeOption(i, j)"
+            class="ml-2 text-red-500 hover:text-red-700">
+            <mat-icon>remove_circle</mat-icon>
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- Buttons -->
-    <div class="flex space-x-4">
-      <button type="button" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" (click)="saveExam()" [disabled]="isSaving">
-        {{ isSaving ? 'Saving...' : 'Save Exam' }}
-      </button>
-      @if (editingExamId) {
-        <button type="button" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" (click)="deleteExam()" [disabled]="isSaving">
-          Delete Exam
+    <!-- Botones -->
+    <div class="flex justify-between">
+      <div>
+        <button
+          type="button"
+          (click)="resetForm()"
+          class="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400 mr-2">
+          Limpiar
         </button>
-      }
-      <button type="button"
-        class="px-4 py-2 bg-neutral-300 dark:bg-neutral-600 text-neutral-800 dark:text-neutral-200 rounded-md hover:bg-neutral-400 dark:hover:bg-neutral-500"
-        (click)="resetForm()" [disabled]="isSaving">
-        Reset
+        <button
+          *ngIf="editingExamId"
+          type="button"
+          (click)="deleteExam()"
+          class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+          [disabled]="isSaving">
+          Eliminar
+        </button>
+      </div>
+      <button
+        type="button"
+        (click)="saveExam()"
+        class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+        [disabled]="isSaving">
+        {{ editingExamId ? 'Actualizar' : 'Guardar' }}
       </button>
     </div>
-  </form>
+  </div>
 </div>
+
