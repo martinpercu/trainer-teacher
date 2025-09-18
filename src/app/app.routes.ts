@@ -61,6 +61,9 @@ export const routes: Routes = [
   { path: 'school',
     component: SchoolMainPageComponent
   },
+  { path: 'school',
+    component: SchoolMainPageComponent
+  },
   { path: 'pdf-viewer',
     component: PdfviewerComponent
   },
@@ -72,6 +75,10 @@ export const routes: Routes = [
     path:'chat',
     component: ChatComponent
   }
+  // {
+  //   path:'leftmenu',
+  //   component: LeftMenuComponent
+  // }
   // {
   //   path:'leftmenu',
   //   component: LeftMenuComponent
