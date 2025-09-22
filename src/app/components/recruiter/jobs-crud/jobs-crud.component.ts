@@ -23,16 +23,16 @@ import { Exam } from '@models/exam';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { RecruiterService } from '@services/recruiter.service'
+import { MatIconModule } from '@angular/material/icon';
+
 
 
 @Component({
   selector: 'app-jobs-crud',
-  imports: [FormsModule, CommonModule, AsyncPipe, TranslocoPipe],
+  imports: [FormsModule, CommonModule, AsyncPipe, TranslocoPipe, MatIconModule],
   templateUrl: './jobs-crud.component.html',
 })
 export class JobsCrudComponent {
-
-
 
   // --- Inyección de Dependencias ---
   auth = inject(Auth);
@@ -61,6 +61,27 @@ export class JobsCrudComponent {
   selectedJobId: string = '';
   isAuthenticated: boolean = false;
   private recruiterId!: string;
+
+  showExpandForm: boolean = false;
+
+  payView: boolean = false;
+  basicDetailView: boolean =  false;
+
+  salaryView:
+    | 'hour'
+    | 'week'
+    | 'month'
+    | 'annual'
+    | '' = ''; // Default view
+
+
+  showSalary: boolean = false;
+  salaryWithRange: boolean = false;
+
+  showHours: boolean = false;
+  showExtras: boolean = false;
+  showExam: boolean = false;
+  examsListMoreThanOne: boolean = false;
 
   ngOnInit() {
     authState(this.auth).subscribe((user) => {
@@ -91,6 +112,17 @@ export class JobsCrudComponent {
             return of([]);
         })
       );
+
+      console.log(this.exams$);
+      this.exams$.subscribe(data => {
+        console.log('El estado del observable es que se ha completado la emisión.');
+        console.log('Los datos recibidos son:', data);
+        console.log('La longitud del array es:', data.length);
+        if(data.length >= 1){
+          this.examsListMoreThanOne = true
+        }
+      })
+
     });
   }
 
@@ -100,37 +132,88 @@ export class JobsCrudComponent {
     const selectElement = event.target as HTMLSelectElement;
     const jobId = selectElement.value;
     this.selectedJobId = jobId;
-
     if (jobId) {
-      this.jobCrudService.getJobById(jobId).subscribe({
-        next: (job) => {
-          if (job) {
-            // Poblar el formulario con todos los datos del trabajo, incluyendo los nuevos
-            this.newJob = {
-              jobId: job.jobId,
-              name: job.name,
-              description: job.description,
-              ownerId: job.ownerId, // Usar el ownerId del trabajo cargado
-              active: job.active || false, // Fallback a false si no está definido
-              examId: job.examId || '', // Fallback a string vacío
-              examActive: job.examActive || false, // Fallback a false
-            };
-            this.editingJobId = jobId;
-            this.errorMessage = '';
-          } else {
-            this.errorMessage = 'Trabajo no encontrado';
-            this.resetForm();
-          }
-        },
-        error: (error) => {
-          console.error('Error al cargar el trabajo:', error);
-          this.errorMessage = 'Error al cargar el trabajo: permisos insuficientes';
+      // Usar getJobByIdRaw en lugar de getJobById para una sola consulta
+      this.jobCrudService.getJobByIdRaw(jobId).then((job) => {
+        if (job) {
+          // Poblar el formulario con todos los datos del trabajo
+          this.newJob = {
+            jobId: job.jobId,
+            name: job.name,
+            description: job.description,
+            ownerId: job.ownerId,
+            active: job.active || false,
+            examId: job.examId || '',
+            examActive: job.examActive || false,
+            showSalary: job.showSalary || false,
+            showRange: job.showRange || false,
+            minSalary: job.minSalary || '',
+            maxSalary: job.maxSalary || '',
+            fixSalary: job.fixSalary || '',
+            salaryHour: job.salaryHour || false,
+            salaryWeek: job.salaryWeek || false,
+            salaryMonth: job.salaryMonth || false,
+            salaryYear: job.salaryYear || false,
+            hoursPerWeek: job.hoursPerWeek || '',
+          };
+          this.editingJobId = jobId;
+          this.errorMessage = '';
+          console.log('Job cargado (una sola vez):', this.newJob);
+          this.setDisplay(this.newJob);
+        } else {
+          this.errorMessage = 'Trabajo no encontrado';
           this.resetForm();
-        },
+        }
+      }).catch((error) => {
+        console.error('Error al cargar el trabajo:', error);
+        this.errorMessage = 'Error al cargar el trabajo: permisos insuficientes';
+        this.resetForm();
       });
     } else {
       this.resetForm();
     }
+
+    // if (jobId) {
+    //   this.jobCrudService.getJobById(jobId).subscribe({
+    //     next: (job) => {
+    //       if (job) {
+    //         // Poblar el formulario con todos los datos del trabajo, incluyendo los nuevos
+    //         this.newJob = {
+    //           jobId: job.jobId,
+    //           name: job.name,
+    //           description: job.description,
+    //           ownerId: job.ownerId, // Usar el ownerId del trabajo cargado
+    //           active: job.active || false, // Fallback a false si no está definido
+    //           examId: job.examId || '', // Fallback a string vacío
+    //           examActive: job.examActive || false, // Fallback a false
+    //           showSalary: job.showSalary || false,
+    //           minSalary: job.minSalary || '',
+    //           maxSalary: job.maxSalary || '',
+    //           fixSalary: job.fixSalary || '',
+    //           salaryHour: job.salaryHour || false,
+    //           salaryWeek: job.salaryWeek || false,
+    //           salaryMonth: job.salaryMonth || false,
+    //           salaryYear: job.salaryYear || false,
+    //           hoursPerWeek: job.hoursPerWeek || '',
+    //         };
+    //         this.editingJobId = jobId;
+    //         this.errorMessage = '';
+    //         console.log(this.newJob);
+    //         this.setDisplay(this.newJob)
+    //       } else {
+    //         this.errorMessage = 'Trabajo no encontrado';
+    //         this.resetForm();
+    //       }
+    //     },
+    //     error: (error) => {
+    //       console.error('Error al cargar el trabajo:', error);
+    //       this.errorMessage = 'Error al cargar el trabajo: permisos insuficientes';
+    //       this.resetForm();
+    //     },
+    //   });
+    // } else {
+    //   this.resetForm();
+    // }
   }
 
   saveJob() {
@@ -159,6 +242,16 @@ export class JobsCrudComponent {
           active: this.newJob.active,
           examId: this.newJob.examId,
           examActive: !!this.newJob.examId && this.newJob.examActive, // examActive solo puede ser true si hay un examId
+          showSalary: this.newJob.showSalary,
+          showRange: this.newJob.showRange,
+          salaryHour: this.newJob.salaryHour,
+          salaryWeek: this.newJob.salaryWeek,
+          salaryMonth: this.newJob.salaryMonth,
+          salaryYear: this.newJob.salaryYear,
+          minSalary: this.newJob.minSalary,
+          maxSalary: this.newJob.maxSalary,
+          fixSalary: this.newJob.fixSalary,
+          hoursPerWeek: this.newJob.hoursPerWeek,
         };
 
         if (this.editingJobId) {
@@ -233,12 +326,123 @@ export class JobsCrudComponent {
       ownerId: '',
       active: true, // Valor por defecto
       examId: '',
-      examActive: false,
+      showSalary: false,
+      showRange: false,
+      minSalary: '',
+      maxSalary: '',
+      fixSalary: '',
+      salaryHour: false,
+      salaryWeek: false,
+      salaryMonth: false,
+      salaryYear: false,
+      hoursPerWeek: '',
     };
     this.editingJobId = undefined;
     this.selectedJobId = '';
     this.errorMessage = '';
   }
+
+
+  setDisplay(theJob: any){
+    console.log(theJob);
+    this.payView = theJob.showSalary
+    this.salaryWithRange = theJob.showRange
+
+    if(theJob.salaryHour){
+      this.salaryView = 'hour';
+      console.log(this.newJob.salaryHour , this.newJob.salaryWeek , this.newJob.salaryMonth, this.newJob.salaryYear );
+    }
+    else if(theJob.salaryWeek){
+      this.salaryView = 'week';
+    }
+    else if(theJob.salaryMonth){
+      this.salaryView = 'month';
+      console.log(this.newJob.salaryHour , this.newJob.salaryWeek , this.newJob.salaryMonth, this.newJob.salaryYear );
+    }
+    else if(theJob.salaryYear){
+      this.salaryView = 'annual';
+    }else{
+      console.log('NARANJA FANTA chequear urs week month annual');
+    }
+  }
+
+  handleShowBasicDetails() {
+    this.basicDetailView = !this.basicDetailView
+  }
+
+  handleShowSalary(){
+    this.showSalary = !this.showSalary
+  }
+
+  handleExpandForm() {
+    this.showExpandForm = !this.showExpandForm
+  }
+
+  handlePayView(){
+    this.payView = !this.payView;
+    this.setBooleanSalaryShow();
+  }
+
+  setBooleanSalaryShow() {
+    this.newJob.showSalary = this.payView
+    console.log(this.newJob);
+  }
+
+  setSalaryView(view: 'hour' | 'week' | 'month' | 'annual'){
+    this.salaryView = view;
+    this.setBooleanOff(view)
+  }
+
+  setBooleanOff(view: 'hour' | 'week' | 'month' | 'annual') {
+    this.newJob.salaryHour = false;
+    this.newJob.salaryWeek = false;
+    this.newJob.salaryMonth = false;
+    this.newJob.salaryYear = false;
+    this.setBoolenFrecuency(view)
+  }
+
+  setBoolenFrecuency(view: 'hour' | 'week' | 'month' | 'annual'){
+    if(view == 'hour'){
+      this.newJob.salaryHour = true;
+      console.log(this.newJob.salaryHour , this.newJob.salaryWeek , this.newJob.salaryMonth, this.newJob.salaryYear );
+    }
+    else if(view == 'week'){
+      this.newJob.salaryWeek = true;
+    }
+    else if(view == 'month'){
+      this.newJob.salaryMonth = true;
+      console.log(this.newJob.salaryHour , this.newJob.salaryWeek , this.newJob.salaryMonth, this.newJob.salaryYear );
+
+    }
+    else if(view == 'annual'){
+      this.newJob.salaryYear = true;
+    }else{
+      console.log('ERROR check booelean hours week month annual');
+    }
+  }
+
+  handleSalaryFixOrRange() {
+    this.salaryWithRange = !this.salaryWithRange
+    this.setBooleanRange()
+  }
+
+  setBooleanRange() {
+    this.newJob.showRange = this.salaryWithRange
+    console.log(this.newJob);
+  }
+
+  handleShowHours(){
+    this.showHours = !this.showHours
+  }
+
+  handleShowExtras(){
+    this.showExtras = !this.showExtras
+  }
+
+  handleShowExam(){
+    this.showExam = !this.showExam
+  }
+
 }
 
 

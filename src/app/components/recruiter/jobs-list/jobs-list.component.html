@@ -97,7 +97,7 @@
 
     </div>
   </div>
-  @if(this.examForJob){
+  @if(this.examForJob && this.job.examActive){
     <div class="flex items-center flex-col sm:flex-row mt-2 text-neutral-600 dark:text-neutral-300">
       <div class="flex items-center">
         <mat-icon class="">
