@@ -1,4 +1,226 @@
-<div class="max-w-4xl mx-auto p-6 bg-white dark:bg-neutral-800 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700">
+<div class="max-w-4xl mx-auto bg-white dark:bg-neutral-800">
+  <div class="p-6 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 min-h-[calc(100vh-10rem)]">
+    @if (examViewMode === 'introInfoExam') {
+      <div class="w-96 m-auto flex flex-row">
+        VAMOOO
+        <div class="flex">
+          Vamo again
+        </div>
+        <div class="flex">
+          Vamo again
+          <div (click)="startExam()" class="bg-green-500 cursor-pointer text-center p-4 font-semibold">
+            START EXAM
+          </div>
+        </div>
+      </div>
+    }
+    @if (examViewMode === 'loading') {
+    <div class="text-center py-10">
+      <p class="text-xl text-neutral-600 dark:text-neutral-300">Cargando examen...</p>
+
+      <div class="text-center">
+        @if (timeRemaining > 0) {
+        <p class="text-lg text-neutral-800 dark:text-neutral-200 mb-4">
+          Tiempo restante: {{ timeRemaining | number:'1.0-0' }} minutos
+        </p>
+        } @else {
+        <button (click)="reloadPage()" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+          Try Again
+        </button>
+        }
+      </div>
+
+
+    </div>
+    }
+    @else if (examViewMode === 'taking_question' || examViewMode === 'editing_question_from_summary') {
+      @if (exam && preparedQuestions.length > 0 && preparedQuestions[currentQuestionIndex]) {
+      <div>
+        <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-1">Examen: {{ exam.title }}</h1>
+        <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-6">Pregunta {{ currentQuestionIndex + 1 }} de {{
+          preparedQuestions.length }}</p>
+        @defer (on viewport) {
+        <div class="mb-6">
+          <h3 class="text-lg font-medium text-neutral-800 dark:text-neutral-200 mb-4">{{
+            preparedQuestions[currentQuestionIndex].question.text }}</h3>
+          <div class="space-y-3">
+            @for (option of preparedQuestions[currentQuestionIndex].options; track option.text) {
+            <button type="button" (click)="selectAnswer(currentQuestionIndex, option.text)" class="w-full text-left p-3 border rounded-lg transition-colors duration-150 ease-in-out
+                            focus:outline-none focus:ring-2 focus:ring-blue-500
+                            dark:border-neutral-600 dark:hover:bg-neutral-700 dark:focus:ring-blue-400
+                            hover:bg-neutral-100" [ngClass]="{
+                        'bg-blue-500 text-white dark:bg-blue-600 dark:text-white': userAnswers[currentQuestionIndex] === option.text,
+                        'bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300': userAnswers[currentQuestionIndex] !== option.text
+                      }">
+              {{ option.text }}
+            </button>
+            }
+          </div>
+        </div>
+        } @placeholder {
+        <p>Cargando pregunta...</p>
+        }
+      </div>
+      } @else {
+    <p class="text-center text-red-500 dark:text-red-400">No se pudo cargar la pregunta.</p>
+    }
+    }
+    @else if (examViewMode === 'summary') {
+    <div>
+      <h2 class="text-xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">Resumen de Respuestas</h2>
+      @if (exam && preparedQuestions.length > 0) {
+      @for (pq of preparedQuestions; track pq.question.text; let i = $index) {
+      <div class="mb-4 p-3 border rounded-lg dark:border-neutral-700">
+        <p class="font-medium text-neutral-700 dark:text-neutral-300">{{ i + 1 }}. {{ pq.question.text }}</p>
+        <p class="text-sm mt-1" [ngClass]="{
+                   'text-blue-600 dark:text-blue-400': userAnswers[i],
+                   'text-neutral-500 dark:text-neutral-400': !userAnswers[i]
+                 }">
+          Respuesta: {{ userAnswers[i] || 'No respondida' }}
+        </p>
+        <button (click)="editQuestionFromSummary(i)"
+          class="mt-2 text-sm px-3 py-1 bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded hover:bg-neutral-300 dark:hover:bg-neutral-600">
+          Modificar respuesta
+        </button>
+      </div>
+      }
+      } @else {
+      <p>No hay preguntas para mostrar en el resumen.</p>
+      }
+    </div>
+    }
+    @else if (examViewMode === 'results') {
+    <div>
+      <h2 class="text-xl font-bold mb-4" [ngClass]="{
+              'text-green-600 dark:text-green-400': lastExamPassed,
+              'text-red-600 dark:text-red-400': !lastExamPassed
+            }">
+        {{ lastExamPassed ? '¡Examen Aprobado!' : 'Examen Reprobado' }}
+      </h2>
+      <p class="text-neutral-700 dark:text-neutral-300 mb-2">Obtuviste un {{ (lastSubmittedResult.correctAnswers /
+        lastSubmittedResult.totalQuestions * 100) | number:'1.0-0' }}%.</p>
+      <p class="text-neutral-700 dark:text-neutral-300 mb-6">Respuestas correctas: {{ lastSubmittedResult.correctAnswers
+        }} de {{ lastSubmittedResult.totalQuestions }}.</p>
+      <h3 class="text-lg font-semibold text-neutral-800 dark:text-neutral-200 mb-3">Detalle de tus respuestas:</h3>
+      @for (qa of lastSubmittedResult.questions; track qa.question) {
+      <div class="mb-3 p-3 border rounded-lg" [ngClass]="{
+                 'border-green-500 dark:border-green-700': qa.correct,
+                 'border-red-500 dark:border-red-700': !qa.correct
+               }">
+        <p class="font-medium text-neutral-700 dark:text-neutral-300">{{ qa.question }}</p>
+        <p class="text-sm mt-1"
+          [ngClass]="{'text-green-700 dark:text-green-400': qa.correct, 'text-red-700 dark:text-red-400': !qa.correct}">
+          Tu respuesta: {{ qa.answer || 'No respondida' }}
+          <!-- @if (!qa.correct) {
+                <span class="block mt-1">Respuesta correcta: {{ getCorrectOptionText(qa) }}</span>
+              } -->
+        </p>
+      </div>
+      }
+      <button (click)="navigateToTeacherPage()"
+        class="mt-6 w-full px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-lg font-medium">
+        Volver a la página del profesor
+      </button>
+    </div>
+    }
+    @else {
+    <div class="text-center">
+      @if (timeRemaining > 0) {
+      <p class="text-lg text-neutral-800 dark:text-neutral-200 mb-4">
+        Tiempo restante para reintentar: {{ timeRemaining | number:'1.0-0' }} minutos
+      </p>
+      } @else if (examViewMode !== 'introInfoExam') {
+      <button (click)="reloadPage()" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+        Reintentar examen
+      </button>
+      }
+    </div>
+    }
+  </div>
+  @if (examViewMode !== 'loading' && examViewMode !== 'results' && isOkToDoTheExam) {
+  <footer
+    class="fixed bottom-0 left-0 right-0 bg-white dark:bg-neutral-900 border-t dark:border-neutral-700 p-4 shadow-md z-50">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <div>
+        @if (examTotalDurationMinutes > 0) {
+        <div class="text-sm font-medium tabular-nums" [ngClass]="{
+                 'text-red-600 dark:text-red-400 font-bold': isExamTimeCritical,
+                 'text-neutral-700 dark:text-neutral-300 font-normal': !isExamTimeCritical
+               }">
+        <mat-icon class=" items-center align-middle">timer</mat-icon>
+
+          Tiempo restante: {{ formatTimeRemaining() }}
+        </div>
+        }
+      </div>
+      <div>
+        @if (footerButtonAction) {
+        <button (click)="footerButtonAction()" [disabled]="isFooterButtonDisabled" class="px-5 py-2.5 rounded-md text-white font-medium transition-colors
+                           bg-blue-600 hover:bg-blue-700
+                           disabled:bg-neutral-400 dark:disabled:bg-neutral-600 disabled:cursor-not-allowed">
+          {{ footerButtonText }}
+        </button>
+        }
+      </div>
+    </div>
+  </footer>
+  }
+</div>
+
+
+<!-- <div class="p-6 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 min-h-[calc(100vh-10rem)]">
+  @if (examViewMode === 'loading') {
+    <p>Loading...</p>
+  } @else if (examViewMode === 'taking_question') {
+    <p>Taking question...</p>
+    @if (exam) {
+      <p>Exam exists.</p>
+      @defer {
+        <p>Defer content</p>
+      } @placeholder {
+        <p>Placeholder</p>
+      }
+    } @else {
+      <p>No exam.</p>
+    }
+  } @else {
+    <p>Other mode.</p>
+  }
+</div>
+ -->
+
+
+
+
+<!-- <div class="p-6 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700 min-h-[calc(100vh-10rem)]">
+  @if (examViewMode === 'loading') {
+    <p>Loading...</p>
+  } @else if (examViewMode === 'taking_question') {
+    <p>Taking question...</p>
+    @if (exam) {
+      <p>Exam exists.</p>
+      @defer {
+         <p>Defer content</p>
+      } @placeholder {
+         <p>Placeholder</p>
+      }
+    } @else {
+      <p>No exam.</p>
+    }
+  } @else {
+    <p>Other mode.</p>
+  }
+</div> -->
+
+
+
+
+<!-- Lo de abajo sigue funcionando con el TS que tenemos -->
+<!-- Lo de abajo sigue funcionando con el TS que tenemos -->
+<!-- Lo de abajo sigue funcionando con el TS que tenemos -->
+<!-- Lo de abajo sigue funcionando con el TS que tenemos -->
+
+<!-- <div class="max-w-4xl mx-auto p-6 bg-white dark:bg-neutral-800 rounded-lg shadow-lg border border-neutral-200 dark:border-neutral-700">
   @if (isOkToDoTheExam) {
     <div>
       <h1 class="text-2xl font-bold text-neutral-800 dark:text-neutral-200 mb-4">{{ exam?.title }}</h1>
@@ -22,7 +244,6 @@
       @if (timeRemaining > 0) {
         <p class="text-lg text-neutral-800 dark:text-neutral-200 mb-4">
           Tiempo restante: {{ timeRemaining | number:'1.0-0' }} minutos
-          <!-- Tiempo restante: {{ timeRemaining  }} minutos -->
         </p>
       } @else {
         <button (click)="reloadPage()" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
@@ -31,4 +252,4 @@
       }
     </div>
   }
-</div>
+</div> -->
