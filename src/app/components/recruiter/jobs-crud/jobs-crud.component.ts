@@ -24,6 +24,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 
 import { RecruiterService } from '@services/recruiter.service'
 import { MatIconModule } from '@angular/material/icon';
+import { StringTransformerService } from '@services/string-transformer.service';
 
 
 
@@ -40,6 +41,7 @@ export class JobsCrudComponent {
   examCrudService = inject(ExamCrudService);
 
   recruiterService = inject(RecruiterService);
+  stringTransformerService = inject(StringTransformerService);
 
   // --- Propiedades del Componente ---
   jobs$!: Observable<Job[]>;
@@ -235,6 +237,7 @@ export class JobsCrudComponent {
           return;
         }
 
+
         // Construir el objeto con todos los datos del formulario
         const jobData: Partial<Job> = {
           name: this.newJob.name!.trim(),
@@ -242,16 +245,16 @@ export class JobsCrudComponent {
           active: this.newJob.active,
           examId: this.newJob.examId,
           examActive: !!this.newJob.examId && this.newJob.examActive, // examActive solo puede ser true si hay un examId
-          showSalary: this.newJob.showSalary,
-          showRange: this.newJob.showRange,
-          salaryHour: this.newJob.salaryHour,
-          salaryWeek: this.newJob.salaryWeek,
-          salaryMonth: this.newJob.salaryMonth,
-          salaryYear: this.newJob.salaryYear,
-          minSalary: this.newJob.minSalary,
-          maxSalary: this.newJob.maxSalary,
-          fixSalary: this.newJob.fixSalary,
-          hoursPerWeek: this.newJob.hoursPerWeek,
+          showSalary: this.newJob.showSalary ?? false, // Asigna false si es null o undefined
+          showRange: this.newJob.showRange ?? false, // Asigna false si es null o undefined
+          salaryHour: this.newJob.salaryHour ?? false, // Asigna 0 si es null o undefined
+          salaryWeek: this.newJob.salaryWeek ?? false,
+          salaryMonth: this.newJob.salaryMonth ?? false,
+          salaryYear: this.newJob.salaryYear ?? false,
+          minSalary: this.newJob.minSalary ?? '',
+          maxSalary: this.newJob.maxSalary ?? '',
+          fixSalary: this.newJob.fixSalary ?? '',
+          hoursPerWeek: this.newJob.hoursPerWeek ?? '',
         };
 
         if (this.editingJobId) {
@@ -274,6 +277,11 @@ export class JobsCrudComponent {
         } else {
           // Lógica de Creación
           jobData.ownerId = this.recruiterId; // Asignar propietario
+
+          const magicStampCompressed = this.stringTransformerService.nowInBase62();
+          console.log(magicStampCompressed);
+          jobData.magicId = magicStampCompressed
+
           this.jobCrudService.createJob(jobData as Job).subscribe({
             next: () => {
               this.resetForm();
@@ -442,6 +450,7 @@ export class JobsCrudComponent {
   handleShowExam(){
     this.showExam = !this.showExam
   }
+
 
 }
 

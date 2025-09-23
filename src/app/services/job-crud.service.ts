@@ -73,6 +73,50 @@ export class JobCrudService {
       : undefined;
   }
 
+  // /**
+  //  * Obtiene un trabajo por su ID.
+  //  * @param magicId ID especial dentro del objeto trabajo.
+  //  * @returns Una Promise con el Job o undefined si no se encuentra.
+  //  */
+  // async getJobByMagikIdRaw(magicId: string): Promise<Job | undefined> {
+  //   const jobDocRef = doc(this.firestore, `jobs/${magicId}`);
+  //   const jobSnapshot = await getDoc(jobDocRef);
+  //   return jobSnapshot.exists()
+  //     ? ({ magicId, ...jobSnapshot.data() } as Job)
+  //     : undefined;
+  // }
+
+  /**
+   * Obtiene un trabajo buscando por su magicId.
+   * @param magicId El ID mágico del trabajo.
+   * @returns Una Promise con el Job o undefined si no se encuentra.
+   */
+  async getJobByMagikIdRaw(magicId: string): Promise<Job | undefined> {
+    // 1. Construir la consulta: buscar documentos donde el campo 'magicId' sea igual al valor pasado
+    const q = query(this.jobsCollection, where('magicId', '==', magicId));
+
+    // 2. Ejecutar la consulta
+    const querySnapshot = await getDocs(q);
+
+    // 3. Procesar el resultado
+    if (querySnapshot.empty) {
+      return undefined;
+    }
+
+    const docSnapshot = querySnapshot.docs[0];
+    const jobId = docSnapshot.id;
+
+    return {
+      jobId,
+      ...docSnapshot.data()
+    } as Job;
+  }
+
+
+
+
+
+
   async getJobOwnerId(jobId: string): Promise<string | undefined> {
     const job = await firstValueFrom(this.getJobById(jobId));
     return job?.ownerId;

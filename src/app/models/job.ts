@@ -1,5 +1,6 @@
 export interface Job {
   jobId: string;
+  magicId?: string;
   name: string;
   description: string;
   ownerId: string;

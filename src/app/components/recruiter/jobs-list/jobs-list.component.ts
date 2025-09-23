@@ -15,6 +15,8 @@ import { environment } from '@env/environment';
 import { ResumeViewerComponent } from '@recruiter/resume-viewer/resume-viewer.component';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 
+import { StringTransformerService } from '@services/string-transformer.service';
+
 
 
 @Component({
@@ -32,6 +34,7 @@ export class JobsListComponent {
   @Input() examForJob!: Exam | undefined;
 
   resumeService = inject(ResumeService);
+  transformerString = inject(StringTransformerService);
 
   magicLink: string = 'Este es el texto super importante que ya tengo en mi variable.';
   copiedSucces: boolean = false; // Para mostrar un mensaje de éxito
@@ -58,7 +61,18 @@ export class JobsListComponent {
     console.log(this.candidatesForJobAndExamPassed);
     this.showCandidates = false
     this.showCandidatesExamPassed = false
-    this.magicLink = `${environment.BASEURL}/job/${this.job.jobId}`;
+    const algo = btoa(this.job.jobId);
+    console.log(this.job.jobId);
+    console.log(this.job.magicId);
+    console.log(algo);
+    console.log('arriba el BTOA');
+    // const idCompressed = await this.transformerString.compress(this.job.jobId)
+    // console.log(idCompressed);
+    console.log('arriba el idCompressed');
+
+
+
+    this.magicLink = `${environment.BASEURL}/job/${this.job.magicId}`;
     console.log(this.magicLink);
     console.log(this.resumesForJob);
     this.combineCandidateData();

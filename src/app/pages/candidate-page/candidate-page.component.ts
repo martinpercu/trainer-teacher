@@ -83,7 +83,8 @@ export class CandidatePageComponent {
     if (jobPositionId) {
       console.log(jobPositionId);
       this.withJobId = true
-      const thisJob: any = await this.jobCrudService.getJobByIdRaw(jobPositionId);
+      // const thisJob: any = await this.jobCrudService.getJobByIdRaw(jobPositionId);
+      const thisJob: any = await this.jobCrudService.getJobByMagikIdRaw(jobPositionId);
       const ownerId: string | undefined =
       await this.jobCrudService.getJobOwnerId(jobPositionId);
         if(ownerId && thisJob && this.candidateService.candidateSig()) {
