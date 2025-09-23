@@ -61,4 +61,13 @@ export class RecruiterRegisterComponent {
     window.open(urlReal, '_blank');
   }
 
+  async loginWithGoogle() {
+    try {
+      this.errorMessage = '';
+      await this.recruiterAuthService.loginWithGoogle();
+    } catch (error: any) {
+      this.errorMessage = error;
+    }
+  }
+
 }

@@ -10,7 +10,9 @@
     "continuing": "By continuing, you agree to our ",
     "terms_coditions": "Terms and Conditions ",
     "and_our": "and our ",
-    "privacy": "Privacy Policy."
+    "privacy": "Privacy Policy.",
+    "continue_google": "Continue with Google",
+    "logging_in": "Logging in..."
   },
   "main": {
     "go_admin": "Go to Admin Zone",

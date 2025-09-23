@@ -10,7 +10,9 @@
     "continuing": "En continuant, vous acceptez nos ",
     "terms_coditions": "Conditions Générales d'Utilisation ",
     "and_our": "et notre ",
-    "privacy": "Politique de Confidentialité."
+    "privacy": "Politique de Confidentialité.",
+    "continue_google": "Continuer avec Google",
+    "logging_in": "Connexion en cours..."
   },
   "main": {
     "go_admin": "Aller vers Admin",

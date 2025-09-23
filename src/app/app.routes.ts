@@ -40,6 +40,10 @@ export const routes: Routes = [
     component: MainpageBridgetoworksComponent
   },
   {
+    path:'login',
+    component: MainpageBridgetoworksComponent
+  },
+  {
     path:'stripe',
     component: StripeCardComponent
   },
