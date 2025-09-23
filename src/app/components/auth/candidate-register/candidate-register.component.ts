@@ -39,8 +39,14 @@ export class CandidateRegisterComponent {
 
   async ngOnInit() {
     // Extraer el jobPositionId
-    const jobPositionId = this.route.snapshot.paramMap.get('jobId'); // Ruta /job/:jobId
-    if (jobPositionId) {
+    // const jobPositionId = this.route.snapshot.paramMap.get('jobId'); // Ruta /job/:jobId
+    const jobMagicPositionId = this.route.snapshot.paramMap.get('jobId'); // Ruta /job/:jobId
+
+    if (jobMagicPositionId) {
+      // const thisJob: any = await this.jobCrudService.getJobByIdRaw(jobPositionId);
+      const theJob: any = await this.jobCrudService.getJobByMagikIdRaw(jobMagicPositionId);
+      const jobPositionId = theJob.jobId
+
       this.jobId = jobPositionId
       const ownerId: string | undefined =
         await this.jobCrudService.getJobOwnerId(jobPositionId);

@@ -79,15 +79,16 @@ export class CandidatePageComponent {
   async ngOnInit() {
 
     // Extraer el jobPositionId
-    const jobPositionId = this.route.snapshot.paramMap.get('jobId'); // Ruta /job/:jobId
-    if (jobPositionId) {
-      console.log(jobPositionId);
+    const jobMagicPositionId = this.route.snapshot.paramMap.get('jobId'); // Ruta /job/:jobId
+    if (jobMagicPositionId) {
+      console.log(jobMagicPositionId);
       this.withJobId = true
       // const thisJob: any = await this.jobCrudService.getJobByIdRaw(jobPositionId);
-      const thisJob: any = await this.jobCrudService.getJobByMagikIdRaw(jobPositionId);
+      const theJob: any = await this.jobCrudService.getJobByMagikIdRaw(jobMagicPositionId);
+      const jobPositionId = theJob.jobId
       const ownerId: string | undefined =
       await this.jobCrudService.getJobOwnerId(jobPositionId);
-        if(ownerId && thisJob && this.candidateService.candidateSig()) {
+        if(ownerId && theJob && this.candidateService.candidateSig()) {
           // alert('hay de SUPER TODOOOOO todooooooo')
           console.log(this.candidateService.candidateSig()?.candidateUID);
           const candidateUID = this.candidateService.candidateSig()?.candidateUID
@@ -110,10 +111,10 @@ export class CandidatePageComponent {
         console.log('hay OWNER ! ! ! \n\n' + ownerId);
         this.recruiterId = ownerId
       }
-      if(thisJob) {
+      if(theJob) {
         // alert(thisJob)
         console.log('hay job job job');
-        this.job = thisJob
+        this.job = theJob
       }
       else {
         console.log(' NO JOB redirecciona a /job sin ID');
