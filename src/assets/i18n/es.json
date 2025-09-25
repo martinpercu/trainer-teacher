@@ -5,8 +5,9 @@
   "auth": {
     "error_already_use": "Email ya en uso.",
     "go_login": "Click en \"Ya tengo cuenta\"",
-    "already_account": "Ya tengo una cuenta",
-    "no_account_create_one": "¿No tienes cuenta? Regístrate",
+    "already_account": "Ya tengo una cuenta con email",
+    "no_account_create_one": "¿No tienes cuenta con email? Regístrate",
+    "or": "si tienes cuenta Google con nosotros...",
     "continuing": "Al continuar, aceptas nuestros ",
     "terms_coditions": "Términos y Condiciones ",
     "and_our": "y nuestra ",

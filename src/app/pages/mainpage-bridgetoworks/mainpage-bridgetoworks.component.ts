@@ -14,9 +14,10 @@ import { TranslocoPipe } from '@jsverse/transloco';
 export class MainpageBridgetoworksComponent {
   router = inject(Router);
 
+
   goToRecruiter() {
     // window.open(url, "_blank");
-    this.router.navigate([`/recruiter`]);
+    this.router.navigate(['recruiter']);
   }
 
   // goToCandidate() {

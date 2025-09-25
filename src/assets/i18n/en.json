@@ -5,8 +5,9 @@
   "auth": {
     "error_already_use": "Email already in use.",
     "go_login": "Click in \"I have an account\"",
-    "already_account": "I already have an account",
-    "no_account_create_one": "Not an account? Sign Up",
+    "already_account": "I already have an email account",
+    "no_account_create_one": "Not an email account? Sign Up",
+    "or": "if you have already a Goolgle account with us...",
     "continuing": "By continuing, you agree to our ",
     "terms_coditions": "Terms and Conditions ",
     "and_our": "and our ",

@@ -1,7 +1,9 @@
 import { Injectable, inject, signal } from '@angular/core';
 
 import { Auth, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, user, signInWithPopup, signInWithRedirect, User } from '@angular/fire/auth';
-import { Observable, from } from 'rxjs';
+import { Observable, from, BehaviorSubject, firstValueFrom } from 'rxjs';
+import { map, filter, take } from 'rxjs/operators';
+
 
 import { Recruiter } from '@models/recruiter';
 import { RecruiterService } from '@services/recruiter.service';
@@ -10,12 +12,13 @@ import { Router } from '@angular/router';
 import { CandidateService } from '@services/candidate.service'
 
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class RecruiterAuthService {
 
-  firebaseAuth = inject(Auth);
+  private firebaseAuth = inject(Auth);
   recruiterService = inject(RecruiterService)
   recruiter$ = user(this.firebaseAuth);
   currentRecruiterSig = signal<Recruiter | null | undefined>(undefined);
@@ -26,34 +29,86 @@ export class RecruiterAuthService {
   recruiter!: Recruiter;
 
 
-
-
-  private auth = inject(Auth);
+  // private auth = inject(Auth);
   // private firestore = inject(Firestore);
 
   // Signal para el estado del usuario
   currentUser = signal<Recruiter | null>(null);
   loading = signal<boolean>(false);
 
+
+  // NUEVO: BehaviorSubject para manejar el estado de autenticación
+  private authStateSubject = new BehaviorSubject<{ user: Recruiter | null, initialized: boolean }>({
+    user: null,
+    initialized: false
+  });
+
+  // Observable público para el estado de auth
+  authState$ = this.authStateSubject.asObservable();
+
+
   // Observable del usuario de Firebase
-  user$: Observable<User | null> = user(this.auth);
+  user$: Observable<User | null> = user(this.firebaseAuth);
 
 
 
 
+
+  // constructor() {
+  //   this.recruiter$.subscribe(async (firebaseUser) => {
+  //     if (firebaseUser) {
+  //       const recruiter = await this.recruiterService.getOneRecruiter(firebaseUser.uid);
+  //       this.recruiterService.setRecruiterSig(recruiter);
+  //       this.currentUser.set(recruiter);
+  //       // this.currentUserSig.set(recruiter); // Opcional
+  //     } else {
+  //       this.recruiterService.setRecruiterSig(null);
+  //       // this.currentUserSig.set(null); // Opcional
+  //     }
+  //   });
+  // }
 
   constructor() {
+    this.initializeAuthState();
+  }
+
+  private async initializeAuthState() {
     this.recruiter$.subscribe(async (firebaseUser) => {
-      if (firebaseUser) {
-        const recruiter = await this.recruiterService.getOneRecruiter(firebaseUser.uid);
-        this.recruiterService.setRecruiterSig(recruiter);
-        // this.currentUserSig.set(recruiter); // Opcional
-      } else {
-        this.recruiterService.setRecruiterSig(null);
-        // this.currentUserSig.set(null); // Opcional
+      try {
+        if (firebaseUser) {
+          const recruiter = await this.recruiterService.getOneRecruiter(firebaseUser.uid);
+          this.recruiterService.setRecruiterSig(recruiter);
+          this.currentUser.set(recruiter);
+          this.authStateSubject.next({ user: recruiter, initialized: true });
+        } else {
+          this.recruiterService.setRecruiterSig(null);
+          this.currentUser.set(null);
+          this.authStateSubject.next({ user: null, initialized: true });
+        }
+      } catch (error) {
+        console.error('Error initializing auth state:', error);
+        this.authStateSubject.next({ user: null, initialized: true });
       }
     });
   }
+
+  // NUEVO: Método para esperar a que el estado de auth se inicialice
+  async waitForAuthInitialization(): Promise<Recruiter | null> {
+    const authState = await firstValueFrom(
+      this.authState$.pipe(
+        filter(state => state.initialized),
+        take(1)
+      )
+    );
+    return authState.user;
+  }
+
+  // NUEVO: Método mejorado para verificar si está logueado
+  async isUserLoggedIn(): Promise<boolean> {
+    const user = await this.waitForAuthInitialization();
+    return user !== null;
+  }
+
 
   register(
     email: string,
@@ -104,7 +159,9 @@ export class RecruiterAuthService {
         const recruiter = await this.recruiterService.getOneRecruiter(response.user.uid);
         this.recruiterService.setRecruiterSig(recruiter); // Actualiza el signal en CandidateService
         this.currentRecruiterSig.set(recruiter); // Opcional, si querés mantenerlo aquí también
-        this.router.navigateByUrl('/recruiter');
+        this.authStateSubject.next({ user: recruiter, initialized: true });
+        // alert('estamos logueados en auth recruiter service')
+        // this.router.navigate(['']);
       })
       .catch((error) => {
         console.error('Error en login:', error);
@@ -116,6 +173,7 @@ export class RecruiterAuthService {
   logout(): Observable<void> {
     this.recruiterService.setUserSigNull();
     const promise = signOut(this.firebaseAuth);
+    this.router.navigate(['']);
     return from(promise)
   }
 
@@ -129,7 +187,7 @@ export class RecruiterAuthService {
       provider.addScope('profile');
       provider.addScope('email');
 
-      const result = await signInWithPopup(this.auth, provider);
+      const result = await signInWithPopup(this.firebaseAuth, provider);
 
       if (result.user) {
         console.log(result.user);
@@ -169,7 +227,7 @@ export class RecruiterAuthService {
       provider.addScope('profile');
       provider.addScope('email');
 
-      await signInWithRedirect(this.auth, provider);
+      await signInWithRedirect(this.firebaseAuth, provider);
     } catch (error: any) {
       console.error('Error en login redirect:', error);
       this.loading.set(false);

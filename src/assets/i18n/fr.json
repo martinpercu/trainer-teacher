@@ -5,8 +5,9 @@
   "auth": {
     "error_already_use": "Courriel dejà registré",
     "go_login": "allez vers Login!",
-    "already_account": "J'ai déjà un compte",
-    "no_account_create_one": "Pas encore de compte ? S'inscrire",
+    "already_account": "J'ai déjà un compte email",
+    "no_account_create_one": "Pas encore de compte email ? S'inscrire",
+    "or": "si vous avez déjà un compte Google avec nous...",
     "continuing": "En continuant, vous acceptez nos ",
     "terms_coditions": "Conditions Générales d'Utilisation ",
     "and_our": "et notre ",

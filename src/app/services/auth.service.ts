@@ -40,22 +40,22 @@ export class AuthService {
         console.log('in get one User');
         console.log(user);
         if (!user) {
-          console.log('no hay user ==> HABRÁ candidate ???');
-          const user = await this.candidateService.getOneCandidate(
+          console.log('no hay User ==> HABRÁ Recruiter???');
+          const user = await this.recruiterService.getOneRecruiter(
             firebaseUser.uid
           );
-          this.candidateService.setUserSig(user);
+          this.recruiterService.setRecruiterSig(user);
           // this.currentUserSig.set(user); // Opcional
-          console.log('in get one Candidate');
+          console.log('in get one Recruiter');
           console.log(user);
           if (!user) {
-            console.log('no hay Candidate');
-            const user = await this.recruiterService.getOneRecruiter(
+            console.log('no hay user ==> HABRÁ candidate ???');
+            const user = await this.candidateService.getOneCandidate(
               firebaseUser.uid
             );
-            this.recruiterService.setRecruiterSig(user);
+            this.candidateService.setUserSig(user);
             // this.currentUserSig.set(user); // Opcional
-            console.log('in get one Recruiter');
+            console.log('in get one Candidate');
             console.log(user);
           }
         }
@@ -66,6 +66,42 @@ export class AuthService {
       }
     });
   }
+
+  // constructor() {
+  //   this.user$.subscribe(async (firebaseUser) => {
+  //     if (firebaseUser) {
+  //       const user = await this.userService.getOneUser(firebaseUser.uid);
+  //       this.userService.setUserSig(user);
+  //       // this.currentUserSig.set(user); // Opcional
+  //       console.log('in get one User');
+  //       console.log(user);
+  //       if (!user) {
+  //         console.log('no hay user ==> HABRÁ candidate ???');
+  //         const user = await this.candidateService.getOneCandidate(
+  //           firebaseUser.uid
+  //         );
+  //         this.candidateService.setUserSig(user);
+  //         // this.currentUserSig.set(user); // Opcional
+  //         console.log('in get one Candidate');
+  //         console.log(user);
+  //         if (!user) {
+  //           console.log('no hay Candidate');
+  //           const user = await this.recruiterService.getOneRecruiter(
+  //             firebaseUser.uid
+  //           );
+  //           this.recruiterService.setRecruiterSig(user);
+  //           // this.currentUserSig.set(user); // Opcional
+  //           console.log('in get one Recruiter');
+  //           console.log(user);
+  //         }
+  //       }
+  //     } else {
+  //       console.log('There is none authenticated');
+  //       this.userService.setUserSig(null);
+  //       // this.currentUserSig.set(null); // Opcional
+  //     }
+  //   });
+  // }
 
   register(
     email: string,

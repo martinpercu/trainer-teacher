@@ -6,10 +6,11 @@ import { RecruiterAuthService } from '@services/recruiter-auth.service';
 import { Router } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { environment } from '@env/environment';
+import { RecruiterSocialButtonsComponent } from '@auth/recruiter-social-buttons/recruiter-social-buttons.component';
 
 @Component({
   selector: 'app-recruiter-register',
-  imports: [ReactiveFormsModule, TranslocoPipe],
+  imports: [ReactiveFormsModule, TranslocoPipe, RecruiterSocialButtonsComponent],
   templateUrl: './recruiter-register.component.html'
 })
 export class RecruiterRegisterComponent {

@@ -32,6 +32,9 @@ import { UserCandidatePageComponent } from '@pages/user-candidate-page/user-cand
 
 import { PaymentsPageComponent } from '@pages/payments-page/payments-page.component';
 import { StripeCardComponent } from '@components/stripe-card/stripe-card.component';
+import { authGuard } from './../app/guards/auth.guard';
+import { LoginAndRegisterComponent } from '@recruiter/login-and-register/login-and-register.component';
+import { publicGuard } from './../app/guards/public.guard';
 
 
 export const routes: Routes = [
@@ -41,7 +44,17 @@ export const routes: Routes = [
   },
   {
     path:'login',
-    component: MainpageBridgetoworksComponent
+    component: LoginAndRegisterComponent,
+    canActivate: [publicGuard]
+  },
+  {
+    path:'recruiter',
+    component: RecruiterDashboardComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path:'recruiter-account',
+    component: RecruiterAccountComponent
   },
   {
     path:'stripe',
@@ -66,14 +79,6 @@ export const routes: Routes = [
   {
     path:'job-crud',
     component: JobsCrudComponent
-  },
-  {
-    path:'recruiter',
-    component: RecruiterDashboardComponent
-  },
-  {
-    path:'recruiter-account',
-    component: RecruiterAccountComponent
   },
   {
     path:'candidate',
