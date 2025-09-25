@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, collectionData, addDoc, query, where } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, addDoc, query, where, doc, setDoc } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Result } from '@models/result';
@@ -9,6 +9,59 @@ import { Result } from '@models/result';
 })
 export class ResultService {
   private firestore = inject(Firestore);
+  private resultsCollectionPath = 'examsresults'; // Define la ruta para reutilizar
+
+  /**
+ * Crea un nuevo documento de resultado en Firestore.
+ * Usado para el guardado inicial del examen en progreso.
+ * @param result Datos iniciales del resultado (sin ID).
+ * @returns Promise con el ID del nuevo documento.
+ */
+  async createInitialResult(result: Omit<Result, 'id'>): Promise<string> {
+    const resultsCollection = collection(this.firestore, this.resultsCollectionPath);
+    return addDoc(resultsCollection, result).then(docRef => docRef.id);
+  }
+
+
+  /**
+   * Actualiza un documento de resultado existente en Firestore.
+   * @param resultId El ID del documento a actualizar.
+   * @param updates Un objeto con los campos a actualizar.
+   * @returns Promise que se resuelve cuando la actualización se completa.
+   */
+  updateExistingResult(resultId: string, updates: Partial<Result>): Promise<void> {
+    const resultDocRef = doc(this.firestore, this.resultsCollectionPath, resultId);
+    // setDoc con merge:true actualiza los campos o los crea si no existen, sin borrar los demás.
+    // updateDoc solo actualiza campos existentes y falla si un campo no existe.
+    // Para esta lógica, setDoc con merge es más robusto.
+    return setDoc(resultDocRef, updates, { merge: true });
+  }
+
+
+  /**
+   * Guarda el resultado final de un examen.
+   * Si ya existe un ID de resultado (examen en progreso), lo actualiza.
+   * Si no, crea un nuevo resultado (como fallback).
+   * @param result El objeto Result completo (puede incluir el ID).
+   * @returns Promise con el ID del resultado guardado/actualizado.
+   */
+  async saveFinalResult(result: Result): Promise<string> {
+    const resultsCollection = collection(this.firestore, this.resultsCollectionPath);
+    if (result.id) {
+      const resultDocRef = doc(this.firestore, this.resultsCollectionPath, result.id);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, ...dataToSave } = result; // Excluimos el 'id' del objeto a guardar
+      await setDoc(resultDocRef, dataToSave); // setDoc sobrescribe, así que pasamos todos los datos finales
+      return result.id;
+    } else {
+      // Fallback si no había un ID (no debería pasar en el flujo normal)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, ...dataToSave } = result;
+      const docRef = await addDoc(resultsCollection, dataToSave);
+      return docRef.id;
+    }
+  }
+
 
   saveResult(result: Omit<Result, 'id'>): Promise<string> {
     const resultsCollection = collection(this.firestore, 'examsresults');
