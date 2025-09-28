@@ -56,30 +56,26 @@ export class JobsListComponent {
 
   async ngOnInit() {
     console.log('START OnINIT Job-List');
-    console.log(this.job);
-    console.log(this.candidatesForJob);
-    console.log(this.candidatesForJobAndExamPassed);
+    // console.log(this.job);
+    // console.log(this.candidatesForJob);
+    // console.log(this.candidatesForJobAndExamPassed);
     this.showCandidates = false
     this.showCandidatesExamPassed = false
     const algo = btoa(this.job.jobId);
-    console.log(this.job.jobId);
-    console.log(this.job.magicId);
-    console.log(algo);
-    console.log('arriba el BTOA');
-    // const idCompressed = await this.transformerString.compress(this.job.jobId)
-    // console.log(idCompressed);
-    console.log('arriba el idCompressed');
-
+    // console.log(this.job.jobId);
+    // console.log(this.job.magicId);
+    // console.log(algo);
+    // console.log('arriba el BTOA');
 
 
     this.magicLink = `${environment.BASEURL}/job/${this.job.magicId}`;
     console.log(this.magicLink);
-    console.log(this.resumesForJob);
+    // console.log(this.resumesForJob);
     this.combineCandidateData();
-    console.log(this.candidatesWithScores);
-    console.log(this.candidatesWithThumbUp);
+    // console.log(this.candidatesWithScores);
+    // console.log(this.candidatesWithThumbUp);
     this.combineCandidateForThumbUp()
-    console.log(this.candidatesWithThumbUp);
+    // console.log(this.candidatesWithThumbUp);
     console.log(this.examForJob + 'eeee');
     console.log('END OnINIT Job-List');
   };

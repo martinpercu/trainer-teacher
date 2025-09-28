@@ -1,29 +1,27 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { RecruiterAuthService } from '@services/recruiter-auth.service';
+import { AuthService } from '@services/auth.service';
+import { take, map } from 'rxjs/operators';
 
-export const publicGuard: CanActivateFn = async (route, state) => {
-  const authService = inject(RecruiterAuthService);
+export const publicGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
   const router = inject(Router);
 
-  try {
-    // Espera a que el estado de autenticación se inicialice completamente
-    const isLoggedIn = await authService.isUserLoggedIn();
-
-    if (!isLoggedIn) {
-      console.log('IN publicAuth Usuario no autenticado, redirigiendo al login');
-      return true;
-    } else {
-      console.log('IN publicAuth \n esta logueado');
-      router.navigate(['recruiter']);
-      // router.navigate(['login']);
-      return false;
-    }
-  } catch (error) {
-    console.error('Error en auth guard:', error);
-    router.navigate(['login']);
-    return false;
-  }
+  // Usamos el Observable 'user$' de Firebase para verificar el estado
+  return authService.user$.pipe(
+    take(1),
+    map(firebaseUser => {
+      if (firebaseUser) {
+        // ⚠️ Si SÍ hay un usuario logueado, lo enviamos al root de la app.
+        console.log("GUARD público - Usuario ya logueado. Redirigiendo a /.");
+        return router.parseUrl('/'); // Redirige a la página principal
+      } else {
+        // ✅ Si NO hay usuario, permitimos que acceda a esta ruta (ej: /login, /register).
+        console.log("GUARD público - No hay usuario. Permitiendo acceso a la ruta.");
+        return true;
+      }
+    })
+  );
 };
 
 

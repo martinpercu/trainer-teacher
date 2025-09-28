@@ -53,7 +53,6 @@ export class RecruiterLoginComponent {
     try {
       this.errorMessage = '';
       await this.recruiterAuthService.loginWithGoogle();
-      this.router.navigate(['recruiter'])
     } catch (error: any) {
       this.errorMessage = error;
     }

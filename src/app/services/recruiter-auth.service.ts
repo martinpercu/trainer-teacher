@@ -10,6 +10,7 @@ import { RecruiterService } from '@services/recruiter.service';
 import { Router } from '@angular/router';
 
 import { CandidateService } from '@services/candidate.service'
+import { TranslocoService } from '@jsverse/transloco';
 
 
 
@@ -51,63 +52,60 @@ export class RecruiterAuthService {
   user$: Observable<User | null> = user(this.firebaseAuth);
 
 
-
-
-
-  // constructor() {
-  //   this.recruiter$.subscribe(async (firebaseUser) => {
-  //     if (firebaseUser) {
-  //       const recruiter = await this.recruiterService.getOneRecruiter(firebaseUser.uid);
-  //       this.recruiterService.setRecruiterSig(recruiter);
-  //       this.currentUser.set(recruiter);
-  //       // this.currentUserSig.set(recruiter); // Opcional
-  //     } else {
-  //       this.recruiterService.setRecruiterSig(null);
-  //       // this.currentUserSig.set(null); // Opcional
-  //     }
-  //   });
-  // }
-
-  constructor() {
-    this.initializeAuthState();
-  }
-
-  private async initializeAuthState() {
+  constructor(private translocoService: TranslocoService) {
     this.recruiter$.subscribe(async (firebaseUser) => {
-      try {
-        if (firebaseUser) {
-          const recruiter = await this.recruiterService.getOneRecruiter(firebaseUser.uid);
-          this.recruiterService.setRecruiterSig(recruiter);
-          this.currentUser.set(recruiter);
-          this.authStateSubject.next({ user: recruiter, initialized: true });
-        } else {
-          this.recruiterService.setRecruiterSig(null);
-          this.currentUser.set(null);
-          this.authStateSubject.next({ user: null, initialized: true });
-        }
-      } catch (error) {
-        console.error('Error initializing auth state:', error);
-        this.authStateSubject.next({ user: null, initialized: true });
+      if (firebaseUser) {
+        const recruiter = await this.recruiterService.getOneRecruiter(firebaseUser.uid);
+        this.recruiterService.setRecruiterSig(recruiter);
+        this.currentUser.set(recruiter);
+        // this.currentUserSig.set(recruiter); // Opcional
+      } else {
+        this.recruiterService.setRecruiterSig(null);
+        // this.currentUserSig.set(null); // Opcional
       }
     });
   }
 
-  // NUEVO: Método para esperar a que el estado de auth se inicialice
-  async waitForAuthInitialization(): Promise<Recruiter | null> {
-    const authState = await firstValueFrom(
-      this.authState$.pipe(
-        filter(state => state.initialized),
-        take(1)
-      )
-    );
-    return authState.user;
-  }
+  // constructor(private translocoService: TranslocoService) {
+  //   this.initializeAuthState();
+  // }
 
-  // NUEVO: Método mejorado para verificar si está logueado
-  async isUserLoggedIn(): Promise<boolean> {
-    const user = await this.waitForAuthInitialization();
-    return user !== null;
-  }
+  // private async initializeAuthState() {
+  //   this.recruiter$.subscribe(async (firebaseUser) => {
+  //     try {
+  //       if (firebaseUser) {
+  //         const recruiter = await this.recruiterService.getOneRecruiter(firebaseUser.uid);
+  //         this.recruiterService.setRecruiterSig(recruiter);
+  //         this.currentUser.set(recruiter);
+  //         this.authStateSubject.next({ user: recruiter, initialized: true });
+  //       } else {
+  //         this.recruiterService.setRecruiterSig(null);
+  //         this.currentUser.set(null);
+  //         this.authStateSubject.next({ user: null, initialized: true });
+  //       }
+  //     } catch (error) {
+  //       console.error('Error initializing auth state:', error);
+  //       this.authStateSubject.next({ user: null, initialized: true });
+  //     }
+  //   });
+  // }
+
+  // // NUEVO: Método para esperar a que el estado de auth se inicialice
+  // async waitForAuthInitialization(): Promise<Recruiter | null> {
+  //   const authState = await firstValueFrom(
+  //     this.authState$.pipe(
+  //       filter(state => state.initialized),
+  //       take(1)
+  //     )
+  //   );
+  //   return authState.user;
+  // }
+
+  // // NUEVO: Método mejorado para verificar si está logueado
+  // async isUserLoggedIn(): Promise<boolean> {
+  //   const user = await this.waitForAuthInitialization();
+  //   return user !== null;
+  // }
 
 
   register(
@@ -190,7 +188,7 @@ export class RecruiterAuthService {
       const result = await signInWithPopup(this.firebaseAuth, provider);
 
       if (result.user) {
-        console.log(result.user);
+        // console.log(result.user);
         const email = result.user.email;
         const username = result.user.displayName;
         const userUid = result.user.uid;
@@ -201,12 +199,17 @@ export class RecruiterAuthService {
         if (existingRecruiter) {
           // Ya existe - solo autenticar
           console.log('Recruiter ya existe, solo autenticando...');
-          alert('Bienvenido de vuelta!');
+          this.router.navigate(['recruiter'])
+
+          // const welcomeback_message = this.translocoService.translate('candidate_resume.resume_sent_success');
+          // alert('Bienvenido de vuelta!');
         } else {
           // No existe - registrar nuevo usuario
           console.log('Nuevo recruiter, registrando...');
           this.addRegisterUsed(email, username, userUid);
-          alert('Registro completado!');
+          const accountCreatedOk = this.translocoService.translate('auth.account_created_ok');
+          alert(username + ' ' + accountCreatedOk);
+          this.router.navigate(['recruiter'])
         }
 
       }
@@ -218,22 +221,22 @@ export class RecruiterAuthService {
     }
   }
 
-  // LOGIN CON GOOGLE (Redirect) - Mejor para móviles
-  async loginWithGoogleRedirect(): Promise<void> {
-    this.loading.set(true);
+  // // LOGIN CON GOOGLE (Redirect) - Mejor para móviles
+  // async loginWithGoogleRedirect(): Promise<void> {
+  //   this.loading.set(true);
 
-    try {
-      const provider = new GoogleAuthProvider();
-      provider.addScope('profile');
-      provider.addScope('email');
+  //   try {
+  //     const provider = new GoogleAuthProvider();
+  //     provider.addScope('profile');
+  //     provider.addScope('email');
 
-      await signInWithRedirect(this.firebaseAuth, provider);
-    } catch (error: any) {
-      console.error('Error en login redirect:', error);
-      this.loading.set(false);
-      throw this.handleAuthError(error);
-    }
-  }
+  //     await signInWithRedirect(this.firebaseAuth, provider);
+  //   } catch (error: any) {
+  //     console.error('Error en login redirect:', error);
+  //     this.loading.set(false);
+  //     throw this.handleAuthError(error);
+  //   }
+  // }
 
 
 

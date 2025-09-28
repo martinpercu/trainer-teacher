@@ -1,49 +1,31 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { RecruiterAuthService } from '@services/recruiter-auth.service';
-// import { map, take, filter } from 'rxjs/operators';
-// import { of } from 'rxjs';
+import { AuthService } from '@services/auth.service';
+import { take, map } from 'rxjs/operators';
+import { from } from 'rxjs';
 
-export const authGuard: CanActivateFn = async (route, state) => {
-  const authService = inject(RecruiterAuthService);
+export const authGuard: CanActivateFn = (route, state) => {const authService = inject(AuthService);
   const router = inject(Router);
 
-  try {
-    // Espera a que el estado de autenticación se inicialice completamente
-    const isLoggedIn = await authService.isUserLoggedIn();
+  // 1. Usa el Observable de Firebase 'user$' que se define en AuthService.
+  // 2. Este Observable emite el estado de autenticación de Firebase después de la inicialización.
+  return authService.user$.pipe(
+    take(1), // Asegura que solo se compruebe el primer valor (al inicializar/cargar)
+    map(firebaseUser => {
+      if (firebaseUser) {
+        // Firebase dice que SÍ hay un usuario, permite el acceso.
+        // La lógica de cargar datos (Recruiter/Candidate) puede seguir en el constructor.
+        console.log("GUARD - Usuario de Firebase autenticado. Permitiendo acceso.");
+        return true;
+      } else {
+        // Firebase dice que NO hay usuario. Redirige.
+        console.log("GUARD - No hay usuario de Firebase. Redirigiendo a /login.");
+        return router.parseUrl('/login'); // Usa parseUrl para devolver un UrlTree
+      }
+    })
+  );
 
-    if (isLoggedIn) {
-      console.log('esta logueado');
 
-      return true;
-    } else {
-      console.log('IN AUTH Usuario no autenticado, redirigiendo al login');
-      router.navigate(['login']);
-      return false;
-    }
-  } catch (error) {
-    console.error('Error en auth guard:', error);
-    router.navigate(['login']);
-    return false;
-  }
+
 };
-
-// export const authGuard: CanActivateFn = (route, state) => {
-//   const authService = inject(RecruiterAuthService);
-//   const router = inject(Router);
-
-//   return authService.user$.pipe(
-//     filter(user => user !== undefined), // Espera hasta que Firebase Auth se resuelva
-//     take(1), // Solo toma el primer valor válido
-//     map(user => {
-//       if (user && authService.currentUser()) {
-//         return true;
-//       } else {
-//         router.navigate(['login']);
-//         return false;
-//       }
-//     })
-//   );
-
-// };
 

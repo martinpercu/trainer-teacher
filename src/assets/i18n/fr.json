@@ -13,7 +13,8 @@
     "and_our": "et notre ",
     "privacy": "Politique de Confidentialité.",
     "continue_google": "Continuer avec Google",
-    "logging_in": "Connexion en cours..."
+    "logging_in": "Connexion en cours...",
+    "account_created_ok": "votre compte a été créé avec succès."
   },
   "main": {
     "go_admin": "Aller vers Admin",

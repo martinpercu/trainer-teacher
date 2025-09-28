@@ -13,7 +13,8 @@
     "and_our": "y nuestra ",
     "privacy": "Política de Privacidad.",
     "continue_google": "Continuar con Google",
-    "logging_in": "Iniciando sesión..."
+    "logging_in": "Iniciando sesión...",
+    "account_created_ok": "tu cuenta fue creada exitosamente."
   },
   "main": {
     "go_admin": "Ir Area Administrador",

@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RecruiterAuthService } from '@services/recruiter-auth.service';
 
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-recruiter-social-buttons',
@@ -10,19 +11,15 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 })
 export class RecruiterSocialButtonsComponent {
   recruiterAuthService = inject(RecruiterAuthService);
+  router = inject(Router);
 
-
-  // private translocoService = inject(TranslocoService);
-
-    errorMessage: string | null = null;
-
-
+  errorMessage: string | null = null;
 
   async loginWithGoogle() {
     try {
       this.errorMessage = '';
       await this.recruiterAuthService.loginWithGoogle();
-      // here do something if OK
+      this.router.navigateByUrl('/recruiter')
     } catch (error: any) {
       this.errorMessage = error;
     }

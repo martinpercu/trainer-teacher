@@ -25,7 +25,8 @@ export class AuthService {
   candidateService = inject(CandidateService);
   recruiterService = inject(RecruiterService);
 
-  user$ = user(this.firebaseAuth);
+  // user$ = user(this.firebaseAuth);
+  public user$ = user(this.firebaseAuth);
   currentUserSig = signal<User | null | undefined>(undefined);
 
   user!: User;
@@ -36,9 +37,9 @@ export class AuthService {
       if (firebaseUser) {
         const user = await this.userService.getOneUser(firebaseUser.uid);
         this.userService.setUserSig(user);
-        // this.currentUserSig.set(user); // Opcional
+        this.currentUserSig.set(user); // Opcional
         console.log('in get one User');
-        console.log(user);
+        // console.log(user);
         if (!user) {
           console.log('no hay User ==> HABRÁ Recruiter???');
           const user = await this.recruiterService.getOneRecruiter(
@@ -47,7 +48,7 @@ export class AuthService {
           this.recruiterService.setRecruiterSig(user);
           // this.currentUserSig.set(user); // Opcional
           console.log('in get one Recruiter');
-          console.log(user);
+          // console.log(user);
           if (!user) {
             console.log('no hay user ==> HABRÁ candidate ???');
             const user = await this.candidateService.getOneCandidate(
@@ -56,7 +57,7 @@ export class AuthService {
             this.candidateService.setUserSig(user);
             // this.currentUserSig.set(user); // Opcional
             console.log('in get one Candidate');
-            console.log(user);
+            // console.log(user);
           }
         }
       } else {
@@ -65,6 +66,15 @@ export class AuthService {
         // this.currentUserSig.set(null); // Opcional
       }
     });
+  }
+
+  ifAuthenticatedSomeone() {
+    if(this.currentUserSig()){
+      return true
+    }
+    else {
+      return false
+    }
   }
 
   // constructor() {

@@ -125,10 +125,10 @@ export class RecruiterDashboardComponent {
         filter((user) => !!user),
         // 2. `switchMap` para obtener el UID del reclutador y luego los datos relacionados
         switchMap((user) => {
-          console.log(user);
+          // console.log(user);
 
           const recruiterUid = user!.uid; // Obtenemos el UID del reclutador aquí
-          console.log('Recruiter UID:', recruiterUid);
+          // console.log('Recruiter UID:', recruiterUid);
 
           // `forkJoin` para buscar candidatos y trabajos en paralelo
           return forkJoin({
@@ -136,7 +136,7 @@ export class RecruiterDashboardComponent {
               take(1),
               tap((candidates) => {
                 this.candidates = candidates; // Asignamos los candidatos a la propiedad del componente
-                console.log('Retrieved candidates (inside forkJoin):', this.candidates);
+                // console.log('Retrieved candidates (inside forkJoin):', this.candidates);
               }),
               map((candidates) => candidates.map((c) => c.candidateUID)), // Extraemos los UIDs para buscar resultados
               catchError((error) => {
@@ -148,10 +148,10 @@ export class RecruiterDashboardComponent {
               take(1),
               tap((jobs) => {
                 this.jobs = jobs; // Asignamos los trabajos a la propiedad del componente
-                console.log('Retrieved jobs (inside forkJoin):', this.jobs);
+                // console.log('Retrieved jobs (inside forkJoin):', this.jobs);
               }),
               catchError((error) => {
-                console.error('Error fetching jobs (inside forkJoin):', error);
+                // console.error('Error fetching jobs (inside forkJoin):', error);
                 return of([]); // Retornar un array vacío en caso de error
               })
             ),
@@ -160,7 +160,7 @@ export class RecruiterDashboardComponent {
               take(1),
               tap((resumes) => {
                 this.resumes = resumes; // Asignamos los resumes a la propiedad del componente
-                console.log('Retrieved resumes (inside forkJoin):', this.resumes);
+                // console.log('Retrieved resumes (inside forkJoin):', this.resumes);
               }),
               catchError((error) => {
                 console.error('Error fetching resumes (inside forkJoin):', error);
@@ -172,7 +172,7 @@ export class RecruiterDashboardComponent {
               take(1),
               tap((exams) => {
                 this.exams = exams; // Asignamos los exams a la propiedad del componente
-                console.log('Retrieved exams (inside forkJoin):', this.exams);
+                // console.log('Retrieved exams (inside forkJoin):', this.exams);
               }),
               catchError((error) => {
                 console.error('Error fetching resumes (inside forkJoin):', error);
@@ -182,7 +182,8 @@ export class RecruiterDashboardComponent {
             // Pasamos el `recruiterUid` directamente en el `forkJoin` para que esté disponible en el siguiente `switchMap`
             recruiterUid: of(recruiterUid)
           }).pipe(
-            tap(forkJoinResults => console.log('forkJoin emitted:', forkJoinResults))
+            // tap(forkJoinResults =>
+            //   console.log('forkJoin emitted:', forkJoinResults))
           );
         }),
         // 3. `switchMap` para procesar los resultados de `forkJoin` (candidatesUIDs, jobs y recruiterUid)
@@ -203,7 +204,7 @@ export class RecruiterDashboardComponent {
       .subscribe({
         next: ({ resumes, results: fetchedResults, jobs, recruiterUid }) => {
           this.jobs = jobs; // Asignamos los trabajos al componente
-          console.log('Jobs for recruiter:', this.jobs);
+          // console.log('Jobs for recruiter:', this.jobs);
 
           if(this.jobs.length == 0){
             this.setView('jobs_edit')
@@ -211,7 +212,7 @@ export class RecruiterDashboardComponent {
           }
 
           this.resumes = resumes;
-          console.log('Resumes for recruiter:', this.resumes);
+          // console.log('Resumes for recruiter:', this.resumes);
 
           // 1. **Filtro Crucial:** Obtener los `examId` de los trabajos creados por el reclutador actual
           const recruiterExamIds = new Set(
@@ -229,7 +230,7 @@ export class RecruiterDashboardComponent {
             recruiterExamIds.has(result.examId)
           );
 
-          console.log('Results (filtered by candidate UIDs AND recruiter\'s exam IDs):', this.results);
+          // console.log('Results (filtered by candidate UIDs AND recruiter\'s exam IDs):', this.results);
 
           // Llama a la función para ordenar los trabajos una vez que los datos estén cargados
           this.orderJobsByCandidateCount();
@@ -335,10 +336,10 @@ export class RecruiterDashboardComponent {
 
     this.jobsOrderedByCandidates = [...sortedActiveJobs, ...sortedInactiveJobs];
 
-    console.log(
-      'Jobs ordered (Active first, then Inactive, both by candidate count):',
-      this.jobsOrderedByCandidates
-    );
+    // console.log(
+    //   'Jobs ordered (Active first, then Inactive, both by candidate count):',
+    //   this.jobsOrderedByCandidates
+    // );
   }
 
   /**

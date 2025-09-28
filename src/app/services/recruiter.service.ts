@@ -49,7 +49,7 @@ export class RecruiterService {
    */
   setRecruiterSig(user: Recruiter | null) {
     this.recruiterSig.set(user);
-    console.log(this.recruiterSig());
+    // console.log(this.recruiterSig());
   }
 
   updateRecruiterSig(user: Recruiter | null) {
