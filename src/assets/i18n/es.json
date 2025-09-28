@@ -1,4 +1,5 @@
 {
+  "lang": "es",
   "hey": "Hola",
   "go_admin": "Ir Area Administrador",
   "main": {
@@ -10,5 +11,19 @@
     "teacher_start": "El profesor comenzará a explicar el contenido de la sección seleccionada.",
     "teacher_ask_1_question": "El profesor te hará una pregunta básica relacionada con el tema elegido.",
     "teacher_test_you": "El profesor te evaluará con preguntas más específicas y difíciles basadas en la sección seleccionada."
+  },
+  "top_right": {
+    "return" : "Volver",
+    "how_works": "Como funciona",
+    "see_docs": "Ver Docs",
+    "take_exam": "Hacer examen",
+    "language": "Español",
+    "change": "Cambiar",
+    "dark": "Oscuro",
+    "light": "Claro",
+    "logout": "Logout",
+    "to_login": "ir al Login",
+    "to_signup": "ir al SignUp",
+    "login_or_signup": "Login o SignUp"
   }
 }

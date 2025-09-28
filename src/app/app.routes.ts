@@ -15,8 +15,14 @@ import { ExamCrudComponent } from '@superadmin/exam-crud/exam-crud.component';
 
 import { ExamComponent } from '@evaluation/exam/exam.component';
 
+import { LangSwitcherComponent } from '@shared/lang-switcher/lang-switcher.component'
+
 
 export const routes: Routes = [
+  {
+    path:'lang',
+    component: LangSwitcherComponent
+  },
   {
     path:'crud',
     component: TeachersCRUDComponent
