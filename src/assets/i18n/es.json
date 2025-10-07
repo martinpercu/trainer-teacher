@@ -88,7 +88,10 @@
     "useExams": "Usar examen in puestos",
     "businessName": "Nombre del negocio",
     "magic_link": "Magic Link",
-    "magic_link_copied": "Magic Link Copiado"
+    "magic_link_copied": "Magic Link Copiado",
+    "own_resumes": "Mis CVs",
+    "own_resumes_title": "Mis CVs",
+    "add_resume": "Agregar CV"
   },
   "recruiter_auth": {
     "login": "Iniciar sesión",

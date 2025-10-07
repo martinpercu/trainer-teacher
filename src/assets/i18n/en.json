@@ -88,7 +88,10 @@
     "useExams": "Use exam in positions",
     "businessName": "Business Name",
     "magic_link": "Magic Link",
-    "magic_link_copied": "Magic Link Copied"
+    "magic_link_copied": "Magic Link Copied",
+    "own_resumes": "Resumes",
+    "own_resumes_title": "My Resumes",
+    "add_resume": "Add Resume"
   },
   "recruiter_auth": {
     "login" : "Log in",

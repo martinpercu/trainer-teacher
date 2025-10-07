@@ -144,7 +144,7 @@
     </button>
     }
 
-    @if(candidates.length >=20){
+    @if(candidates.length >=6){
     <button
       (click)="setView('candidates')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
@@ -163,6 +163,24 @@
       >
     </button>
     }
+
+    <button
+      (click)="setView('own_resumes')"
+      class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
+      [ngClass]="{
+        'bg-neutral-100 dark:bg-neutral-800 font-semibold shadow-sm shadow-neutral-300':
+          currentView === 'own_resumes'
+      }"
+    >
+      <mat-icon>clinical_notes</mat-icon>
+      <span
+        class="hidden sm:block"
+        [ngClass]="{
+          'pl-1': currentView === 'own_resumes'
+        }"
+        >{{ "recruiter.own_resumes" | transloco }}</span
+      >
+    </button>
 
 
 
@@ -303,6 +321,18 @@
         <p class="text-gray-500 dark:text-gray-400">No candidates found for this recruiter.</p>
       }
 
+    }
+
+    @if (currentView === 'own_resumes') {
+    <h1 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
+      {{ "recruiter.own_resumes_title" | transloco }}
+    </h1>
+      <div>
+        <app-own-resumes
+        [recruiterId]="recruiterService.recruiterSig()?.recruiterUID"
+        >
+        </app-own-resumes>
+      </div>
     }
 
     @if (currentView === 'config') {

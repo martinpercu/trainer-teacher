@@ -12,7 +12,8 @@ import {
   updateDoc,
   orderBy,
   query,
-  where
+  where,
+  CollectionReference
 } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -20,6 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom, timeout } from 'rxjs';
 import { environment } from '@env/environment';
 import { Resume } from '@models/resume'
+import { Ownresume } from '@models/ownResume';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +31,7 @@ export class ResumeService {
   private firestore = inject(Firestore);
   private http = inject(HttpClient);
   private resumesCollection = collection(this.firestore, 'resumes');
+  private ownResumesCollection = collection(this.firestore, 'ownresumes');
 
   private apiUrl = environment.BACK_CHAT_URL; // Define esto en tu environment.ts
 
@@ -367,7 +370,6 @@ export class ResumeService {
   // }
 
 
-
   /**
    * Obtiene todos los trabajos.
    * @returns Un Observable de un array de Resumes.
@@ -375,6 +377,174 @@ export class ResumeService {
   getResumesForRecruiter(recruiterId: string): Observable<Resume[]> {
     const q = query(this.resumesCollection, where('recruiterId', '==', recruiterId));
     return collectionData(q, { idField: 'recruiterId' }) as Observable<Resume[]>;
+  }
+
+
+
+  // UNDER is OWN RESUMES
+  // UNDER is OWN RESUMES
+  // UNDER is OWN RESUMES
+
+
+
+  async processOwnResumeWithPython(resumeUrl: string, recruiterId: string, fileType: string): Promise<any> {
+    const body = { resume_url: resumeUrl, user_id: recruiterId, file_type: fileType };
+    return firstValueFrom(this.http.post(`${this.apiUrl}/process_resume_content`, body));
+  }
+
+  async processOwnResumeWithPythonTest(resumeUrl: string, recruiterId: string, fileType: string): Promise<any> {
+    const body = { resume_url: resumeUrl, user_id: recruiterId, file_type: fileType };
+    const timeoutDuration = 30000;
+    console.log(body);
+
+    return firstValueFrom(
+      this.http.post(`${this.apiUrl}/process_resume_content`, body).pipe(
+        timeout(timeoutDuration)
+      )
+    );
+  }
+
+  /**
+   * Saves the structured resume data to Firestore.
+   * @param resumeData The structured JSON object from the Python backend.
+   * @param candidateUID The UID of the candidate.
+   * @returns A Promise that resolves when the data is saved.
+   */
+
+  async saveOwnResumeDataToFirestore(ownResumeData: any, recruiterId: string): Promise<string> {
+    // 1. Crear una referencia al nuevo documento **antes** de guardarlo
+    // Esto genera un ID único automáticamente.
+    const ownResumesRef = collection(this.firestore, 'ownresumes') as CollectionReference<Ownresume>; // Asegúrate de que ownResumesRef apunte a tu colección
+    const docRef = doc(ownResumesRef); // Referencia con el ID generado
+
+    // **OBTENEMOS EL ID DEL DOCUMENTO GENERADO**
+    const documentId = docRef.id;
+
+    // 2. Construir el objeto Ownresume **usando el ID generado**
+    const newOwnResume: Ownresume = {
+        // ... (Tu mapeo de datos original) ...
+
+        recruiterId: recruiterId,
+        // *** AGREGAMOS EL ID DEL DOCUMENTO AQUÍ ***
+        resumeId: documentId, // Agregamos el campo para guardar el ID dentro
+
+        name: ownResumeData['Name'] || null,
+        email: ownResumeData['Email'] || null,
+        phone: ownResumeData['Phone Number'] || null,
+        zipcode: ownResumeData['Postal Code'] || null,
+        city: ownResumeData['City'] || null,
+        // ... (El resto de tus campos mapeados) ...
+        summary: ownResumeData['Summary/Objective'] || null,
+        skills: ownResumeData['Skills'] || null,
+        languages: ownResumeData['Languages'] || null,
+        works: (ownResumeData['Work Experience'] || []).map((work: any) => ({
+            jobtitle: work['Job Title'] || null,
+            company: work['Company'] || null,
+            dates: work['Dates'] || null,
+            description: work['Description'] || null,
+        })),
+        certifications: (ownResumeData['Certification'] || []).map((cert: any) => ({
+            certificate: cert['Certificate'] || null,
+            issuingOrganization: cert['Issuing Organization'] || null,
+            year: cert['Year'] || null,
+        })),
+        education: (ownResumeData['Education'] || []).map((edu: any) => ({
+            degree: edu['Degree'] || null,
+            institution: edu['Institution'] || null,
+            graduationYear: edu['Graduation Year'] || null,
+        })),
+    };
+
+    console.log(newOwnResume);
+
+    // 3. Usar setDoc para guardar el objeto en la referencia que creamos
+    await setDoc(docRef, newOwnResume);
+    console.log(`Resume data saved successfully with document ID: ${documentId}`);
+
+    return documentId;
+  };
+
+
+  /**
+   * Obtiene todos los trabajos.
+   * @returns Un Observable de un array de Ownresume.
+   */
+  getOwnResumesForRecruiter(recruiterId: string): Observable<Ownresume[]> {
+    const q = query(this.ownResumesCollection, where('recruiterId', '==', recruiterId));
+    return collectionData(q, { idField: 'resumeId' }) as Observable<Ownresume[]>;
+  }
+
+
+  // async updatedThisOwnResumeById(
+  //     resume: Partial<Ownresume>,
+  //     resumeId: string // Ahora recibimos el ID del documento
+  // ): Promise<Ownresume | null> {
+
+  //     // 1. Crear la referencia DIRECTA al documento
+  //     // Debes obtener la referencia a la colección base si no la tienes como propiedad.
+  //     // Usaremos 'ownResumes' como nombre de colección de ejemplo
+  //     const ownResumesCollection = collection(this.firestore, 'ownResumes');
+
+  //     // Creamos la referencia al documento específico usando el ID
+  //     const resumeDocRef = doc(ownResumesCollection, resumeId);
+
+  //     try {
+  //         // 2. Actualizar el documento en Firestore
+  //         await updateDoc(resumeDocRef, resume);
+  //         console.log(`Resume with ID ${resumeId} updated successfully.`);
+
+  //         // 3. Obtener el documento actualizado para retornarlo
+  //         const updatedDoc = await getDoc(resumeDocRef);
+
+  //         if (updatedDoc.exists()) {
+  //             // Incluimos el ID del documento en los datos que retornamos
+  //             const updatedResume = updatedDoc.data() as Ownresume;
+
+  //             return updatedResume;
+  //         } else {
+  //             console.log('Documento actualizado no encontrado (debería existir).');
+  //             return null;
+  //         }
+  //     } catch (error) {
+  //         console.error(`Error updating resume with ID ${resumeId}:`, error);
+  //         throw error;
+  //     }
+  // }
+
+  async updatedThisOwnResumeById(
+    resume: Partial<Ownresume>,
+    documentId: string // Ahora recibimos el ID del documento
+  ): Promise<Ownresume | null> {
+
+    // 1. Crear la referencia DIRECTA al documento
+    // Debes obtener la referencia a la colección base si no la tienes como propiedad.
+    // Usaremos 'ownResumes' como nombre de colección de ejemplo
+    const ownResumesCollection = collection(this.firestore, 'ownresumes');
+
+    // Creamos la referencia al documento específico usando el ID
+    const resumeDocRef = doc(ownResumesCollection, documentId);
+
+    try {
+        // 2. Actualizar el documento en Firestore
+        await updateDoc(resumeDocRef, resume);
+        console.log(`Resume with ID ${documentId} updated successfully.`);
+
+        // 3. Obtener el documento actualizado para retornarlo
+        const updatedDoc = await getDoc(resumeDocRef);
+
+        if (updatedDoc.exists()) {
+            // Incluimos el ID del documento en los datos que retornamos
+            const updatedResume = updatedDoc.data() as Ownresume;
+
+            return updatedResume;
+        } else {
+            console.log('Documento actualizado no encontrado (debería existir).');
+            return null;
+        }
+    } catch (error) {
+        console.error(`Error updating resume with ID ${documentId}:`, error);
+        throw error;
+    }
   }
 
 
