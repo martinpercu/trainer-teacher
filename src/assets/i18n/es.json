@@ -28,7 +28,12 @@
     "this_recruiter_system": "Este es la plataforma de ATS con IA. Dedicada a personas de ",
     "im_recruiter": "Soy profesional en el area de RRHH",
     "im_candidate": "No estoy en el departamento de RRHH",
-    "human_resourses": "Recursos Humanos"
+    "human_resourses": "Recursos Humanos",
+    "welcome_to": "Welcome to ",
+    "copy_1": "Contratación simplificada",
+    "this_is_beta": "Este es el acceso a una cuenta gratuita para usar el servicio.",
+    "enter_account": "Entrar",
+    "continue": "Continuar"
   },
   "top_right": {
     "return" : "Volver",
@@ -81,7 +86,9 @@
     "allow_whatsapp": "Permitir mensajes de Whatsapp",
     "allow_whatsapp_info": "Cuando un candidato sube su currículum, puedes recibir una notificación por mensaje de Whatsapp.",
     "useExams": "Usar examen in puestos",
-    "businessName": "Nombre del negocio"
+    "businessName": "Nombre del negocio",
+    "magic_link": "Magic Link",
+    "magic_link_copied": "Magic Link Copiado"
   },
   "recruiter_auth": {
     "login": "Iniciar sesión",

@@ -9,7 +9,6 @@ export interface Recruiter {
   businessName?: string;
   cellphone?: string;
   whatsapp?: string;
-  allowSMS?: boolean;
   allowWhatsapp?: boolean;
   useExams?: boolean;
 }

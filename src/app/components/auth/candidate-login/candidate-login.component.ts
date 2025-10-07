@@ -6,7 +6,9 @@ import { CandidateAuthService } from '@services/candidate-auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { JobCrudService } from '@services/job-crud.service';
-import { TranslocoPipe } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+// import { CandidateSocialButtonsComponent } from '@auth/candidate-social-buttons/candidate-social-buttons.component'
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-candidate-login',
@@ -18,6 +20,7 @@ export class CandidateLoginComponent {
   http = inject(HttpClient);
   candidateAuthService = inject(CandidateAuthService);
   router = inject(Router);
+  private translocoService = inject(TranslocoService);
 
   private route = inject(ActivatedRoute);
   jobCrudService = inject(JobCrudService);
@@ -61,4 +64,27 @@ export class CandidateLoginComponent {
       },
     });
   }
+
+    getLang(){
+      return this.translocoService.getActiveLang()
+    }
+
+    toTerms() {
+      const languageNow = this.getLang();
+      console.log(languageNow);
+      const url = environment.BASEURL; // our baseURL
+      const urlReal = `${url}/termsandprivacy/terms-${languageNow}`
+      console.log(urlReal);
+      window.open(urlReal, '_blank');
+    }
+
+    toPrivacy() {
+      const languageNow = this.getLang();
+      console.log(languageNow);
+      const url = environment.BASEURL; // our baseURL
+      const urlReal = `${url}/termsandprivacy/privacy-${languageNow}`
+      console.log(urlReal);
+      window.open(urlReal, '_blank');
+    }
+
 }

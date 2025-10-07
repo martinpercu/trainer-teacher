@@ -14,6 +14,8 @@ import { TranslocoPipe } from '@jsverse/transloco';
 export class MainpageBridgetoworksComponent {
   router = inject(Router);
 
+  appName: string = environment.WEBSITE_NAME;
+
 
   goToRecruiter() {
     // window.open(url, "_blank");

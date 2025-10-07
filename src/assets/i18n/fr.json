@@ -28,7 +28,12 @@
     "this_recruiter_system": "C'est la plateforme ATS pilotée par IA, dédiée aux professionnels des ",
     "im_recruiter": "Je suis un professionnel des RH",
     "im_candidate": "Je NE travaille pas dans les RH",
-    "human_resourses": "Ressources Humaines"
+    "human_resourses": "Ressources Humaines",
+    "welcome_to": "Welcome to ",
+    "copy_1": "Recrutement facile",
+    "this_is_beta": "Voici l'accès à un compte gratuit pour utiliser le service.",
+    "enter_account": "Connexion au compte",
+    "continue": "Continuer"
   },
   "top_right": {
     "return" : "Retourner",
@@ -81,7 +86,9 @@
     "allow_whatsapp": "Autoriser les messages Whatsapp",
     "allow_whatsapp_info": "Lorsqu'un candidat télécharge son CV, vous pouvez recevoir une notification par message Whatsapp.",
     "useExams": "Utiliser des examen dans le postes",
-    "businessName": "Nom du Business"
+    "businessName": "Nom du Business",
+    "magic_link": "Lien magique",
+    "magic_link_copied": "Lien magique copié"
   },
   "recruiter_auth": {
     "login": "Se connecter",

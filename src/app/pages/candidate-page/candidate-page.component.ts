@@ -20,11 +20,13 @@ import { UploadComponent } from '@components/candidate/upload/upload.component';
 
 import { Job } from '@models/job';
 import { Candidate } from '@models/candidate';
+import { CandidateSocialButtonsComponent } from '@auth/candidate-social-buttons/candidate-social-buttons.component'
+
 
 
 @Component({
   selector: 'app-candidate-page',
-  imports: [TranslocoPipe, CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent, CandidateHeaderComponent, CandidateResumeEditComponent, CandidateResumeBasicConfirmationComponent],
+  imports: [TranslocoPipe, CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent, CandidateHeaderComponent, CandidateResumeEditComponent, CandidateResumeBasicConfirmationComponent, CandidateSocialButtonsComponent],
   templateUrl: './candidate-page.component.html'
 })
 export class CandidatePageComponent {

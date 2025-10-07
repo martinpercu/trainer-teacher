@@ -41,10 +41,9 @@
 
   <!-- FORMULARIO DE EDICIÓN DE INFORMACIÓN PERSONAL -->
   @if(editBasicInfo == true) {
-  <!-- <div class="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm"> -->
   <div class="grid gap-y-4 gap-x-6 mb-6 sm:grid-cols-2">
     <!-- First Name -->
-    <div class="">
+    <div>
       <label
         for="firstname"
         class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200"
@@ -70,12 +69,12 @@
     </div>
 
     <!-- Last Name -->
-    <div class="">
+    <div>
       <label
         for="lastname"
         class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200"
-        >{{ "candidate_profile.lastname" | transloco }}:</label
-      >
+        >{{ "candidate_profile.lastname" | transloco }}:
+      </label>
       <input
         type="text"
         id="lastname"
@@ -93,8 +92,8 @@
       </div>
     </div>
 
-    <!-- Last Name -->
-    <div class="">
+    <!-- Business Name -->
+    <div>
       <label
         for="businessName"
         class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200"
@@ -135,11 +134,11 @@
           </div> -->
 
     <!-- Phone Number -->
-    <div class="">
+    <div>
       <label
         for="phone"
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200"
-        >{{ "candidate_profile.phone_number" | transloco }}:</label
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">
+      {{ "candidate_profile.phone_number" | transloco }}:</label
       >
       <div class="relative">
         <div
@@ -179,37 +178,25 @@
     </div>
 
 
-  <!-- <div class="flex mt-4 mb-4 py-1 text-gray-900 dark:text-gray-200">
-    <div class="flex items-center me-4">
-      <label for="inline-checked-checkbox" class="ms-2 text-sm font-medium ">
-        {{ "recruiter.allow_sms" | transloco }}
-      </label>
-    </div>
-    <div class="flex items-center me-4">
-      <input
-        type="checkbox"
-        formControlName="allowSMS"
-        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-      />
-    </div>
-  </div> -->
 
 
-  <div class="flex mt-4 mb-4 py-1 text-gray-900 dark:text-gray-200">
-    <div class="flex items-center me-4">
-      <label for="inline-checked-checkbox" class="ms-2 text-sm font-medium ">
-        {{ "recruiter.useExams" | transloco }}
-      </label>
-    </div>
-    <div class="flex items-center me-4">
-      <input
-        type="checkbox"
-        formControlName="useExams"
-        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-      />
-      <!-- <label class="ms-2 text-sm font-medium text-gray-900">  </label> -->
-    </div>
-  </div>
+    <!-- USE EXAM -- USE EXAM -->
+    <!-- <div class="flex mt-4 mb-4 py-1 text-gray-900 dark:text-gray-200">
+      <div class="flex items-center me-4">
+        <label for="inline-checked-checkbox" class="ms-2 text-sm font-medium ">
+          {{ "recruiter.useExams" | transloco }}
+        </label>
+      </div>
+      <div class="flex items-center me-4">
+        <input
+          type="checkbox"
+          formControlName="useExams"
+          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+        />
+      </div>
+    </div> -->
+
+
 
     <!-- City -->
     <!-- <div class="">
@@ -249,24 +236,24 @@
     <!-- <div class="sm:col-span-1">
           <label for="zipCode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">ZIP code:</label>
           <div class="relative">
-             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+              <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                     <path d="M8 0a7.992 7.992 0 0 0-6.583 12.535 1 1 0 0 0 .12.183l.12.146c.112.145.227.285.326.4l5.245 6.374a1 1 0 0 0 1.545-.003l5.092-6.205c.206-.222.4-.455.578-.7l.127-.155a.934.934 0 0 0 .122-.192A8.001 8.001 0 0 0 8 0Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/>
                 </svg>
             </div>
             <input type="tel" id="zipCode" formControlName="zipCode"
-                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                   placeholder="12345" [class.border-green-500]="iszipCodeFieldValid" [class.is-invalid]="iszipCodeFieldInvalid">
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="12345" [class.border-green-500]="iszipCodeFieldValid" [class.is-invalid]="iszipCodeFieldInvalid">
           </div>
           <div class="text-xs text-red-600 dark:text-red-400">
             @if (zipCodeField?.hasError('minlength')){<span>At least 5 characters</span> }
             @if (zipCodeField?.hasError('maxlength')){<span>No more than 8 characters</span> }
           </div>
         </div> -->
+
   </div>
 
 
-  <!-- </div> -->
   }
 
 
@@ -277,7 +264,7 @@
       [class.opacity-50]="form.invalid"
       [class.cursor-not-allowed]="form.invalid"
       type="submit"
-      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+      class="w-full sm:w-auto py-2 px-8 mt-2 text-base bg-black dark:bg-white text-white dark:text-black rounded-lg"
     >
       {{ "candidate_profile.save" | transloco }}
     </button>

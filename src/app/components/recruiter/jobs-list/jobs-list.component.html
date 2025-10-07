@@ -19,18 +19,13 @@
 
     <div class="flex flex-col sm:flex-row sm:items-center gap-3">
 
-      <div class="flex flex-row items-center ">
-        <mat-icon class="text-neutral-600 dark:text-neutral-300"
+      <div class="flex flex-row items-center min-w-0 flex-1">
+        <mat-icon class="text-neutral-600 dark:text-neutral-300 flex-shrink-0"
           >assignment_ind</mat-icon
         >
-        <h2 class="text-xl truncate pl-2 font-semibold text-neutral-900 dark:text-neutral-100">
+        <h2 class="text-xl truncate pl-2 font-semibold text-neutral-900 dark:text-neutral-100 min-w-0">
           {{ job.name }}
         </h2>
-      </div>
-      <div class="hidden sm:block sm:grow">
-        <!-- @if(this.examForJob){
-          <div>{{this.examForJob.title}}</div>
-        } -->
       </div>
 
       <!-- <p>El string que quiero copiar es: <strong>{{ miVariableConString }}</strong></p> -->
@@ -41,7 +36,7 @@
         (click)="copyMagicString()"
       >
         <mat-icon class="sm:!hidden">wand_stars</mat-icon>
-        <div class="pl-2 sm:pl-0 sm:pr-2">Magic link</div>
+        <div class="pl-2 sm:pl-0 sm:pr-2">{{ "recruiter.magic_link" | transloco }}</div>
         <mat-icon class="!hidden sm:!block">wand_stars</mat-icon>
       </div>
       } @if(copiedSucces){
@@ -49,7 +44,7 @@
         class="flex flex-row rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 font-bold"
       >
         <mat-icon>wand_stars</mat-icon>
-        <div class="px-2">Magic link copiado</div>
+        <div class="px-2">{{ "recruiter.magic_link_copied" | transloco }}</div>
         <mat-icon>wand_stars</mat-icon>
       </div>
       }

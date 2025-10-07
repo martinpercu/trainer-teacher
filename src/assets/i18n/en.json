@@ -28,7 +28,12 @@
     "this_recruiter_system": "This is the AI-powered ATS platform, designed for ",
     "im_recruiter": "I'm an HR professional",
     "im_candidate": "I DON'T work in HR",
-    "human_resourses": "Human Resources Professionals"
+    "human_resourses": "Human Resources Professionals",
+    "welcome_to": "Welcome to ",
+    "copy_1": "Hiring Made Simple",
+    "this_is_beta": "Here is the access to a free account to use the service.",
+    "enter_account": "Log In to Account",
+    "continue": "Continue"
   },
   "top_right": {
     "return" : "Return Main",
@@ -81,7 +86,9 @@
     "allow_whatsapp": "Allow Whatsapp messages",
     "allow_whatsapp_info": "When a candidate uploads their resume, you can receive a Whatsapp messages notification",
     "useExams": "Use exam in positions",
-    "businessName": "Business Name"
+    "businessName": "Business Name",
+    "magic_link": "Magic Link",
+    "magic_link_copied": "Magic Link Copied"
   },
   "recruiter_auth": {
     "login" : "Log in",

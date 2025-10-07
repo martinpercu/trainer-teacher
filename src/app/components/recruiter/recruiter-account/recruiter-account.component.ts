@@ -77,7 +77,6 @@ export class RecruiterAccountComponent {
       cellphone: [this.recruiter.cellphone, [Validators.minLength(9), Validators.maxLength(15), Validators.pattern("^[0-9]*$")]],
       birthdate: [this.recruiter.whatsapp, [Validators.minLength(7)]],
       businessName: [this.recruiter.businessName, [Validators.minLength(2), Validators.maxLength(40)]],
-      allowSMS: [this.recruiter.allowSMS],
       allowWhatsapp: [this.recruiter.allowWhatsapp],
       useExams: [this.recruiter.useExams],
       // state: [this.recruiter.state],
