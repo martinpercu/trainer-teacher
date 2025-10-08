@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Auth, authState } from '@angular/fire/auth';
 import { Observable, of } from 'rxjs';
-import { switchMap, catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, AsyncPipe } from '@angular/common';
 
-import { SchoolCrudService } from '@services/school-crud.service';
+import { JobCrudService } from '@services/job-crud.service';
 import { Job } from '@models/job';
-import { School } from '@models/school';
-import { Course } from '@models/course';
+// import { Job } from '@models/job';
+// import { Course } from '@models/course';
+// import { RecruiterService } from '@services/recruiter.service'
 
 @Component({
   selector: 'app-jobs-crud',
@@ -17,82 +17,80 @@ import { Course } from '@models/course';
   templateUrl: './jobs-crud.component.html',
 })
 export class JobsCrudComponent {
-  schools$!: Observable<School[]>;
-  courses$!: Observable<Course[]>;
-  newSchool: Partial<School> = {
+  jobs$!: Observable<Job[]>;
+  newJob: Partial<Job> = {
     name: '',
-    courseIds: [],
+    description: '',
+    ownerId: '', // <-- Inicializa ownerId
   };
   errorMessage: string = '';
-  editingSchoolId: string | undefined = undefined;
-  selectedSchoolId: string = '';
+  editingJobId: string | undefined = undefined;
+  selectedJobId: string = '';
   isAuthenticated: boolean = false;
+  private recruiterId!: string;
 
   constructor(
-    private schoolCrudService: SchoolCrudService,
-    private firestore: Firestore,
+    private jobCrudService: JobCrudService, // <-- Inyecta el servicio
     private auth: Auth
-  ) {}
+  ) // private recruiterService: RecruiterService, // <-- Inyecta el servicio
+  {}
 
-  ngOnInit() {
-    // Verificar autenticación
+  async ngOnInit() {
     authState(this.auth).subscribe((user) => {
       this.isAuthenticated = !!user;
+      console.log(user);
+      if (user && user.uid) {
+        this.recruiterId = user.uid;
+        console.log(this.recruiterId);
+
+      }
+
       if (!this.isAuthenticated) {
-        this.errorMessage = 'Debes iniciar sesión para acceder a las escuelas';
-        this.schools$ = of([]);
-        this.courses$ = of([]);
+        this.errorMessage = 'Debes iniciar sesión para acceder a los trabajos';
+        this.jobs$ = of([]);
         return;
       }
 
-      // Cargar escuelas
-      this.schools$ = this.schoolCrudService.getSchools().pipe(
+      this.jobs$ = this.jobCrudService.getJobs(this.recruiterId).pipe(
+        // <-- Usa el servicio para obtener trabajos
         catchError((error) => {
-          console.error('Error al cargar escuelas:', error);
+          console.error('Error al cargar trabajos:', error);
           this.errorMessage =
-            'Error al cargar escuelas: permisos insuficientes';
-          return of([]);
-        })
-      );
-
-      // Cargar cursos
-      this.courses$ = collectionData(collection(this.firestore, 'courses'), {
-        idField: 'id',
-      }).pipe(
-        map((courses) => courses as Course[]),
-        catchError((error) => {
-          console.error('Error al cargar cursos:', error);
-          this.errorMessage = 'Error al cargar cursos: permisos insuficientes';
+            'Error al cargar trabajos: permisos insuficientes';
           return of([]);
         })
       );
     });
   }
 
-  loadSchool(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const schoolId = selectElement.value;
-    this.selectedSchoolId = schoolId;
+  // --- Funciones CRUD ---
 
-    if (schoolId) {
-      this.schoolCrudService.getSchoolById(schoolId).subscribe({
-        next: (school) => {
-          if (school) {
-            this.newSchool = {
-              name: school.name,
-              courseIds: school.courseIds,
+  loadJob(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const jobId = selectElement.value;
+    this.selectedJobId = jobId;
+
+    if (jobId) {
+      this.jobCrudService.getJobById(jobId).subscribe({
+        // <-- Usa el servicio para cargar un trabajo
+        next: (job) => {
+          if (job) {
+            this.newJob = {
+              name: job.name,
+              description: job.description,
+              ownerId: this.recruiterId
             };
-            this.editingSchoolId = schoolId;
+            this.editingJobId = jobId;
             this.errorMessage = '';
           } else {
-            this.errorMessage = 'Escuela no encontrada';
+            this.errorMessage = 'Trabajo no encontrado';
             this.resetForm();
           }
         },
         error: (error) => {
-          console.error('Error al cargar la escuela:', error);
+          console.error('Error al cargar el trabajo:', error);
           this.errorMessage =
-            'Error al cargar la escuela: permisos insuficientes';
+            'Error al cargar el trabajo: permisos insuficientes';
           this.resetForm();
         },
       });
@@ -101,113 +99,199 @@ export class JobsCrudComponent {
     }
   }
 
-  saveSchool() {
+
+
+  saveJob() {
     if (!this.isAuthenticated) {
       this.errorMessage = 'Debes iniciar sesión para realizar esta acción';
       return;
     }
 
-    if (!this.newSchool.name?.trim()) {
+    if (!this.newJob.name?.trim()) {
       this.errorMessage = 'El nombre es requerido';
       return;
     }
-    if (!Array.isArray(this.newSchool.courseIds)) {
-      this.errorMessage = 'Los cursos seleccionados son inválidos';
+    if (!this.newJob.description?.trim()) {
+      this.errorMessage = 'La descripción es requerida';
       return;
     }
 
-    // Verificar nombre duplicado
-    this.schoolCrudService
-      .checkSchoolNameExists(this.newSchool.name, this.editingSchoolId)
-      .subscribe({
-        next: (exists) => {
-          if (exists) {
-            this.errorMessage = 'Ya existe una escuela con este nombre';
+    this.jobCrudService.checkJobNameExists(this.newJob.name, this.editingJobId).subscribe({
+      next: (exists) => {
+        if (exists) {
+          this.errorMessage = 'Ya existe un trabajo con este nombre';
+          return;
+        }
+
+        const jobData: Partial<Job> = {
+          name: this.newJob.name!.trim(),
+          description: this.newJob.description!.trim()
+        };
+
+        if (this.editingJobId) {
+          // Si estamos editando, verifica que el usuario actual sea el propietario
+          if (this.newJob.ownerId !== this.recruiterId) {
+            this.errorMessage = 'No tienes permisos para editar este trabajo.';
             return;
           }
-
-          const schoolData: Partial<School> = {
-            name: this.newSchool.name!.trim(),
-            courseIds: this.newSchool.courseIds,
-          };
-
-          if (this.editingSchoolId) {
-            this.schoolCrudService
-              .updateSchool(this.editingSchoolId, schoolData)
-              .subscribe({
-                next: (success) => {
-                  if (success) {
-                    this.resetForm();
-                  } else {
-                    this.errorMessage = 'Error al actualizar la escuela';
-                  }
-                },
-                error: (error) => {
-                  console.error('Error al actualizar la escuela:', error);
-                  this.errorMessage =
-                    'Error al actualizar la escuela: permisos insuficientes';
-                },
-              });
-          } else {
-            this.schoolCrudService.createSchool(schoolData).subscribe({
-              next: (id) => {
-                if (id) {
-                  this.resetForm();
-                } else {
-                  this.errorMessage = 'Error al crear la escuela';
-                }
-              },
-              error: (error) => {
-                console.error('Error al crear la escuela:', error);
-                this.errorMessage =
-                  'Error al crear la escuela: permisos insuficientes';
-              },
-            });
-          }
-        },
-        error: (error) => {
-          console.error('Error al verificar el nombre:', error);
-          this.errorMessage = 'Error al verificar el nombre de la escuela';
-        },
-      });
+          this.jobCrudService.updateJob(this.editingJobId, jobData).subscribe({
+            next: (success) => {
+              if (success) {
+                this.resetForm();
+              } else {
+                this.errorMessage = 'Error al actualizar el trabajo';
+              }
+            },
+            error: (error) => {
+              console.error('Error al actualizar el trabajo:', error);
+              this.errorMessage = 'Error al actualizar el trabajo: permisos insuficientes';
+            }
+          });
+        } else {
+          // Al crear, asigna el ownerId del usuario actual
+          jobData.ownerId = this.recruiterId;
+          this.jobCrudService.createJob(jobData).subscribe({
+            next: (id) => {
+              if (id) {
+                this.resetForm();
+              } else {
+                this.errorMessage = 'Error al crear el trabajo';
+              }
+            },
+            error: (error) => {
+              console.error('Error al crear el trabajo:', error);
+              this.errorMessage = 'Error al crear el trabajo: permisos insuficientes';
+            }
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error al verificar el nombre:', error);
+        this.errorMessage = 'Error al verificar el nombre del trabajo';
+      }
+    });
   }
+  // saveJob() {
+  //   if (!this.isAuthenticated) {
+  //     this.errorMessage = 'Debes iniciar sesión para realizar esta acción';
+  //     return;
+  //   }
 
-  deleteSchool() {
+  //   if (!this.newJob.name?.trim()) {
+  //     this.errorMessage = 'El nombre es requerido';
+  //     return;
+  //   }
+  //   if (!this.newJob.description?.trim()) {
+  //     this.errorMessage = 'La descripción es requerida';
+  //     return;
+  //   }
+
+  //   this.jobCrudService
+  //     .checkJobNameExists(this.newJob.name, this.editingJobId)
+  //     .subscribe({
+  //       // <-- Usa el servicio para verificar nombre
+  //       next: (exists) => {
+  //         if (exists) {
+  //           this.errorMessage = 'Ya existe un trabajo con este nombre';
+  //           return;
+  //         }
+
+  //         const jobData: Partial<Job> = {
+  //           name: this.newJob.name!.trim(),
+  //           description: this.newJob.description!.trim(),
+  //         };
+
+  //         if (this.editingJobId) {
+  //           this.jobCrudService
+  //             .updateJob(this.editingJobId, jobData)
+  //             .subscribe({
+  //               // <-- Usa el servicio para actualizar
+  //               next: (success) => {
+  //                 if (success) {
+  //                   this.resetForm();
+  //                 } else {
+  //                   this.errorMessage = 'Error al actualizar el trabajo';
+  //                 }
+  //               },
+  //               error: (error) => {
+  //                 console.error('Error al actualizar el trabajo:', error);
+  //                 this.errorMessage =
+  //                   'Error al actualizar el trabajo: permisos insuficientes';
+  //               },
+  //             });
+  //         } else {
+  //           this.jobCrudService.createJob(jobData).subscribe({
+  //             // <-- Usa el servicio para crear
+  //             next: (id) => {
+  //               if (id) {
+  //                 this.resetForm();
+  //               } else {
+  //                 this.errorMessage = 'Error al crear el trabajo';
+  //               }
+  //             },
+  //             error: (error) => {
+  //               console.error('Error al crear el trabajo:', error);
+  //               this.errorMessage =
+  //                 'Error al crear el trabajo: permisos insuficientes';
+  //             },
+  //           });
+  //         }
+  //       },
+  //       error: (error) => {
+  //         console.error('Error al verificar el nombre:', error);
+  //         this.errorMessage = 'Error al verificar el nombre del trabajo';
+  //       },
+  //     });
+  // }
+
+
+  deleteJob() {
     if (!this.isAuthenticated) {
       this.errorMessage = 'Debes iniciar sesión para realizar esta acción';
       return;
     }
 
-    if (this.editingSchoolId) {
-      const confirmDelete = confirm(
-        '¿Estás seguro de que quieres eliminar esta escuela?'
-      );
+    if (this.editingJobId) {
+      // Verifica que el usuario actual sea el propietario antes de intentar eliminar
+      if (this.newJob.ownerId !== this.recruiterId) {
+        this.errorMessage = 'No tienes permisos para eliminar este trabajo.';
+        return;
+      }
+
+      const confirmDelete = confirm('¿Estás seguro de que quieres eliminar este trabajo?');
       if (confirmDelete) {
-        this.schoolCrudService.deleteSchool(this.editingSchoolId).subscribe({
+        this.jobCrudService.deleteJob(this.editingJobId).subscribe({
           next: (success) => {
             if (success) {
               this.resetForm();
             } else {
-              this.errorMessage = 'Error al eliminar la escuela';
+              this.errorMessage = 'Error al eliminar el trabajo';
             }
           },
           error: (error) => {
-            console.error('Error al eliminar la escuela:', error);
-            this.errorMessage =
-              'Error al eliminar la escuela: permisos insuficientes';
-          },
+            console.error('Error al eliminar el trabajo:', error);
+            this.errorMessage = 'Error al eliminar el trabajo: permisos insuficientes';
+          }
         });
       }
     }
   }
 
+  // --- Funciones Auxiliares ---
+
   resetForm() {
-    this.newSchool = {
+    this.newJob = {
       name: '',
-      courseIds: [],
+      description: '',
+      ownerId: '' // Limpia el ownerId al resetear
     };
-    this.editingSchoolId = undefined;
-    this.selectedSchoolId = '';
+    this.editingJobId = undefined;
+    this.selectedJobId = '';
     this.errorMessage = '';
+  }
+
+  // Helper para deshabilitar botones si el usuario no es el propietario
+  isOwner(): boolean {
+    return this.isAuthenticated && this.recruiterId === this.newJob.ownerId;
   }
 }

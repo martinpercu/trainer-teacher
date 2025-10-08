@@ -1,0 +1,196 @@
+import { Injectable } from '@angular/core';
+import {
+  Firestore,
+  collection,
+  collectionData,
+  doc,
+  docData,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  getDocs,
+} from '@angular/fire/firestore';
+import { Observable, from, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Job } from '@models/job';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class JobCrudService {
+  private jobsCollection;
+
+  constructor(private firestore: Firestore) {
+    this.jobsCollection = collection(this.firestore, 'jobs');
+  }
+
+  // /**
+  //  * Obtiene todos los trabajos.
+  //  * @returns Un Observable de un array de Jobs.
+  //  */
+  // getJobs(): Observable<Job[]> {
+  //   return collectionData(this.jobsCollection, {
+  //     idField: 'jobId',
+  //   }) as Observable<Job[]>;
+  // }
+
+
+  /**
+   * Obtiene todos los trabajos.
+   * @returns Un Observable de un array de Jobs.
+   */
+  getJobs(ownerId: string): Observable<Job[]> {
+    const q = query(this.jobsCollection, where('ownerId', '==', ownerId));
+    return collectionData(q, { idField: 'jobId' }) as Observable<Job[]>;
+  }
+
+  /**
+   * Obtiene un trabajo por su ID.
+   * @param jobId El ID del trabajo.
+   * @returns Un Observable del Job o undefined si no se encuentra.
+   */
+  getJobById(jobId: string): Observable<Job | undefined> {
+    const jobDocRef = doc(this.firestore, `jobs/${jobId}`);
+    return docData(jobDocRef, { idField: 'jobId' }) as Observable<Job | undefined>;
+  }
+
+  /**
+   * Crea un nuevo trabajo.
+   * @param job El objeto Job a crear (sin jobId, pero con ownerId).
+   * @returns Un Observable del ID del nuevo trabajo o null en caso de error.
+   */
+  createJob(job: Partial<Job>): Observable<string | null> {
+    // Es crucial que el ownerId ya venga en el Partial<Job> desde el componente
+    return from(addDoc(this.jobsCollection, job)).pipe(
+      map((docRef) => docRef.id)
+    );
+  }
+
+  /**
+   * Actualiza un trabajo existente.
+   * @param jobId El ID del trabajo a actualizar.
+   * @param jobData Los datos a actualizar del trabajo.
+   * @returns Un Observable booleano indicando si la actualización fue exitosa.
+   */
+  updateJob(jobId: string, jobData: Partial<Job>): Observable<boolean> {
+    const jobDocRef = doc(this.firestore, `jobs/${jobId}`);
+    return from(updateDoc(jobDocRef, jobData)).pipe(map(() => true));
+  }
+
+  /**
+   * Elimina un trabajo.
+   * @param jobId El ID del trabajo a eliminar.
+   * @returns Un Observable booleano indicando si la eliminación fue exitosa.
+   */
+  deleteJob(jobId: string): Observable<boolean> {
+    const jobDocRef = doc(this.firestore, `jobs/${jobId}`);
+    return from(deleteDoc(jobDocRef)).pipe(map(() => true));
+  }
+
+  /**
+   * Verifica si ya existe un trabajo con un nombre dado.
+   * @param name El nombre a verificar.
+   * @param excludeId (Opcional) Un ID de trabajo a excluir de la verificación (útil para actualizaciones).
+   * @returns Un Observable booleano indicando si el nombre ya existe.
+   */
+  checkJobNameExists(
+    name: string | undefined,
+    excludeId: string | undefined
+  ): Observable<boolean> {
+    if (!name) {
+      return of(false); // Usamos 'of' directamente desde rxjs
+    }
+
+    const normalizedName = name.trim().toLowerCase();
+    const q = query(this.jobsCollection, where('name', '==', normalizedName));
+
+    return from(getDocs(q)).pipe(
+      map((snapshot) => {
+        return snapshot.docs.some((doc) => doc.id !== excludeId);
+      })
+    );
+  }
+}
+
+//   /**
+//    * Obtiene todos los trabajos.
+//    * @returns Un Observable de un array de Jobs.
+//    */
+//   getJobs(): Observable<Job[]> {
+//     return collectionData(this.jobsCollection, { idField: 'jobId' }) as Observable<Job[]>;
+//   }
+
+//   /**
+//    * Obtiene un trabajo por su ID.
+//    * @param jobId El ID del trabajo.
+//    * @returns Un Observable del Job o undefined si no se encuentra.
+//    */
+//   getJobById(jobId: string): Observable<Job | undefined> {
+//     const jobDocRef = doc(this.firestore, `jobs/${jobId}`);
+//     return collectionData(this.jobsCollection, { idField: 'jobId' }).pipe(
+//       map(jobs => (jobs as Job[]).find(job => job.jobId === jobId))
+//     );
+//   }
+
+//   /**
+//    * Crea un nuevo trabajo.
+//    * @param job El objeto Job a crear (sin jobId).
+//    * @returns Un Observable del ID del nuevo trabajo o null en caso de error.
+//    */
+//   createJob(job: Partial<Job>): Observable<string | null> {
+//     return from(addDoc(this.jobsCollection, job)).pipe(
+//       map(docRef => docRef.id),
+//       map(id => id) // Retorna el ID generado por Firebase
+//     );
+//   }
+
+//   /**
+//    * Actualiza un trabajo existente.
+//    * @param jobId El ID del trabajo a actualizar.
+//    * @param jobData Los datos a actualizar del trabajo.
+//    * @returns Un Observable booleano indicando si la actualización fue exitosa.
+//    */
+//   updateJob(jobId: string, jobData: Partial<Job>): Observable<boolean> {
+//     const jobDocRef = doc(this.firestore, `jobs/${jobId}`);
+//     return from(updateDoc(jobDocRef, jobData)).pipe(
+//       map(() => true), // Si la promesa se resuelve, es exitoso
+//       map(() => true)
+//     );
+//   }
+
+//   /**
+//    * Elimina un trabajo.
+//    * @param jobId El ID del trabajo a eliminar.
+//    * @returns Un Observable booleano indicando si la eliminación fue exitosa.
+//    */
+//   deleteJob(jobId: string): Observable<boolean> {
+//     const jobDocRef = doc(this.firestore, `jobs/${jobId}`);
+//     return from(deleteDoc(jobDocRef)).pipe(
+//       map(() => true), // Si la promesa se resuelve, es exitoso
+//       map(() => true)
+//     );
+//   }
+
+//   /**
+//    * Verifica si ya existe un trabajo con un nombre dado.
+//    * @param name El nombre a verificar.
+//    * @param excludeId (Opcional) Un ID de trabajo a excluir de la verificación (útil para actualizaciones).
+//    * @returns Un Observable booleano indicando si el nombre ya existe.
+//    */
+//   checkJobNameExists(name: string | undefined, excludeId: string | undefined): Observable<boolean> {
+//     if (!name) {
+//       return from(Promise.resolve(false));
+//     }
+
+//     const normalizedName = name.trim().toLowerCase();
+//     const q = query(this.jobsCollection, where('name', '==', normalizedName));
+
+//     return from(getDocs(q)).pipe(
+//       map(snapshot => {
+//         return snapshot.docs.some(doc => doc.id !== excludeId);
+//       })
+//     );
+//   }
+// }
