@@ -18,8 +18,17 @@ import { ExamComponent } from '@evaluation/exam/exam.component';
 import { LangSwitcherComponent } from '@shared/lang-switcher/lang-switcher.component';
 
 import { CandidatePageComponent } from '@pages/candidate-page/candidate-page.component';
+import { RecruiterPageComponent } from '@pages/recruiter-page/recruiter-page.component';
 
 export const routes: Routes = [
+  {
+    path:'recruiter',
+    component: RecruiterPageComponent
+  },
+  {
+    path:'candidate',
+    component: CandidatePageComponent
+  },
   {
     path:'candidate/:jobId',
     component: CandidatePageComponent

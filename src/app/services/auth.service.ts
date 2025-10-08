@@ -13,6 +13,7 @@ import { Observable, from } from 'rxjs';
 import { User } from '@models/user';
 import { UserService } from '@services/user.service';
 import { CandidateService } from '@services/candidate.service';
+import { RecruiterService } from '@services/recruiter.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,7 @@ export class AuthService {
   firebaseAuth = inject(Auth);
   userService = inject(UserService);
   candidateService = inject(CandidateService);
+  recruiterService = inject(RecruiterService);
 
   user$ = user(this.firebaseAuth);
   currentUserSig = signal<User | null | undefined>(undefined);
@@ -33,13 +35,27 @@ export class AuthService {
         const user = await this.userService.getOneUser(firebaseUser.uid);
         this.userService.setUserSig(user);
         // this.currentUserSig.set(user); // Opcional
+        console.log('in get one User');
         console.log(user);
         if (!user) {
           console.log('no hay user');
-          const user = await this.candidateService.getOneCandidate(firebaseUser.uid);
+          const user = await this.candidateService.getOneCandidate(
+            firebaseUser.uid
+          );
           this.candidateService.setUserSig(user);
           // this.currentUserSig.set(user); // Opcional
+          console.log('in get one Candidate');
           console.log(user);
+          if (!user) {
+            console.log('no hay user');
+            const user = await this.recruiterService.getOneRecruiter(
+              firebaseUser.uid
+            );
+            this.recruiterService.setUserSig(user);
+            // this.currentUserSig.set(user); // Opcional
+            console.log('in get one Recruiter');
+            console.log(user);
+          }
         }
       } else {
         console.log('There is none authenticated');
