@@ -1,6 +1,123 @@
-<p>jobs-crud works!</p>
 
-<div class="jobs-crud mx-auto mt-8 max-w-3xl bg-neutral-300 p-8">
+<div class="mx-auto max-w-3xl">
+  <!-- <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Selecciona un Puesto</h2> -->
+  <label class="block text-gray-700 dark:text-gray-300 mb-2">Selecciona un Puesto</label>
+  <select
+    [ngModel]="selectedJobId"
+    (change)="loadJob($event)"
+    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-400 dark:focus:border-green-400"
+  >
+    <option value="">Selecciona un trabajo</option>
+    @for (job of jobs$ | async; track job.jobId) {
+      <option [value]="job.jobId">{{ job.name }}</option>
+    }
+  </select>
+</div>
+
+<div class="jobs-crud mx-auto mt-4 max-w-3xl bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl border dark:border-0">
+  <!-- <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Cargar Trabajo</h2>
+  <select
+    [ngModel]="selectedJobId"
+    (change)="loadJob($event)"
+    class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-400 dark:focus:border-green-400"
+  >
+    <option value="">Selecciona un trabajo</option>
+    @for (job of jobs$ | async; track job.jobId) {
+      <option [value]="job.jobId">{{ job.name }}</option>
+    }
+  </select> -->
+
+  <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">{{ editingJobId ? 'Editar Trabajo' : 'Crear Nuevo Trabajo' }}</h3>
+  <form (ngSubmit)="saveJob()" class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre del Trabajo:</label>
+      <input
+        class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-400 dark:focus:border-green-400"
+        type="text"
+        [(ngModel)]="newJob.name"
+        name="jobName"
+        required
+      />
+      @if (errorMessage) {
+        <p class="text-red-500 dark:text-red-400 text-sm mt-1">{{ errorMessage }}</p>
+      }
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descripción:</label>
+      <textarea
+        class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-400 dark:focus:border-green-400"
+        [(ngModel)]="newJob.description"
+        name="jobDescription"
+        rows="4"
+        required
+      ></textarea>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Estado del Trabajo:</label>
+      <div class="flex items-center">
+        <input
+          type="checkbox"
+          [(ngModel)]="newJob.active"
+          name="jobActive"
+          class="h-4 w-4 text-green-600 dark:text-green-400 border-gray-300 dark:border-gray-600 rounded focus:ring-green-500 dark:focus:ring-green-400"
+        />
+        <span class="ml-2 text-gray-700 dark:text-gray-300">{{ newJob.active ? 'Activo' : 'Inactivo' }}</span>
+      </div>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Examen Asociado:</label>
+      <select
+        [(ngModel)]="newJob.examId"
+        name="examId"
+        class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-400 dark:focus:border-green-400"
+      >
+        <option value="">Sin examen</option>
+        @for (exam of exams$ | async; track exam.id) {
+          <option [value]="exam.id">{{ exam.title }}</option>
+        }
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Examen Activo:</label>
+      <div class="flex items-center">
+        <input
+          type="checkbox"
+          [(ngModel)]="newJob.examActive"
+          name="examActive"
+          class="h-4 w-4 text-green-600 dark:text-green-400 border-gray-300 dark:border-gray-600 rounded focus:ring-green-500 dark:focus:ring-green-400"
+          [disabled]="!newJob.examId"
+        />
+        <span class="ml-2 text-gray-700 dark:text-gray-300">{{ newJob.examActive ? 'Activo' : 'Inactivo' }}</span>
+      </div>
+    </div>
+
+    <div class="flex space-x-2">
+      <button type="submit" class="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white px-4 py-2 rounded-md">
+        {{ editingJobId ? 'Actualizar Trabajo' : 'Crear Trabajo' }}
+      </button>
+      @if (editingJobId) {
+        <button
+          type="button"
+          (click)="resetForm()"
+          class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-2 rounded-md"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          (click)="deleteJob()"
+          class="bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white px-4 py-2 rounded-md"
+        >
+          Eliminar Trabajo
+        </button>
+      }
+    </div>
+  </form>
+</div>
+
+
+
+<!-- <div class="jobs-crud mx-auto mt-8 max-w-3xl bg-gray-300 p-8">
   <h2 class="text-2xl font-bold mb-4">Cargar Trabajo</h2>
   <select
     [ngModel]="selectedJobId"
@@ -56,74 +173,6 @@
           (click)="deleteJob()"
           class="bg-red-500 text-white px-4 py-2 rounded-md">
           Eliminar Trabajo
-        </button>
-      }
-    </div>
-  </form>
-</div>
-
-<!--
-<div class="bg-red-400 text-3xl p-2"> JOBS CRUD </div>
-
-<div class="jobs-crud mx-auto mt-8 max-w-3xl bg-neutral-300 p-8">
-  <h2 class="text-2xl font-bold mb-4">Selecciona un puesto</h2>
-  <select
-    [ngModel]="selectedJobId"
-    (change)="loadJob($event)"
-    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-    <option value="">Lista de puestos</option>
-    @for (job of jobs$ | async; track job.jobId) {
-      <option [value]="job.jobId">{{ job.name }}</option>
-    }
-  </select>
-
-  <h3 class="text-xl font-semibold mt-6 mb-4">{{ editingJobId ? 'Editar Escuela' : 'Crear Nueva Escuela' }}</h3>
-  <form (ngSubmit)="saveJob()" class="space-y-4">
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Nombre:</label>
-      <input
-        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-        type="text"
-        [(ngModel)]="newJob.name"
-        name="name"
-        required
-      >
-      @if (errorMessage) {
-        <p class="text-red-500 text-sm mt-1">{{ errorMessage }}</p>
-      }
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Lista de bla bla:</label>
-      <select
-        multiple
-        [(ngModel)]="newJob.courseIds"
-        name="courseIds"
-        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-        size="5">
-        @for (course of courses$ | async; track course.id) {
-          <option [value]="course.id">{{ course.name }}</option>
-        }
-      </select>
-    </div>
-
-    <div class="flex space-x-2">
-      <button
-        type="submit"
-        class="bg-green-500 text-white px-4 py-2 rounded-md">
-        {{ editingJobId ? 'Actualizar Escuela' : 'Crear Escuela' }}
-      </button>
-      @if (editingJobId) {
-        <button
-          type="button"
-          (click)="resetForm()"
-          class="bg-gray-500 text-white px-4 py-2 rounded-md">
-          Cancelar
-        </button>
-        <button
-          type="button"
-          (click)="deleteJob()"
-          class="bg-red-500 text-white px-4 py-2 rounded-md">
-          Eliminar Escuela
         </button>
       }
     </div>

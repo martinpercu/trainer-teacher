@@ -15,7 +15,7 @@ export interface Result {
   correctAnswers: number; // Cantidad respuestas correctas.
   examTitle: string; // Título del examen, requerido
   examId: string; // Is the exame id.
-  teacherId: string; // ID del profesor, requerido
+  teacherId?: string; // ID del profesor, requerido
   questions: QuestionAndAnswer[]; // Lista de preguntas
   difficulty?: number; // Number 1 to 5 in relation how many false choices
   questions_answered: number; // Cantidad de preguntas con una respuesta seleccionada (answer no vacío)
