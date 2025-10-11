@@ -32,11 +32,11 @@ export const routes: Routes = [
     component: RecruiterDashboardComponent
   },
   {
-    path:'candidate',
+    path:'job',
     component: CandidatePageComponent
   },
   {
-    path:'candidate/:jobId',
+    path:'job/:jobId',
     component: CandidatePageComponent
   },
   {
