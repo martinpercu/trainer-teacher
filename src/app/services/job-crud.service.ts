@@ -12,10 +12,12 @@ import {
   query,
   where,
   getDocs,
+  setDoc
 } from '@angular/fire/firestore';
 import { Observable, from, of, firstValueFrom } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { Job } from '@models/job';
+
 
 @Injectable({
   providedIn: 'root',
@@ -72,9 +74,21 @@ export class JobCrudService {
   }
 
   async getJobOwnerId(jobId: string): Promise<string | undefined> {
-  const job = await firstValueFrom(this.getJobById(jobId));
-  return job?.ownerId;
-}
+    const job = await firstValueFrom(this.getJobById(jobId));
+    return job?.ownerId;
+  }
+
+  // /**
+  //  * Crea un nuevo trabajo.
+  //  * @param job El objeto Job a crear (sin jobId, pero con ownerId).
+  //  * @returns Un Observable del ID del nuevo trabajo o null en caso de error.
+  //  */
+  // createJob(job: Partial<Job>): Observable<string | null> {
+  //   // Es crucial que el ownerId ya venga en el Partial<Job> desde el componente
+  //   return from(addDoc(this.jobsCollection, job)).pipe(
+  //     map((docRef) => docRef.id)
+  //   );
+  // }
 
   /**
    * Crea un nuevo trabajo.
@@ -83,8 +97,12 @@ export class JobCrudService {
    */
   createJob(job: Partial<Job>): Observable<string | null> {
     // Es crucial que el ownerId ya venga en el Partial<Job> desde el componente
-    return from(addDoc(this.jobsCollection, job)).pipe(
-      map((docRef) => docRef.id)
+    return from(addDoc(this.jobsCollection, { ...job, jobId: '' })).pipe(
+      switchMap((docRef) =>
+        from(
+          setDoc(docRef, { ...job, jobId: docRef.id }, { merge: true })
+        ).pipe(map(() => docRef.id))
+      )
     );
   }
 

@@ -30,8 +30,8 @@ export class ExamCrudComponent implements OnInit {
   teachers$!: Observable<Teacher[]>;
   newExam: Partial<Exam> = {
     title: '',
-    teacherId: 'none',
-    teacherName: 'none',
+    teacherId: '',
+    teacherName: '',
     questions: [],
     passingPercentage: 70,
     timeToWait: 48,
@@ -90,7 +90,7 @@ export class ExamCrudComponent implements OnInit {
             this.newExam = {
               title: exam.title,
               teacherId: exam.teacherId,
-              teacherName: exam.teacherName || '',
+              teacherName: exam.teacherName,
               questions: exam.questions.map(q => ({
                 text: q.text,
                 options: q.options.map(o => ({ text: o.text, isCorrect: o.isCorrect }))
@@ -129,6 +129,21 @@ export class ExamCrudComponent implements OnInit {
       return;
     }
 
+    // console.log(this.newExam.teacherId);
+    // console.log(this.newExam.teacherName);
+    // if (this.newExam.teacherId == '') {
+    //   console.log('in teacher id set');
+    //   this.newExam.teacherId = 's'
+    // }
+    // if (this.newExam.teacherName == '') {
+    //   console.log('in teacher Name set');
+    //   this.newExam.teacherName = 's'
+    // }
+
+    console.log(this.newExam.teacherId);
+    console.log(this.newExam.teacherName);
+
+
     this.examCrudService.checkExamTitleExists(this.newExam.title, this.editingExamId).subscribe({
       next: (titleExists) => {
         if (titleExists) {
@@ -138,10 +153,21 @@ export class ExamCrudComponent implements OnInit {
         }
         console.log(this.recruiterId);
 
+        // if (this.newExam.teacherId == undefined) {
+        //   console.log('in teacher id set');
+        //   this.newExam.teacherId = 's'
+        // }
+        // if (this.newExam.teacherName == undefined) {
+        //   console.log('in teacher Name set');
+        //   this.newExam.teacherName = 's'
+        // }
+        // console.log(this.newExam.teacherId);
+        // console.log(this.newExam.teacherName);
+
         const examData: Partial<Exam> = {
           title: this.newExam.title!.trim(),
-          teacherId: this.newExam.teacherId,
-          teacherName: this.newExam.teacherName?.trim() || undefined,
+          teacherId: this.newExam.teacherId || "",
+          teacherName: this.newExam.teacherName?.trim() || "",
           questions: this.newExam.questions,
           // courseId: this.newExam.courseId,
           passingPercentage: this.newExam.passingPercentage,
@@ -150,6 +176,8 @@ export class ExamCrudComponent implements OnInit {
           timeToDoTheExam: this.newExam.timeToDoTheExam,
           recruiterId: this.recruiterId
         };
+        console.log(examData);
+
 
         if (this.editingExamId) {
           this.examCrudService.updateExam(this.editingExamId, examData).subscribe({

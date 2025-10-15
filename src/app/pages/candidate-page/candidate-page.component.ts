@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-
 import { CandidateLoginComponent } from '@components/auth/candidate-login/candidate-login.component';
 import { CandidateLogoutComponent } from '@components/auth/candidate-logout/candidate-logout.component';
 import { CandidateRegisterComponent } from '@components/auth/candidate-register/candidate-register.component';
@@ -12,6 +11,8 @@ import { CandidateAuthService } from '@services/candidate-auth.service';
 import { CandidateEditComponent } from '@candidate/candidate-edit/candidate-edit.component';
 
 import { UploadComponent } from '@components/candidate/upload/upload.component';
+
+import { Job } from '@models/job'
 
 
 @Component({
@@ -31,6 +32,8 @@ export class CandidatePageComponent {
 
   alreadyAccount: boolean = false;
 
+  job!: Job;
+
   async ngOnInit() {
     // Extraer el jobPositionId
     const jobPositionId = this.route.snapshot.paramMap.get('jobId'); // Ruta /job/:jobId
@@ -39,6 +42,7 @@ export class CandidatePageComponent {
       const thisJob: any = await this.jobCrudService.getJobByIdRaw(jobPositionId);
       if(thisJob) {
         console.log('hay job job job');
+        this.job = thisJob
       }else {
         console.log(' NO JOB redirecciona a /job sin ID');
         this.router.navigateByUrl(`/job`);
