@@ -3,7 +3,9 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Candidate } from '@models/candidate';
 import { CandidateAuthService } from '@services/candidate-auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+
+import { JobCrudService } from '@services/job-crud.service';
 
 @Component({
   selector: 'app-candidate-login',
@@ -16,6 +18,9 @@ export class CandidateLoginComponent {
   candidateAuthService = inject(CandidateAuthService);
   router = inject(Router);
 
+  private route = inject(ActivatedRoute);
+  jobCrudService = inject(JobCrudService);
+
   form = this.fb.nonNullable.group({
     email: ['', Validators.required],
     password: ['', Validators.required],
@@ -23,11 +28,32 @@ export class CandidateLoginComponent {
 
   errorMessage: string | null = null;
 
+  jobRecruiterId: string = '';
+  jobId: string = '';
+
+  async ngOnInit() {
+    // Extraer el jobPositionId
+    const jobPositionId = this.route.snapshot.paramMap.get('jobId'); // Ruta /job/:jobId
+    if (jobPositionId) {
+      this.jobId = jobPositionId;
+      const ownerId: string | undefined =
+        await this.jobCrudService.getJobOwnerId(jobPositionId);
+      if (ownerId) {
+        console.log(ownerId); // "I8oITrIOHDX2rkMvJmtU6iUHqkn1"
+        // Use ownerId as a string
+        this.jobRecruiterId = ownerId;
+        console.log(this.jobRecruiterId, this.jobId); // "I8oITrIOHDX2rkMvJmtU6iUHqkn1"
+      } else {
+        console.log('no Recuiter for this Job');
+      }
+    }
+  }
+
   onSubmit(): void {
     const rawForm = this.form.getRawValue();
-    this.candidateAuthService.login(rawForm.email, rawForm.password).subscribe({
+    this.candidateAuthService.login(rawForm.email, rawForm.password, this.jobId, this.jobRecruiterId).subscribe({
       next: () => {
-        this.router.navigateByUrl('/candidate');
+        this.router.navigateByUrl(`/job/${this.jobId}`);
       },
       error: (err) => {
         this.errorMessage = err.code;

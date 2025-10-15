@@ -21,6 +21,10 @@ import { DOCUMENT } from '@angular/common'; // Importa DOCUMENT
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco } from '@jsverse/transloco';
 
+import { provideStorage, getStorage } from '@angular/fire/storage';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,6 +32,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withFetch()),
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
+    provideStorage(() => getStorage()),
+    { provide: FIREBASE_OPTIONS, useValue: firebaseConfig },
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideAnimations(), // Requerido por Angular Material

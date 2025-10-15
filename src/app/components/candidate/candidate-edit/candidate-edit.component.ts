@@ -65,14 +65,14 @@ export class CandidateEditComponent {
       firstname: [this.candidate.username, [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
       lastname: [this.candidate.lastname, [Validators.minLength(1), Validators.maxLength(30)]],
       email: [this.candidate.email, [Validators.required, Validators.email, Validators.maxLength(80)]],
-      // phone: [this.candidate.phone, [Validators.minLength(9), Validators.maxLength(15), Validators.pattern("^[0-9]*$")]],
-      // birthdate: [this.candidate.birthdate, [Validators.minLength(7)]],
-      // optionalText: [this.candidate.optionalText, Validators.maxLength(80)],
+      phone: [this.candidate.phone, [Validators.minLength(9), Validators.maxLength(15), Validators.pattern("^[0-9]*$")]],
+      birthdate: [this.candidate.birthdate, [Validators.minLength(7)]],
       address: [this.candidate.address, Validators.minLength(8)],
       city: [this.candidate.city, [Validators.minLength(2)]],
-      // state: [this.candidate.state],
-      // zipCode: [this.candidate.zipCode, [Validators.minLength(5), Validators.maxLength(8)]],
+      state: [this.candidate.state],
+      zipCode: [this.candidate.zipCode, [Validators.minLength(5), Validators.maxLength(8)]],
       // // country: [this.candidate.country],
+      // optionalText: [this.candidate.optionalText, Validators.maxLength(80)],
     });
   };
 
@@ -111,21 +111,9 @@ export class CandidateEditComponent {
   get birthdateField() {
     return this.form.get('birthdate')
   };
-  get byEmailField() {
-    return this.form.get('byEmail')
-  };
-  get byPhoneField() {
-    return this.form.get('byPhone')
-  };
-  get optionalTextField() {
-    return this.form.get('optionalText')
-  };
 
   get addressField() {
     return this.form.get('address')
-  };
-  get addressExtraField() {
-    return this.form.get('addressExtra')
   };
   get cityField() {
     return this.form.get('city')
@@ -136,41 +124,6 @@ export class CandidateEditComponent {
   get zipCodeField() {
     return this.form.get('zipCode')
   };
-
-  // // get adultField() {
-  // //   return this.form.get('adult')
-  // // };
-  // // get agreeField() {
-  // //   return this.form.get('agree')
-  // // };
-
-  get billDifThanShipField() {
-    return this.form.get('billDifThanShip')
-  };
-
-  get xfirstnameField() {
-    return this.form.get('xfirstname')
-  };
-  get xlastnameField() {
-    return this.form.get('xlastname')
-  };
-
-  get xaddressField() {
-    return this.form.get('xaddress')
-  };
-  get xaddressExtraField() {
-    return this.form.get('xaddressExtra')
-  };
-  get xcityField() {
-    return this.form.get('xcity')
-  };
-  get xstateField() {
-    return this.form.get('xstate')
-  };
-  get xzipCodeField() {
-    return this.form.get('xzipCode')
-  };
-
 
 
 
@@ -209,28 +162,6 @@ export class CandidateEditComponent {
   get isbirthdateFieldInvalid() {
     return this.birthdateField!.touched && this.birthdateField!.invalid
   };
-  // BY phone
-  get isbyPhoneFieldValid() {
-    return this.byPhoneField!.touched && this.byPhoneField!.valid
-  };
-  get isbyPhoneFieldInvalid() {
-    return this.byPhoneField!.touched && this.byPhoneField!.invalid
-  };
-  // BY email
-  get isbyEmailFieldValid() {
-    return this.byEmailField!.touched && this.byEmailField!.valid
-  };
-  get isbyEmailFieldInvalid() {
-    return this.byEmailField!.touched && this.byEmailField!.invalid
-  };
-  // OPTIONAL TEXT
-  get isoptionalTextFieldValid() {
-    return this.optionalTextField!.touched && this.optionalTextField!.valid
-  };
-  get isoptionalTextFieldInvalid() {
-    return this.optionalTextField!.touched && this.optionalTextField!.invalid
-  };
-
 
   // ADDRESS
   get isaddressFieldValid() {
@@ -239,13 +170,7 @@ export class CandidateEditComponent {
   get isaddressFieldInvalid() {
     return this.addressField!.touched && this.addressField!.invalid
   };
-  // ADDRESS Extra
-  get isaddressExtraFieldValid() {
-    return this.addressExtraField!.touched && this.addressExtraField!.valid
-  };
-  get isaddressExtraFieldInvalid() {
-    return this.addressExtraField!.touched && this.addressExtraField!.invalid
-  };
+
   // CITY
   get iscityFieldValid() {
     return this.cityField!.touched && this.cityField!.valid
@@ -266,68 +191,6 @@ export class CandidateEditComponent {
   };
   get iszipCodeFieldInvalid() {
     return this.zipCodeField!.touched && this.zipCodeField!.invalid
-  };
-
-
-  // BILL Same as SHIPPING
-  get isbillDifThanShipFieldValid() {
-    return this.billDifThanShipField!.touched && this.billDifThanShipField!.valid
-  };
-  get isbillDifThanShipFieldInvalid() {
-    return this.billDifThanShipField!.touched && this.billDifThanShipField!.invalid
-  };
-
-
-  // X FIRST name
-  get isxfirstnameFieldValid() {
-    return this.xfirstnameField!.touched && this.xfirstnameField!.valid
-  };
-  get isxfirstnameFieldInvalid() {
-    return this.xfirstnameField!.touched && this.xfirstnameField!.invalid
-  };
-  // X LAST name
-  get isxlastnameFieldValid() {
-    return this.xlastnameField!.touched && this.xlastnameField!.valid
-  };
-  get isxlastnameFieldInvalid() {
-    return this.xlastnameField!.touched && this.xlastnameField!.invalid
-  };
-
-
-  // X ADDRESS
-  get isxaddressFieldValid() {
-    return this.xaddressField!.touched && this.xaddressField!.valid
-  };
-  get isxaddressFieldInvalid() {
-    return this.xaddressField!.touched && this.xaddressField!.invalid
-  };
-  // X ADDRESS Extra xaddressExtra
-  get isxaddressExtraFieldValid() {
-    return this.xaddressExtraField!.touched && this.xaddressExtraField!.valid
-  };
-  get isxaddressExtraFieldInvalid() {
-    return this.xaddressExtraField!.touched && this.xaddressExtraField!.invalid
-  };
-  // X CITY
-  get isxcityFieldValid() {
-    return this.xcityField!.touched && this.xcityField!.valid
-  };
-  get isxcityFieldInvalid() {
-    return this.xcityField!.touched && this.xcityField!.invalid
-  };
-  // X STATE
-  get isxstateFieldValid() {
-    return this.xstateField!.touched && this.xstateField!.valid
-  };
-  get isxstateFieldInvalid() {
-    return this.xstateField!.touched && this.xstateField!.invalid
-  };
-  // X ZIP CODE
-  get isxzipCodeFieldValid() {
-    return this.xzipCodeField!.touched && this.xzipCodeField!.valid
-  };
-  get isxzipCodeFieldInvalid() {
-    return this.xzipCodeField!.touched && this.xzipCodeField!.invalid
   };
 
 

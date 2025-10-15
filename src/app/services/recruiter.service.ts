@@ -55,8 +55,9 @@ export class RecruiterService {
   /**
    * Regresa el  el usuario actual en la señal
    */
-  currentRecruiter() {
-    return this.recruiterSig()
+  async currentRecruiter() {
+    // return this.recruiterSig()
+    return Promise.resolve(this.recruiterSig()); // Convierte la señal en promesa
   }
 
   /**
