@@ -5,6 +5,19 @@ export interface Candidate {
   username: string;
   displayname?: string;
   lastname?: string;
-  id?: string;
   recruiters?: string[];
+  jobs?: string[];
+  phone?: string;
+  birthdate?: string;
+  optionalText?: string;
+  byPhone?: boolean;
+  byEmail?: boolean;
+  agree?: boolean;
+  subscription?: boolean;
+  address?: string;
+  addressExtra?: string;
+  state?: string;
+  city?: string;
+  zipCode?: string;
+  country?: string;
 }

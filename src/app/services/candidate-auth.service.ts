@@ -36,6 +36,8 @@ export class CandidateAuthService {
     email: string,
     username: string,
     password: string,
+    jobRecruiterId: string,
+    jobId: string
   ): Observable<void> {
     const promise = createUserWithEmailAndPassword(
       this.firebaseAuth,
@@ -43,17 +45,19 @@ export class CandidateAuthService {
       password,
     ).then((response) => {
       updateProfile(response.user, { displayName: username })
-      this.addRegisterUsed(email, username, response.user.uid)
+      this.addRegisterUsed(email, username, response.user.uid, jobRecruiterId, jobId)
     }
     );
     return from(promise);
   };
 
-  addRegisterUsed(email: string, username: string, userUid:any) {
+  addRegisterUsed(email: string, username: string, userUid:any, jobRecruiterId: string, jobId: string) {
     this.candidate = {
       email: email,
       username: username,
-      candidateUID: userUid
+      candidateUID: userUid,
+      recruiters: [jobRecruiterId],
+      jobs: [jobId]
     }
     this.candidateService.addUserWithId(this.candidate, userUid);
     this.candidateService.setUserSig(this.candidate);

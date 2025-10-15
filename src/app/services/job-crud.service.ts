@@ -3,6 +3,7 @@ import {
   Firestore,
   collection,
   collectionData,
+  getDoc,
   doc,
   docData,
   addDoc,
@@ -12,7 +13,7 @@ import {
   where,
   getDocs,
 } from '@angular/fire/firestore';
-import { Observable, from, of } from 'rxjs';
+import { Observable, from, of, firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Job } from '@models/job';
 
@@ -36,7 +37,6 @@ export class JobCrudService {
   //   }) as Observable<Job[]>;
   // }
 
-
   /**
    * Obtiene todos los trabajos.
    * @returns Un Observable de un array de Jobs.
@@ -53,8 +53,28 @@ export class JobCrudService {
    */
   getJobById(jobId: string): Observable<Job | undefined> {
     const jobDocRef = doc(this.firestore, `jobs/${jobId}`);
-    return docData(jobDocRef, { idField: 'jobId' }) as Observable<Job | undefined>;
+    return docData(jobDocRef, { idField: 'jobId' }) as Observable<
+      Job | undefined
+    >;
   }
+
+  /**
+   * Obtiene un trabajo por su ID.
+   * @param jobId El ID del trabajo.
+   * @returns Una Promise con el Job o undefined si no se encuentra.
+   */
+  async getJobByIdRaw(jobId: string): Promise<Job | undefined> {
+    const jobDocRef = doc(this.firestore, `jobs/${jobId}`);
+    const jobSnapshot = await getDoc(jobDocRef);
+    return jobSnapshot.exists()
+      ? ({ jobId, ...jobSnapshot.data() } as Job)
+      : undefined;
+  }
+
+  async getJobOwnerId(jobId: string): Promise<string | undefined> {
+  const job = await firstValueFrom(this.getJobById(jobId));
+  return job?.ownerId;
+}
 
   /**
    * Crea un nuevo trabajo.
