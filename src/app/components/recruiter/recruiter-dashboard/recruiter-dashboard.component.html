@@ -160,6 +160,8 @@
     @for (job of jobs; track job.jobId) {
       <app-jobs-list
         [job]="job"
+        [candidatesForJob]="getCandidatesForJob(job.jobId)"
+        [results]="getResultsForJobCandidates(job.jobId)"
       >
       </app-jobs-list>
     }

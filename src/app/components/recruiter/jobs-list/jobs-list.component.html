@@ -33,7 +33,23 @@
       <mat-icon class="text-neutral-600 dark:text-neutral-300">group</mat-icon>
       <div>
         <p class="text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ 'recruiter.candidates' | transloco }}</p>
-        <p class="text-base text-neutral-600 dark:text-neutral-400">{{ job.name }}</p>
+        <div class="text-base text-neutral-600 dark:text-neutral-400">
+        @if(candidatesForJob.length >= 1) {
+          @for(candidate of candidatesForJob; track $index) {
+            {{ candidate.username }},
+            @for(result of results; track $index) {
+              @if(result.userUID == candidate.candidateUID) {
+                {{result.examId}}
+              }
+            }
+          }
+        } @else {
+          <span class="text-red-500 text-sm">
+            {{ 'recruiter.no_candidates' | transloco }}
+          </span>
+        }
+
+          </div>
       </div>
     </div>
 
@@ -43,6 +59,26 @@
       <div>
         <p class="text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ 'recruiter.last_name' | transloco }}</p>
         <p class="text-base text-neutral-600 dark:text-neutral-400">{{ job.name || 'N/A' }}</p>
+      </div>
+    </div>
+
+
+    <!-- Email -->
+    <div class="flex items-center space-x-3">
+      <mat-icon class="text-neutral-600 dark:text-neutral-300">group</mat-icon>
+      <div>
+        <p class="text-sm font-medium text-neutral-800 dark:text-neutral-200">{{ 'recruiter.candidates_test_ok' | transloco }}</p>
+        <div class="text-base text-neutral-600 dark:text-neutral-400">
+        @for(result of results; track $index) {
+          @if(result.examPassed ) {
+            @for(candidate of candidatesForJob; track $index) {
+              @if(result.userUID == candidate.candidateUID) {
+                {{ candidate.username }}
+              }
+            }
+          }
+        }
+        </div>
       </div>
     </div>
 
