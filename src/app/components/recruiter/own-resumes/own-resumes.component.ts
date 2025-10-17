@@ -3,6 +3,7 @@ import { Component, Input, inject, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 import { Ownresume } from '@models/ownResume';
+import { Resume } from '@models/resume';
 
 import { ResumeService } from '@services/resume.service';
 import { Subscription } from 'rxjs';
@@ -17,13 +18,14 @@ import { StorageService } from '@services/storage.service';
 import { LoadingBarComponent } from '@shared/loading-bar/loading-bar.component';
 
 import { OwnResumeViewerComponent } from '@recruiter/own-resume-viewer/own-resume-viewer.component';
+import { ResumeViewerComponent } from '@recruiter/resume-viewer/resume-viewer.component';
 
 
 
 
 @Component({
   selector: 'app-own-resumes',
-  imports: [MatIconModule, TranslocoPipe, CommonModule, FormsModule, LoadingBarComponent, OwnResumeViewerComponent],
+  imports: [MatIconModule, TranslocoPipe, CommonModule, FormsModule, LoadingBarComponent, OwnResumeViewerComponent, ResumeViewerComponent],
   templateUrl: './own-resumes.component.html'
 })
 export class OwnResumesComponent {
@@ -39,10 +41,16 @@ export class OwnResumesComponent {
   showLoadingBar = signal<boolean>(false);
 
   ownResumes: Ownresume[] = [];
-  private resumeSubscription!: Subscription; // Para manejar la desuscripción
+  resumes: Resume[] = [];
+
+  private ownResumeSubscription!: Subscription; // Para manejar la desuscripción
+  private resumeSubscription!: Subscription; // to handle unsubscription
 
   showResume!: boolean;
-  selectedResume: Ownresume | null = null; // Esta variable guardará el currículum a mostrar
+
+  selectedOwnResume: Ownresume | null = null; // Esta variable guardará el currículum a mostrar
+  selectedResume: Resume | null = null; // Esta variable guardará el currículum a mostrar
+
 
 
 
@@ -52,7 +60,7 @@ export class OwnResumesComponent {
   }
   ngOnInit() {
     console.log(this.recruiterId);
-    this.resumeSubscription = this.resumeService
+    this.ownResumeSubscription = this.resumeService
       .getOwnResumesForRecruiter(this.recruiterId)
       .subscribe({
         next: (data) => {
@@ -65,10 +73,23 @@ export class OwnResumesComponent {
         }
       });
 
+    this.resumeSubscription = this.resumeService
+      .getResumesForRecruiter(this.recruiterId)
+      .subscribe({
+        next: (data) => {
+          // Asigna los datos a la propiedad
+          this.resumes = data;
+        },
+        error: (err) => {
+          console.error('Error al cargar resumes:', err);
+          // Manejo de errores aquí...
+        }
+      });
   }
 
   // **IMPORTANTE**: Desuscribirse para evitar fugas de memoria
   ngOnDestroy(): void {
+    this.ownResumeSubscription.unsubscribe();
     this.resumeSubscription.unsubscribe();
   }
 
@@ -182,29 +203,51 @@ export class OwnResumesComponent {
   }
 
 
-    // Esta función ahora recibe un objeto Candidate
-    showOwnResume(ownresume: Ownresume): void {
-      // 1. Busca el currículum (resume) correspondiente en la lista de resumesForJob
-      // const resumeToShow = this.resumesForJob.find(resume => resume.candidateUID === candidate.candidateUID);
-      const resumeToShow = ownresume;
-      console.log(resumeToShow);
+  // Esta función ahora recibe un objeto Candidate
+  showOwnResume(ownresume: Ownresume): void {
+    // 1. Busca el currículum (resume) correspondiente en la lista de resumesForJob
+    // const resumeToShow = this.resumesForJob.find(resume => resume.candidateUID === candidate.candidateUID);
+    const resumeToShow = ownresume;
+    console.log(resumeToShow);
 
-
-      // 2. Si se encontró un currículum
-      if (resumeToShow) {
-        // 3. Compara si el currículum encontrado es el mismo que el que se está mostrando actualmente.
-        // Si son el mismo, significa que el usuario está haciendo "toggle" para ocultarlo.
-        if (this.selectedResume === resumeToShow) {
-          this.selectedResume = null; // Oculta el componente.
-        } else {
-          // Si es diferente, lo asigna para que se muestre.
-          this.selectedResume = resumeToShow;
-        }
+    // 2. Si se encontró un currículum
+    if (resumeToShow) {
+      // 3. Compara si el currículum encontrado es el mismo que el que se está mostrando actualmente.
+      // Si son el mismo, significa que el usuario está haciendo "toggle" para ocultarlo.
+      if (this.selectedOwnResume === resumeToShow) {
+        this.selectedOwnResume = null; // Oculta el componente.
       } else {
-        // En caso de que no haya un currículum para el candidato, lo ocultamos por si acaso.
-        this.selectedResume = null;
+        // Si es diferente, lo asigna para que se muestre.
+        this.selectedOwnResume = resumeToShow;
       }
+    } else {
+      // En caso de que no haya un currículum para el candidato, lo ocultamos por si acaso.
+      this.selectedOwnResume = null;
     }
+  }
+
+  // Esta función ahora recibe un objeto Candidate
+  showCandidateResume(resume: Resume): void {
+    // 1. Busca el currículum (resume) correspondiente en la lista de resumesForJob
+    // const resumeToShow = this.resumesForJob.find(resume => resume.candidateUID === candidate.candidateUID);
+    const resumeToShow = resume;
+    console.log(resumeToShow);
+
+    // 2. Si se encontró un currículum
+    if (resumeToShow) {
+      // 3. Compara si el currículum encontrado es el mismo que el que se está mostrando actualmente.
+      // Si son el mismo, significa que el usuario está haciendo "toggle" para ocultarlo.
+      if (this.selectedResume === resumeToShow) {
+        this.selectedResume = null; // Oculta el componente.
+      } else {
+        // Si es diferente, lo asigna para que se muestre.
+        this.selectedResume = resumeToShow;
+      }
+    } else {
+      // En caso de que no haya un currículum para el candidato, lo ocultamos por si acaso.
+      this.selectedResume = null;
+    }
+  }
 
 
 }

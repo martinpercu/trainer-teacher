@@ -52,7 +52,7 @@
   },
   "recruiter": {
     "posts" : "Perfiles",
-    "profils_in_posts" : "Perfiles en Puestos",
+    "profils_in_posts" : "Candidatos para Puestos",
     "posts_edit" : "Puestos",
     "exams": "Examenes",
     "exams_edit": "Examenes",
@@ -90,8 +90,9 @@
     "magic_link": "Magic Link",
     "magic_link_copied": "Magic Link Copiado",
     "own_resumes": "Mis CVs",
-    "own_resumes_title": "Mis CVs",
-    "add_resume": "Agregar CV"
+    "own_resumes_title": "Mis Contactos y CVs",
+    "add_resume": "Agregar CV",
+    "manager": "Manager"
   },
   "recruiter_auth": {
     "login": "Iniciar sesión",

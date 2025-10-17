@@ -52,7 +52,7 @@
   },
   "recruiter": {
     "posts" : "Profiles",
-    "profils_in_posts" : "Profiles in Positions",
+    "profils_in_posts" : "Candidates for Positions",
     "posts_edit" : "Positions",
     "exams": "Exams",
     "exams_edit": "Exams",
@@ -90,8 +90,9 @@
     "magic_link": "Magic Link",
     "magic_link_copied": "Magic Link Copied",
     "own_resumes": "Resumes",
-    "own_resumes_title": "My Resumes",
-    "add_resume": "Add Resume"
+    "own_resumes_title": "My Contacts & Resumes",
+    "add_resume": "Add Resume",
+    "manager": "Manager"
   },
   "recruiter_auth": {
     "login" : "Log in",

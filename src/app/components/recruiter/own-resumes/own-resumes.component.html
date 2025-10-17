@@ -46,7 +46,6 @@
   class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-lg mb-2 p-2 sm:p-5 border border-neutral-200 dark:border-neutral-700"
 >
 @for (ownresume of ownResumes; track ownresume.resumeId) {
-
 <div class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-md mb-1 p-2 border border-neutral-200 dark:border-neutral-700">
   <div class="flex flex-row items-center align-middle space-x-2 h-7 gap-1">
     <div class="flex grow items-center space-x-2">
@@ -58,17 +57,41 @@
       {{ 'recruiter.see_cv' | transloco }}
     </div>
   </div>
-
 </div>
-
 }
+
+</div>
+<div
+  class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-lg mb-2 p-2 sm:p-5 border border-neutral-200 dark:border-neutral-700"
+>
+@for (resume of resumes; track resume.candidateUID) {
+<div class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-md mb-1 p-2 border border-neutral-200 dark:border-neutral-700">
+  <div class="flex flex-row items-center align-middle space-x-2 h-7 gap-1">
+    <div class="flex grow items-center space-x-2">
+      <!-- <mat-icon class="text-neutral-600 dark:text-neutral-300">person</mat-icon> -->
+      <h2 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ resume.name }}</h2>
+    </div>
+    <div  (click)="showCandidateResume(resume)"
+    class="cursor-pointer rounded-lg border px-2 py-1 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+      {{ 'recruiter.see_cv' | transloco }}
+    </div>
+  </div>
+</div>
+}
+
 </div>
 
+@if (selectedOwnResume) {
+    <app-own-resume-viewer
+      [ownResume]="selectedOwnResume"
+      [recruiterId]="this.recruiterId"
+      (closeViewer)="selectedOwnResume = null"
+    ></app-own-resume-viewer>
+  }
 
 @if (selectedResume) {
-    <app-own-resume-viewer
-      [ownResume]="selectedResume"
-      [recruiterId]="this.recruiterId"
+    <app-resume-viewer
+      [resumeForJob]="selectedResume"
       (closeViewer)="selectedResume = null"
-    ></app-own-resume-viewer>
+    ></app-resume-viewer>
   }
