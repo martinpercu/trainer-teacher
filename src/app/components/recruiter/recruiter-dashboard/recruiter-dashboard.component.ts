@@ -84,6 +84,7 @@ export class RecruiterDashboardComponent {
   candidates: Candidate[] = [];
   results: Result[] = [];
   jobs: Job[] = [];
+  jobsOrderedByCandidates: Job[] = [];
 
 
   currentView:
@@ -94,7 +95,7 @@ export class RecruiterDashboardComponent {
     | 'exams'
     | 'jobs'
     | 'jobs_edit'
-    | 'candidates' = 'teachers'; // Default to courses
+    | 'candidates' = 'jobs'; // Default to courses
 
   showSettingMenu: boolean = false;
 
@@ -156,6 +157,8 @@ export class RecruiterDashboardComponent {
           this.jobs = jobs;
           console.log('Results filtered by candidate UIDs:', this.results);
           console.log('Jobs for recruiter:', this.jobs);
+          // Llama a la nueva función para ordenar los trabajos
+          this.orderJobsByCandidateCount();
         },
         error: (error) => {
           console.error('Error in main subscription:', error);
@@ -165,57 +168,6 @@ export class RecruiterDashboardComponent {
         },
       });
 
-
-    // this.authService.user$
-    //   .pipe(
-    //     // Filter out null users (not authenticated)
-    //     filter((user) => !!user),
-    //     // switchMap to switch from the user observable to the candidate observable
-    //     switchMap((user) => {
-    //       const uid = user!.uid; // 'user' is guaranteed to be non-null here due to filter
-    //       console.log('UID del reclutador:', uid);
-    //       return this.candidateService.getCandidatesByRecruiter(uid).pipe(
-    //         // Tap to see the candidates before mapping
-    //         tap((candidates) => {
-    //           this.candidates = candidates;
-    //           console.log('Candidatos recuperados:', this.candidates);
-    //         }),
-    //         // Map the candidates array to an array of their UIDs
-    //         map((candidates) => candidates.map((c) => c.candidateUID)),
-    //         // Handle case where no candidates are found
-    //         catchError((error) => {
-    //           console.error('Error al obtener candidatos:', error);
-    //           return of([]); // Return an empty array of UIDs
-    //         })
-    //       );
-    //     }),
-    //     // switchMap again to switch from candidate UIDs to results
-    //     switchMap((candidateUIDs) => {
-    //       // If no candidateUIDs, return an empty observable of results
-    //       if (candidateUIDs.length === 0) {
-    //         console.log('No hay UIDs de candidatos para buscar resultados.');
-    //         return of([]);
-    //       }
-    //       // Call the new service method with the extracted UIDs
-    //       return this.resultService.getResultsByUserUIDs(candidateUIDs);
-    //     })
-    //   )
-    //   .subscribe({
-    //     next: (filteredResults) => {
-    //       this.results = filteredResults;
-    //       console.log(
-    //         'Resultados filtrados por UID de candidatos:',
-    //         this.results
-    //       );
-    //     },
-    //     error: (error) => {
-    //       console.error('Error en la suscripción principal:', error);
-    //     },
-    //     complete: () => {
-    //       console.log('Suscripción de resultados completada.');
-    //       // Optional: Add logic for when the observable completes
-    //     },
-    //   });
   }
 
   setView(
@@ -232,6 +184,18 @@ export class RecruiterDashboardComponent {
     this.currentView = view;
   }
 
+
+
+  switchExpand() {
+    this.showSettingMenu = !this.showSettingMenu;
+  }
+
+  goToMain() {
+    alert('Gracias totales \nNo va a nngun lado');
+    // window.open("https://trainer-teacher.web.app", '_blank');
+    // window.open(`${environment.BASEURL}`, '_blank');
+    // this.router.navigate(['/main']);
+  }
 
   /**
    * Filters the 'results' array to return only those belonging to a specific candidate.
@@ -273,15 +237,109 @@ export class RecruiterDashboardComponent {
   }
 
 
+  /**
+   * Obtiene una lista de candidatos que han aprobado el examen para un trabajo específico.
+   * Un candidato se considera "aprobado" si tiene un `Result` asociado a ese `jobId`
+   * donde `examPassed` es `true`.
+   * @param jobId El ID del trabajo.
+   * @returns Un array de objetos Candidate que han aprobado el examen para el trabajo dado.
+   */
+  getApprovedCandidatesForJob(jobId: string): Candidate[] {
+    // 1. Encontrar el objeto Job para obtener su examId
+    const job = this.jobs.find(j => j.jobId === jobId);
+    if (!job || !job.examId) {
+      // Si el trabajo no existe o no tiene un examId, no hay candidatos aprobados por examen
+      return [];
+    }
 
-  switchExpand() {
-    this.showSettingMenu = !this.showSettingMenu;
+    // 2. Obtener todos los resultados asociados a los candidatos de este trabajo
+    const resultsForJobCandidates = this.getResultsForJobCandidates(jobId);
+
+    // 3. Filtrar los resultados para encontrar aquellos que pasaron el examen y corresponden al examId del trabajo
+    const approvedResultsForThisJob = resultsForJobCandidates.filter(result =>
+      result.examPassed === true && result.examId === job.examId
+    );
+
+    // 4. Extraer los userUID (IDs de candidatos) de los resultados aprobados
+    const approvedCandidateUIDs = new Set(approvedResultsForThisJob.map(result => result.userUID));
+
+    // 5. Filtrar la lista global de candidatos para obtener solo los que tienen un UID aprobado
+    // Se usa 'this.candidates' para obtener los objetos Candidate completos.
+    return this.candidates.filter(candidate =>
+      approvedCandidateUIDs.has(candidate.candidateUID)
+    );
   }
 
-  goToMain() {
-    alert('Gracias totales \nNo va a nngun lado');
-    // window.open("https://trainer-teacher.web.app", '_blank');
-    // window.open(`${environment.BASEURL}`, '_blank');
-    // this.router.navigate(['/main']);
+  /**
+   * Orders the 'jobs' array by the number of candidates assigned to each job
+   * and assigns the result to 'jobsOrderedByCandidates'.
+   * Jobs with more candidates will appear first.
+   */
+  // orderJobsByCandidateCount(): void {
+  //   // Crea una copia de la lista de trabajos para no modificar la original directamente
+  //   this.jobsOrderedByCandidates = [...this.jobs];
+
+  //   this.jobsOrderedByCandidates.sort((a, b) => {
+  //     const candidatesA = this.getCandidatesForJob(a.jobId).length;
+  //     const candidatesB = this.getCandidatesForJob(b.jobId).length;
+  //     // Orden descendente: b - a
+  //     return candidatesB - candidatesA;
+  //   });
+
+  //   console.log('Jobs ordered by candidate count:', this.jobsOrderedByCandidates);
+  // }
+
+  //   /**
+  //  * Filters the 'jobs' array to include only active jobs (active: true),
+  //  * then orders them by the number of candidates assigned to each job,
+  //  * and assigns the result to 'jobsOrderedByCandidates'.
+  //  * Jobs with more candidates will appear first.
+  //  */
+  // orderJobsByCandidateCount(): void {
+  //   // 1. Filtrar solo los trabajos activos
+  //   const activeJobs = this.jobs.filter(job => job.active === true);
+
+  //   // 2. Crear una copia de los trabajos activos para ordenar
+  //   this.jobsOrderedByCandidates = [...activeJobs];
+
+  //   // 3. Ordenar los trabajos activos por la cantidad de candidatos
+  //   this.jobsOrderedByCandidates.sort((a, b) => {
+  //     const candidatesA = this.getCandidatesForJob(a.jobId).length;
+  //     const candidatesB = this.getCandidatesForJob(b.jobId).length;
+  //     // Orden descendente: b - a
+  //     return candidatesB - candidatesA;
+  //   });
+
+  //   console.log('Jobs filtered (active) and ordered by candidate count:', this.jobsOrderedByCandidates);
+  // }
+
+    orderJobsByCandidateCount(): void {
+    // 1. Dividir los trabajos en activos e inactivos
+    const activeJobs = this.jobs.filter(job => job.active === true);
+    const inactiveJobs = this.jobs.filter(job => job.active === false);
+
+    // Función auxiliar para ordenar por cantidad de candidatos (descendente)
+    const sortByCandidateCount = (jobsArray: Job[]): Job[] => {
+      // Crear una copia para ordenar y no mutar el array original
+      return [...jobsArray].sort((a, b) => {
+        const candidatesA = this.getCandidatesForJob(a.jobId).length;
+        const candidatesB = this.getCandidatesForJob(b.jobId).length;
+        return candidatesB - candidatesA; // Orden descendente (más candidatos primero)
+      });
+    };
+
+    // 2. Ordenar los trabajos activos
+    const sortedActiveJobs = sortByCandidateCount(activeJobs);
+
+    // 3. Ordenar los trabajos inactivos
+    const sortedInactiveJobs = sortByCandidateCount(inactiveJobs);
+
+    // 4. Combinar las listas: activos primero, luego inactivos
+    this.jobsOrderedByCandidates = [...sortedActiveJobs, ...sortedInactiveJobs];
+
+    console.log('Jobs ordered (Active first, then Inactive, both by candidate count):', this.jobsOrderedByCandidates);
   }
+
+
+
 }
