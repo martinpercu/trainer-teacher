@@ -45,39 +45,170 @@
 <div
   class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-lg mb-2 p-2 sm:p-5 border border-neutral-200 dark:border-neutral-700"
 >
-@for (ownresume of ownResumes; track ownresume.resumeId) {
-<div class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-md mb-1 p-2 border border-neutral-200 dark:border-neutral-700">
-  <div class="flex flex-row items-center align-middle space-x-2 h-7 gap-1">
-    <div class="flex grow items-center space-x-2">
-      <!-- <mat-icon class="text-neutral-600 dark:text-neutral-300">person</mat-icon> -->
-      <h2 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ ownresume.name }}</h2>
+
+
+
+
+<!-- Button to expand ownResumes -->
+@if(ownResumes.length >= 1) {
+<div class="flex flex-col sm:flex-row gap-3 mt-2 font-light">
+  <div
+    class="flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100"
+    (click)="switchShowOwnResumes()"
+  >
+    <div class="flex">
+      <mat-icon class="text-neutral-600 dark:text-neutral-300"
+      >verified_user
+      </mat-icon>
     </div>
-    <div  (click)="showOwnResume(ownresume)"
-    class="cursor-pointer rounded-lg border px-2 py-1 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
-      {{ 'recruiter.see_cv' | transloco }}
+    <div class="flex pl-2">
+      {{ "recruiter.own_conctacts" | transloco }} ({{ ownResumes.length }})
+    </div>
+    <div class="flex pl-2 ml-auto">
+      @if(!showListOwnResumes) {
+      <mat-icon
+        class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
+        >expand_circle_down</mat-icon
+      >
+      } @else {
+      <mat-icon
+        class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
+        >expand_circle_up</mat-icon
+      >
+      }
     </div>
   </div>
 </div>
 }
 
-</div>
-<div
-  class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-lg mb-2 p-2 sm:p-5 border border-neutral-200 dark:border-neutral-700"
->
-@for (resume of resumes; track resume.candidateUID) {
-<div class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-md mb-1 p-2 border border-neutral-200 dark:border-neutral-700">
-  <div class="flex flex-row items-center align-middle space-x-2 h-7 gap-1">
-    <div class="flex grow items-center space-x-2">
-      <!-- <mat-icon class="text-neutral-600 dark:text-neutral-300">person</mat-icon> -->
-      <h2 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ resume.name }}</h2>
+@if(showListOwnResumes){
+  <div class="grid grid-cols-1 sm:grid-cols-2 mt-2">
+  @for (ownresume of ownResumes; track ownresume.resumeId) {
+    <div class="sm:flex-row text-neutral-600 dark:text-neutral-300 py-2 px-1 border-b last:border-b-0 sm:border-0 border-neutral-200 dark:border-neutral-700">
+      <div class="flex items-center justify-between">
+        <div class="flex-grow sm:flex-grow-0 truncate overflow-hidden whitespace-nowrap pr-2">
+          • {{ ownresume.name }}
+        </div>
+        <div
+          (click)="showOwnResume(ownresume)"
+          class="flex cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 ml-auto"
+        >
+          <mat-icon class="text-neutral-600 dark:text-neutral-300">clinical_notes</mat-icon>
+          <span class="pl-2 pr-2">{{ 'recruiter.resume' | transloco }}</span>
+          <!-- @if(candidate.scoreToPosition !== null){
+            <span class="">{{ candidate.scoreToPosition / 10 | number:'1.1-1'}}%</span>
+          } @else {
+            <span class="">"?"</span>
+          } -->
+          <!-- @if(candidate.scoreToPosition != "N/A"){
+            <span class="">{{ candidate.scoreToPosition / 10 | number:'1.1-1'}}%</span>
+          } -->
+        </div>
+        <div class="sm:grow"></div>
+      </div>
     </div>
-    <div  (click)="showCandidateResume(resume)"
-    class="cursor-pointer rounded-lg border px-2 py-1 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
-      {{ 'recruiter.see_cv' | transloco }}
+
+
+
+
+  <!-- <div class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-md mb-1 p-2 border border-neutral-200 dark:border-neutral-700">
+    <div class="flex flex-row items-center align-middle space-x-2 h-7 gap-1">
+      <div class="flex grow items-center space-x-2">
+        <mat-icon class="text-neutral-600 dark:text-neutral-300">person</mat-icon>
+        <h2 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ ownresume.name }}</h2>
+      </div>
+      <div  (click)="showOwnResume(ownresume)"
+      class="cursor-pointer rounded-lg border px-2 py-1 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+        {{ 'recruiter.see_cv' | transloco }}
+      </div>
+    </div>
+  </div> -->
+
+  }
+  </div>
+
+}
+
+
+
+
+<!-- Button to expand resumes -->
+@if(resumes.length >= 1) {
+<div class="flex flex-col sm:flex-row gap-3 mt-2 font-light">
+  <div
+    class="flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100"
+    (click)="switchShowResumes()"
+  >
+    <div class="flex">
+      <mat-icon class="text-neutral-600 dark:text-neutral-300"
+      >groups
+      </mat-icon>
+    </div>
+    <div class="flex pl-2">
+      {{ "recruiter.candidates_resumes" | transloco }} ({{ resumes.length }})
+    </div>
+    <div class="flex pl-2 ml-auto">
+      @if(!showListResumes) {
+      <mat-icon
+        class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
+        >expand_circle_down</mat-icon
+      >
+      } @else {
+      <mat-icon
+        class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
+        >expand_circle_up</mat-icon
+      >
+      }
     </div>
   </div>
 </div>
 }
+
+@if(showListResumes) {
+  <div class="grid grid-cols-1 sm:grid-cols-2 mt-2">
+
+  @for (resume of resumes; track resume.candidateUID) {
+      <div class="sm:flex-row text-neutral-600 dark:text-neutral-300 py-2 px-1 border-b last:border-b-0 sm:border-0 border-neutral-200 dark:border-neutral-700">
+        <div class="flex items-center justify-between">
+          <div class="flex-grow sm:flex-grow-0 truncate overflow-hidden whitespace-nowrap pr-2">
+            • {{ resume.name }}
+          </div>
+          <div
+            (click)="showCandidateResume(resume)"
+            class="flex cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100 ml-auto"
+          >
+            <mat-icon class="text-neutral-600 dark:text-neutral-300">clinical_notes</mat-icon>
+            <span class="pl-2 pr-2">{{ 'recruiter.resume' | transloco }}</span>
+            <!-- @if(candidate.scoreToPosition !== null){
+              <span class="">{{ candidate.scoreToPosition / 10 | number:'1.1-1'}}%</span>
+            } @else {
+              <span class="">"?"</span>
+            } -->
+            <!-- @if(candidate.scoreToPosition != "N/A"){
+              <span class="">{{ candidate.scoreToPosition / 10 | number:'1.1-1'}}%</span>
+            } -->
+          </div>
+          <div class="sm:grow"></div>
+        </div>
+      </div>
+
+  <!-- <div class="max-w-4xl mx-auto bg-white dark:bg-neutral-800 rounded-lg shadow-md mb-1 p-2 border border-neutral-200 dark:border-neutral-700">
+    <div class="flex flex-row items-center align-middle space-x-2 h-7 gap-1">
+      <div class="flex grow items-center space-x-2">
+        <h2 class="text-lg font-medium text-neutral-900 dark:text-neutral-100">{{ resume.name }}</h2>
+      </div>
+      <div  (click)="showCandidateResume(resume)"
+      class="cursor-pointer rounded-lg border px-2 py-1 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100">
+        {{ 'recruiter.see_cv' | transloco }}
+      </div>
+    </div>
+  </div> -->
+
+  }
+  </div>
+}
+
+
 
 </div>
 

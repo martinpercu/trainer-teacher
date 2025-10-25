@@ -52,6 +52,8 @@ export class OwnResumesComponent {
   selectedResume: Resume | null = null; // Esta variable guardará el currículum a mostrar
 
 
+  showListOwnResumes: boolean = false
+  showListResumes: boolean = false
 
 
   constructor() {
@@ -203,6 +205,16 @@ export class OwnResumesComponent {
   }
 
 
+  switchShowOwnResumes(){
+    this.showListOwnResumes = !this.showListOwnResumes
+  };
+
+
+  switchShowResumes(){
+    this.showListResumes = !this.showListResumes
+  };
+
+
   // Esta función ahora recibe un objeto Candidate
   showOwnResume(ownresume: Ownresume): void {
     // 1. Busca el currículum (resume) correspondiente en la lista de resumesForJob
@@ -248,6 +260,7 @@ export class OwnResumesComponent {
       this.selectedResume = null;
     }
   }
+
 
 
 }

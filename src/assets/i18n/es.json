@@ -92,7 +92,9 @@
     "own_resumes": "Mis CVs",
     "own_resumes_title": "Mis Contactos y CVs",
     "add_resume": "Agregar CV",
-    "manager": "Manager"
+    "manager": "Manager",
+    "own_conctacts": "CVs de mis contactos",
+    "candidates_resumes": "CVs de los candidatos"
   },
   "recruiter_auth": {
     "login": "Iniciar sesión",

@@ -92,7 +92,9 @@
     "own_resumes": "Resumes",
     "own_resumes_title": "My Contacts & Resumes",
     "add_resume": "Add Resume",
-    "manager": "Manager"
+    "manager": "Manager",
+    "own_conctacts": "My added resumes",
+    "candidates_resumes": "All candidates resumes"
   },
   "recruiter_auth": {
     "login" : "Log in",
