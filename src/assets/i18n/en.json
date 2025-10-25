@@ -46,5 +46,14 @@
     "last_name": "Last Name",
     "email": "Email",
     "no_result": "No result for this candidate."
+  },
+  "candidate": {
+    "upload" : "Upload",
+    "cv" : "resume",
+    "this_job" : "This is the job: ",
+    "title_job": "How it works",
+    "description": "See Docs",
+    "unique_id": "Take the Exam",
+    "exam_id": "English"
   }
 }

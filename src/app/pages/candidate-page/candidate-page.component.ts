@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { TranslocoPipe } from '@jsverse/transloco';
+
 import { CandidateLoginComponent } from '@components/auth/candidate-login/candidate-login.component';
 import { CandidateLogoutComponent } from '@components/auth/candidate-logout/candidate-logout.component';
 import { CandidateRegisterComponent } from '@components/auth/candidate-register/candidate-register.component';
@@ -17,28 +19,29 @@ import { Job } from '@models/job'
 
 @Component({
   selector: 'app-candidate-page',
-  imports: [CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent],
+  imports: [TranslocoPipe, CandidateLoginComponent, CandidateLogoutComponent, CandidateRegisterComponent, CandidateEditComponent, UploadComponent],
   templateUrl: './candidate-page.component.html'
 })
 export class CandidatePageComponent {
-
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   candidateService = inject(CandidateService);
   jobCrudService = inject(JobCrudService);
-
   candidateAuthService = inject(CandidateAuthService);
 
-  private router = inject(Router);
-
   alreadyAccount: boolean = false;
+  withJobId: boolean = false;
 
   job!: Job;
+  showRegister: boolean = true;
+  showLogin: boolean = false;
 
   async ngOnInit() {
     // Extraer el jobPositionId
     const jobPositionId = this.route.snapshot.paramMap.get('jobId'); // Ruta /job/:jobId
     if (jobPositionId) {
       console.log(jobPositionId);
+      this.withJobId = true
       const thisJob: any = await this.jobCrudService.getJobByIdRaw(jobPositionId);
       if(thisJob) {
         console.log('hay job job job');
@@ -50,6 +53,11 @@ export class CandidatePageComponent {
     }
     const algo = this.candidateAuthService.currentCandidateSig()
     console.log(algo);
+  }
+
+  switchLoginRegister() {
+    this.showLogin = !this.showLogin;
+    this.showRegister = !this.showRegister;
   }
 
 }

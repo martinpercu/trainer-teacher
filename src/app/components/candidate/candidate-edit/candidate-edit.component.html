@@ -80,7 +80,7 @@
 
         <!-- Email -->
         <div class="sm:col-span-2">
-          <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">Email:</label>
+          <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">Contact Email:</label>
           <input type="email" id="email" formControlName="email"
                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                  placeholder="john.doe@company.com" [class.border-green-500]="isemailFieldValid" [class.border-red-500]="isemailFieldInvalid">
@@ -111,6 +111,13 @@
           </div>
         </div>
 
+        <!-- City -->
+        <div class="sm:col-span-1">
+          <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">City:</label>
+          <input type="text" id="city" formControlName="city"
+                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        </div>
+
         <!-- Birthday -->
         <div class="sm:col-span-1">
           <label for="birthdate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">Birthday:</label>
@@ -118,6 +125,25 @@
                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
           <div class="h-4"></div>
         </div>
+
+        <!-- ZIP Code -->
+        <!-- <div class="sm:col-span-1">
+          <label for="zipCode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">ZIP code:</label>
+          <div class="relative">
+             <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                    <path d="M8 0a7.992 7.992 0 0 0-6.583 12.535 1 1 0 0 0 .12.183l.12.146c.112.145.227.285.326.4l5.245 6.374a1 1 0 0 0 1.545-.003l5.092-6.205c.206-.222.4-.455.578-.7l.127-.155a.934.934 0 0 0 .122-.192A8.001 8.001 0 0 0 8 0Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/>
+                </svg>
+            </div>
+            <input type="tel" id="zipCode" formControlName="zipCode"
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                   placeholder="12345" [class.border-green-500]="iszipCodeFieldValid" [class.is-invalid]="iszipCodeFieldInvalid">
+          </div>
+          <div class="mt-1 text-xs text-red-600 dark:text-red-400 h-4">
+            @if (zipCodeField?.hasError('minlength')){<span>At least 5 characters</span> }
+            @if (zipCodeField?.hasError('maxlength')){<span>No more than 8 characters</span> }
+          </div>
+        </div> -->
 
       </div>
 
