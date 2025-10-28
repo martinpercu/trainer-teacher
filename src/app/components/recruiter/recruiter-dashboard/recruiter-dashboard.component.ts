@@ -45,6 +45,7 @@ import { JobsListComponent } from '@recruiter/jobs-list/jobs-list.component';
 import { LoginAndRegisterComponent } from '@recruiter/login-and-register/login-and-register.component';
 import { RecruiterAccountComponent } from '@recruiter/recruiter-account/recruiter-account.component';
 import { OwnResumesComponent } from '@recruiter/own-resumes/own-resumes.component';
+import { AgentChatComponent } from '@recruiter/agent-chat/agent-chat.component';
 
 import { Candidate } from '@models/candidate';
 import { CandidateService } from '@services/candidate.service';
@@ -79,7 +80,8 @@ import { LoadingBarComponent } from "@shared/loading-bar/loading-bar.component";
     LoginAndRegisterComponent,
     LoadingBarComponent,
     RecruiterAccountComponent,
-    OwnResumesComponent
+    OwnResumesComponent,
+    AgentChatComponent
 ],
   templateUrl: './recruiter-dashboard.component.html',
 })
@@ -114,8 +116,9 @@ export class RecruiterDashboardComponent {
     | 'jobs_edit'
     | 'own_resumes'
     | 'candidates'
+    | 'agent_chat'
     // = 'jobs'; // Default to courses
-    = 'own_resumes'; // Default to courses
+    = 'agent_chat'; // Default to courses
 
   showSettingMenu: boolean = false;
 
@@ -264,6 +267,7 @@ export class RecruiterDashboardComponent {
       | 'jobs_edit'
       | 'candidates'
       | 'own_resumes'
+      | 'agent_chat'
   ) {
     this.currentView = view;
   }

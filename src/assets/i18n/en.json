@@ -94,7 +94,9 @@
     "add_resume": "Add Resume",
     "manager": "Manager",
     "own_conctacts": "My added resumes",
-    "candidates_resumes": "All candidates resumes"
+    "candidates_resumes": "All candidates resumes",
+    "ai_agent": "Agent AI",
+    "ai_agents": "Agents AI"
   },
   "recruiter_auth": {
     "login" : "Log in",

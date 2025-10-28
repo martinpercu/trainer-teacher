@@ -94,7 +94,9 @@
     "add_resume": "Adjouter CV",
     "manager": "Manager",
     "own_conctacts": "CVs de mes contacts",
-    "candidates_resumes": "Tous les CVs des candidats"
+    "candidates_resumes": "Tous les CVs des candidats",
+    "ai_agent": "Agent IA",
+    "ai_agents": "Agents IA"
   },
   "recruiter_auth": {
     "login": "Se connecter",
