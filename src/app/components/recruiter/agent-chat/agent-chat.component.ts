@@ -1,9 +1,9 @@
-import { Component, signal, inject, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 
 import { environment } from '@env/environment';
 
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpDownloadProgressEvent, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { MatIconModule } from '@angular/material/icon';
 
@@ -14,8 +14,8 @@ import { MessageWaitingComponent } from '@components/message-waiting/message-wai
 import { ChatMessage } from '@models/chatMessage';
 
 import { VisualStatesService } from '@services/visual-states.service';
-import { PagesService } from '@services/pages.service';
-import { UserService } from '@services/user.service';
+// import { PagesService } from '@services/pages.service';
+// import { UserService } from '@services/user.service';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 
@@ -40,7 +40,6 @@ export class AgentChatComponent {
   chatMessages: ChatMessage[] = [];
 
   loadingResponse: boolean = false;
-  startingResponse: boolean = false;
 
   showArrowDown: boolean = false;
   userScrolled: boolean = false; // Nueva bandera para controlar el scroll manual
@@ -63,7 +62,7 @@ export class AgentChatComponent {
 
 
   scrollToBottomFromArrow(): void {
-    console.log('hello');
+    console.log('SCROLL BOTTOM METHOD');
     const container = this.messagesContainer.nativeElement;
     container.scrollTop = container.scrollHeight;
   }
@@ -75,6 +74,12 @@ export class AgentChatComponent {
     textarea.style.height = `${textarea.scrollHeight}px`;
   }
 
+  scrollToBottom(): void {
+    if (!this.userScrolled && this.messagesContainer) {
+      const container = this.messagesContainer.nativeElement;
+      container.scrollTop = container.scrollHeight;  // Solo hacer scroll si el usuario no lo ha detenido
+    }
+  }
 
   handleKeydown(event: KeyboardEvent): void {
     if (event.key === 'Enter' && !event.shiftKey) {
@@ -83,15 +88,128 @@ export class AgentChatComponent {
     }
   }
 
+  sendMessage(message: string, showUserMessage: boolean = true): void {
+    if (message.trim() === "") return;
 
-  scrollToBottom(): void {
-    if (!this.userScrolled && this.messagesContainer) {
-      const container = this.messagesContainer.nativeElement;
-      container.scrollTop = container.scrollHeight;  // Solo hacer scroll si el usuario no lo ha detenido
+    this.loadingResponse = true;
+
+    if (showUserMessage) {
+      this.chatMessages.push({ role: "user", message });
     }
+
+    console.log('📤 Mensaje enviado:', message);
+
+    // Crear el mensaje del asistente vacío
+    const responseMessage = { role: "assistant", message: "" };
+    this.chatMessages.push(responseMessage);
+    const responseIndex = this.chatMessages.length - 1;
+
+    // Usar EventSource o fetch con streaming
+    this.streamResponse(message, responseIndex);
+
+    this.userMessage = "";
+    if (showUserMessage) {
+      setTimeout(() => {
+        this.userMessage = "";
+        this.adjustHeight();
+      }, 100);
+    }
+
+    setTimeout(() => {
+      this.scrollToBottomFromArrow();
+    }, 100);
   }
 
-  sendMessage(message: string, showUserMessage: boolean = true): void {
+  private streamResponse(message: string, responseIndex: number): void {
+    const url = `${environment.BACK_AGENT_BRIDGE}/chat_agent/5858/stream`; // ⚠️ Agregar /stream
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message: message })
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Network response was not ok');
+
+      const reader = response.body!.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let firstContentReceived = false; // 👈 Nueva bandera
+
+      const readStream = () => {
+        reader.read().then(({ done, value }) => {
+          if (done) {
+            console.log('✅ Stream completado');
+            console.log('✅ Stream completado');
+            console.log("🎯 ACA YA TENGO TODO EL MENSAJE TERMINADO");
+            console.log("📝 Mensaje completo:", this.chatMessages[responseIndex].message);
+            const the_message_finished = this.chatMessages[responseIndex].message
+            // ✅ Validación correcta
+            if (typeof the_message_finished === 'string' && the_message_finished.trim() !== '') {
+              this.speakText(the_message_finished);
+            }
+            // not needed here the this.loadingResponse. Anyway we keep it.
+            // this.loadingResponse = false;
+            return;
+          }
+
+          // Decodificar el chunk
+          buffer += decoder.decode(value, { stream: true });
+
+          // Procesar líneas completas
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.substring(6));
+
+                if (data.type === 'content') {
+                  // 🎯 Detener el loading cuando llega el primer contenido
+                  if (!firstContentReceived) {
+                    this.loadingResponse = false;
+                    firstContentReceived = true;
+                    console.log('🚀 Primer contenido recibido - loading detenido');
+                  }
+
+                  this.chatMessages[responseIndex].message += data.content;
+                  this.chatMessages = [...this.chatMessages];
+                  this.scrollToBottom();
+                } else if (data.type === 'error') {
+                  console.error('❌ Error del servidor:', data.message);
+                  this.chatMessages[responseIndex].message = "Error getting response. Please try again.";
+                  this.loadingResponse = false;
+                }
+              } catch (e) {
+                console.error('Error parsing JSON:', e, line);
+              }
+            }
+          }
+
+          readStream();
+        }).catch(error => {
+          console.error('❌ Error en stream:', error);
+          this.chatMessages[responseIndex].message = "Error getting response. Please try again.";
+          this.chatMessages = [...this.chatMessages];
+          this.loadingResponse = false;
+        });
+      };
+
+      readStream();
+    })
+    .catch(error => {
+      console.error('❌ Error en fetch:', error);
+      this.chatMessages[responseIndex].message = "Error getting response. Please try again.";
+      this.chatMessages = [...this.chatMessages];
+      this.loadingResponse = false;
+    });
+  }
+
+  // sendMessage_no_stream No in use. Anyway keep it
+  sendMessage_no_stream(message: string, showUserMessage: boolean = true): void {
     if (message.trim() === "") return;
 
     this.loadingResponse = true;
@@ -113,7 +231,7 @@ export class AgentChatComponent {
       message: message
     };
 
-    this.http.post<string>(`${environment.BACK_CHAT_URL}/chat_agent/5858`, formData)
+    this.http.post<string>(`${environment.BACK_AGENT_BRIDGE}/chat_agent/5858`, formData)
       .subscribe({
         next: (response: string) => {
           console.log('✅ Respuesta recibida:', response);
@@ -165,264 +283,6 @@ export class AgentChatComponent {
       this.scrollToBottomFromArrow();
     }, 100);
   }
-
-
-//   sendMessage(message: string, showUserMessage: boolean = true): void {
-//   if (message.trim() === "") return;
-
-//   this.loadingResponse = true;
-
-//   if (showUserMessage) {
-//     this.chatMessages.push({ role: "user", message });
-//   }
-
-//   console.log('📤 Mensaje enviado:', message);
-//   console.log('📊 chatMessages antes:', this.chatMessages);
-
-//   // Crear el mensaje del asistente vacío
-//   const responseMessage = { role: "assistant", message: "" };
-//   this.chatMessages.push(responseMessage);
-
-//   console.log('📊 chatMessages después de push:', this.chatMessages);
-
-//   const formData = {
-//     message: message
-//   };
-
-//   this.http.post<string>(`${environment.BACK_CHAT_URL}/chat_agent/5858`, formData)
-//     .subscribe({
-//       next: (response: string) => {
-//         console.log('✅ Respuesta recibida:', response);
-//         console.log('📦 Tipo de respuesta:', typeof response);
-//         console.log('📏 Longitud:', response?.length);
-
-//         responseMessage.message = response.trim();
-
-//         console.log('💬 responseMessage actualizado:', responseMessage);
-//         console.log('📊 chatMessages después de actualizar:', this.chatMessages);
-
-//         this.loadingResponse = false;
-
-//         setTimeout(() => this.scrollToBottom(), 10);
-//         // this.speakText(response);
-//       },
-//       error: (err) => {
-//         console.error('❌ Error:', err);
-//         responseMessage.message = "Error getting response. Please try again.";
-//         this.loadingResponse = false;
-//       }
-//     });
-
-//   this.userMessage = "";
-
-//   if (showUserMessage) {
-//     setTimeout(() => {
-//       this.userMessage = "";
-//       this.adjustHeight();
-//     }, 100);
-//   }
-
-//   setTimeout(() => {
-//     this.scrollToBottomFromArrow();
-//   }, 100);
-// }
-
-  // sendMessage(message: string, showUserMessage: boolean = true): void {
-  // if (message.trim() === "") return;
-
-  // this.loadingResponse = true;
-
-  // if (showUserMessage) {
-  //   this.chatMessages.push({ role: "user", message });
-  // }
-
-  // const responseMessage = { role: "assistant", message: "" };
-  // this.chatMessages.push(responseMessage);
-
-  // const formData = {
-  //   message: message
-  // };
-
-  // this.http.post<string>(`${environment.BACK_CHAT_URL}/chat_agent/5858`, formData)
-  //   .subscribe({
-  //     next: (response: string) => {
-  //       responseMessage.message = response.trim();
-  //       this.loadingResponse = false;
-  //       this.scrollToBottom();
-  //       this.speakText(response);
-  //     },
-  //     error: (err) => {
-  //       console.error('Error:', err);
-  //       responseMessage.message = "Error getting response. Please try again.";
-  //       this.loadingResponse = false;
-  //     }
-  //   });
-
-  // this.userMessage = "";
-
-  // if (showUserMessage) {
-  //   setTimeout(() => {
-  //     this.userMessage = "";
-  //     this.adjustHeight();
-  //   }, 100);
-  // }
-
-  // setTimeout(() => {
-  //   this.scrollToBottomFromArrow();
-  // }, 100);
-  // }
-
-
-  // sendMessageStreaming(message: string, showUserMessage: boolean = true): void {
-  // if (message.trim() === "") return;
-
-  // this.loadingResponse = true;
-
-  // if (showUserMessage) {
-  //   this.chatMessages.push({ role: "user", message });
-  // }
-
-  // const responseMessage = { role: "assistant", message: "" };
-  // this.chatMessages.push(responseMessage);
-
-  // let completeResponse = "";
-
-  // const formData = {
-  //   message: message
-  // };
-
-  // this.http.post(`${environment.BACK_CHAT_URL}/chat_agent/5858/stream`, formData, {
-  //   responseType: 'text',
-  //   observe: 'events',
-  //   reportProgress: true,
-  // })
-  //   .subscribe({
-  //     next: (event: HttpEvent<string>) => {
-  //       if (event.type === HttpEventType.DownloadProgress) {
-  //         const rawText = (event as HttpDownloadProgressEvent).partialText ?? "";
-  //         completeResponse = rawText.trim();
-  //         responseMessage.message = completeResponse;
-  //         this.loadingResponse = false;
-  //         setTimeout(() => this.scrollToBottom(), 10);
-  //       } else if (event.type === HttpEventType.Response) {
-  //         completeResponse = (event.body as string)?.trim() || completeResponse;
-  //         responseMessage.message = completeResponse;
-  //         this.speakText(completeResponse);
-  //       }
-  //     },
-  //     error: (err) => {
-  //       console.error('Error:', err);
-  //       responseMessage.message = "Error getting response. Please try again.";
-  //       this.loadingResponse = false;
-  //     }
-  //   });
-
-  // this.userMessage = "";
-
-  // if (showUserMessage) {
-  //   setTimeout(() => {
-  //     this.userMessage = "";
-  //     this.adjustHeight();
-  //   }, 100);
-  // }
-
-  // setTimeout(() => {
-  //   this.scrollToBottomFromArrow();
-  // }, 100);
-  // }
-
-
-
-
-  sendMessageOld_from_teacher_chat(message: string, showUserMessage: boolean = true): void {
-    if (message.trim() === "") return;
-
-    this.loadingResponse = true;
-    if (showUserMessage) {
-      this.chatMessages.push({ role: "user", message });
-    }
-
-    const responseMessage = { role: "assistant", message: "" };
-    this.chatMessages.push(responseMessage);
-
-    let completeResponse = "";
-    let displayedChars = 0;
-    let typingInterval: any = null;
-
-    const charsPerTick = 3; // Puedes ajustarlo o hacerlo dinámico más adelante
-
-    const simulateTyping = () => {
-      if (displayedChars < completeResponse.length) {
-        const nextChunk = Math.min(displayedChars + charsPerTick, completeResponse.length);
-        responseMessage.message = completeResponse.substring(0, nextChunk);
-        displayedChars = nextChunk;
-        this.loadingResponse = false;
-        setTimeout(() => this.scrollToBottom(), 10);
-      } else {
-        clearInterval(typingInterval);
-        responseMessage.message = completeResponse;
-        this.loadingResponse = false;
-        this.startingResponse = false;
-      }
-    };
-
-    const formData = {
-      message,
-      session_id: "id-sesson",
-      pages: "page para szaber que temario"
-    };
-
-    const timeout = setTimeout(() => {
-      clearInterval(typingInterval);
-      responseMessage.message = completeResponse;
-      this.loadingResponse = false;
-    }, 10000);
-
-    // this.http.post("https://assistant-chat-backend-production.up.railway.app/stream_chat_test", formData, {
-    // this.http.post("http://127.0.0.1:8000/stream_chat_test", formData, {
-    this.http.post(`${environment.BACK_CHAT_URL}/chat/5858`, formData, {
-      responseType: 'text',
-      observe: 'events',
-      reportProgress: true,
-    })
-      .subscribe({
-        next: (event: HttpEvent<string>) => {
-          if (event.type === HttpEventType.DownloadProgress) {
-            const rawText = (event as HttpDownloadProgressEvent).partialText ?? "";
-            completeResponse = rawText.trim();
-            if (!typingInterval) {
-              typingInterval = setInterval(simulateTyping, 80);
-            }
-          } else if (event.type === HttpEventType.Response) {
-            completeResponse = (event.body as string)?.trim() || completeResponse;
-            this.speakText(completeResponse); // Solo reproducimos el texto, no lo mostramos
-          }
-        },
-        error: (err) => {
-          console.error('Error:', err);
-          clearInterval(typingInterval);
-          clearTimeout(timeout);
-          responseMessage.message = "Error getting response. Please try again.";
-          this.loadingResponse = false;
-        },
-        complete: () => {
-          clearTimeout(timeout);
-        }
-      });
-
-    this.userMessage = "";
-    if (showUserMessage) {
-      setTimeout(() => {
-        this.userMessage = "";
-        this.adjustHeight();
-      }, 100);
-    }
-
-    setTimeout(() => {
-      this.scrollToBottomFromArrow();
-    }, 100);
-  }
-
 
   toggleSpeak(): void {
     this.speakIsEnabled = !this.speakIsEnabled;
