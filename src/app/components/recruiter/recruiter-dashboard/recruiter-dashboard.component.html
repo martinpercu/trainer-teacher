@@ -125,6 +125,7 @@
     </button>
 
     @if(allowedExamsShow && recruiterService.recruiterSig()?.useExams){
+    <!-- @if(true){ -->
     <button
       (click)="setView('exams')"
       class="flex items-center gap-2 px-4 py-2 rounded-lg text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
@@ -164,6 +165,7 @@
     </button>
     }
 
+    @if(recruiterService.recruiterSig()?.useManager){
     <button
       (click)="setView('own_resumes')"
       class="flex items-center gap-2 px-4 py-2 rounded-lg text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
@@ -181,7 +183,9 @@
         >{{ "recruiter.manager" | transloco }}</span
       >
     </button>
+    }
 
+    @if(recruiterService.recruiterSig()?.useAgentsAI){
     <button
       (click)="setView('agent_chat')"
       class="flex items-center gap-2 px-4 py-2 rounded-lg text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
@@ -199,6 +203,7 @@
         >{{ "recruiter.ai_agent" | transloco }}</span
       >
     </button>
+    }
 
 
 
@@ -550,6 +555,7 @@
       </button>
     }
 
+    @if(allowedExamsShow && recruiterService.recruiterSig()?.useManager){
     <button
       (click)="setView('own_resumes')"
       class="flex-1 flex flex-col items-center text-neutral-600 dark:text-neutral-400"
@@ -569,7 +575,9 @@
         >{{ "recruiter.manager" | transloco }}</span
       >
     </button>
+    }
 
+    @if(allowedExamsShow && recruiterService.recruiterSig()?.useAgentsAI){
     <button
       (click)="setView('agent_chat')"
       class="flex-1 flex flex-col items-center text-neutral-600 dark:text-neutral-400"
@@ -589,7 +597,7 @@
         >{{ "recruiter.ai_agent" | transloco }}</span
       >
     </button>
-
+    }
 
 
 

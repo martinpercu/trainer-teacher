@@ -11,4 +11,6 @@ export interface Recruiter {
   whatsapp?: string;
   allowWhatsapp?: boolean;
   useExams?: boolean;
+  useManager?: boolean;
+  useAgentsAI?: boolean;
 }

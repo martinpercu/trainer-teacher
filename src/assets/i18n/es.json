@@ -96,7 +96,10 @@
     "own_conctacts": "CVs de mis contactos",
     "candidates_resumes": "CVs de los candidatos",
     "ai_agent": "Agente IA",
-    "ai_agents": "Agentes IA"
+    "ai_agents": "Agentes IA",
+    "use_ai_agents": "Usar Agentes AI",
+    "use_manager": "Usar Manager",
+    "here_show_all_resumes": "Aquí encontrarás los CV y perfiles. Los que usted cargue como los que envíen los candidatos"
   },
   "recruiter_auth": {
     "login": "Iniciar sesión",
@@ -197,6 +200,7 @@
     "create_new_job" : "Nuevo Puesto",
     "edit_job" : "Editar Trabajo",
     "job_name" : "Nombre del Trabajo",
+    "job_description": "Descripción",
     "id_unique": "Identificador Único:",
     "description": "Descripción",
     "job_state": "Estado del Trabajo",
@@ -211,7 +215,12 @@
     "delete_job": "Eliminar",
     "basic_view": "Vista básica",
     "expand_view": "Vista expandida",
+    "basic_mode": "Modo Sencillo",
+    "expand_mode": "Modo Extendido",
     "change_view": "Cambiar vista",
+    "change_mode": "Cambiar Modo",
+    "expand": "Expandir",
+    "contract": "Básico",
     "salary_hour": "Salario por hora",
     "salary_week": "Salario semanal",
     "salary_month": "Remuneración mensual",

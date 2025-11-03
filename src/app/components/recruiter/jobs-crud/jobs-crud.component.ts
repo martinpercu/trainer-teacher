@@ -350,6 +350,12 @@ export class JobsCrudComponent {
     this.errorMessage = '';
   }
 
+  handleExpandForm() {
+    this.showExpandForm = !this.showExpandForm
+    if (this.showExpandForm == true) {
+      this.basicDetailView = true
+    }
+  }
 
   setDisplay(theJob: any){
     console.log(theJob);
@@ -380,10 +386,6 @@ export class JobsCrudComponent {
 
   handleShowSalary(){
     this.showSalary = !this.showSalary
-  }
-
-  handleExpandForm() {
-    this.showExpandForm = !this.showExpandForm
   }
 
   handlePayView(){

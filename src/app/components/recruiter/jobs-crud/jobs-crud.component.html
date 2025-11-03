@@ -80,76 +80,41 @@
 
   </div> -->
 
+
+  <div class="flex justify-between mt-2 sm:mt-4 mb-6 sm:mb-8 text-gray-900 dark:text-gray-100">
+    <div class="flex flex-col sm:flex-row">
+      <div class="text-xl font-semibold self-center">
+        {{ editingJobId ? ('position_edit.edit_job' | transloco) : ('position_edit.create_new_job' | transloco)  }}
+      </div>
+      <div class="text-sm font-semibold sm:ml-3 ml-0 self-center">
+        <span> -- </span>
+        @if(!showExpandForm) { {{ 'position_edit.basic_mode' | transloco  }} }
+        @if(showExpandForm) { {{ 'position_edit.expand_mode' | transloco  }} }
+        <span> -- </span>
+      </div>
+    </div>
+    <div class="">
+      <button
+        class="flex flex-row cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100"
+        (click)="handleExpandForm()"
+      >
+        <div class="pl-2 sm:pl-0 pr-2">
+          @if(!showExpandForm){ {{ 'position_edit.expand' | transloco  }} }
+          @if(showExpandForm){ {{ 'position_edit.contract' | transloco  }} }
+        </div>
+        <mat-icon>
+          @if(!showExpandForm){arrows_output}
+          @if(showExpandForm){arrows_input}
+        </mat-icon>
+      </button>
+    </div>
+  </div>
+
   <form (ngSubmit)="saveJob()" class="space-y-4">
 
 
-  @if(showExpandForm){
-
-  <!-- BUTTON for expand SALARY -->
-  <div class="flex flex-col sm:flex-row gap-3 mt-2 font-light">
-    <div
-      class="flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100"
-      (click)="handleShowBasicDetails()"
-    >
-      <div class="flex">
-        <mat-icon class="text-neutral-600 dark:text-neutral-300"
-        >work_update
-        </mat-icon>
-      </div>
-      <div class="flex pl-2">
-        {{ editingJobId ? ('position_edit.edit_job' | transloco) : ('position_edit.create_new_job' | transloco)  }}
-      </div>
-      <div class="flex pl-2 ml-auto">
-        @if(!basicDetailView) {
-        <mat-icon
-          class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
-          >expand_circle_down</mat-icon
-        >
-        } @else {
-        <mat-icon
-          class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
-          >expand_circle_up</mat-icon
-        >
-        }
-      </div>
-    </div>
-  </div>
-
-  @if(basicDetailView){
-  <div>
-    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ "position_edit.job_name" | transloco }}</label>
-    <input
-      class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-400 dark:focus:border-green-400"
-      type="text"
-      [(ngModel)]="newJob.name"
-      name="jobName"
-      required
-    />
-    @if (errorMessage) {
-      <p class="text-red-500 dark:text-red-400 text-sm mt-1">{{ errorMessage }}</p>
-    }
-  </div>
-
-
-  <div>
-    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ "position_edit.description" | transloco }}</label>
-    <textarea
-      class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-400 dark:focus:border-green-400"
-      [(ngModel)]="newJob.description"
-      name="jobDescription"
-      rows="3"
-      required
-    ></textarea>
-  </div>
-
-  }
-}
 
   @if(!showExpandForm) {
-    <div class="text-xl font-semibold text-center sm:text-left mt-4 text-gray-900 dark:text-gray-100">
-      {{ editingJobId ? ('position_edit.edit_job' | transloco) : ('position_edit.create_new_job' | transloco)  }}
-    </div>
-
 
   <div>
     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ "position_edit.job_name" | transloco }}</label>
@@ -219,6 +184,71 @@
 
 
   }
+
+  @if(showExpandForm){
+
+
+  <!-- BUTTON for expand SALARY -->
+  <div class="flex flex-col sm:flex-row gap-3 mt-2 font-light">
+    <div
+      class="flex items-center cursor-pointer rounded-lg border py-1 px-2 border-neutral-200 dark:border-neutral-700 bg-neutral-150 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-100"
+      (click)="handleShowBasicDetails()"
+    >
+      <div class="flex">
+        <mat-icon class="text-neutral-600 dark:text-neutral-300"
+        >work_update
+        </mat-icon>
+      </div>
+      <div class="flex pl-2">
+        {{ 'position_edit.job_description' | transloco }}
+      </div>
+      <div class="flex pl-2 ml-auto">
+        @if(!basicDetailView) {
+        <mat-icon
+          class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
+          >expand_circle_down</mat-icon
+        >
+        } @else {
+        <mat-icon
+          class="text-neutral-600 dark:text-neutral-300 items-center align-middle"
+          >expand_circle_up</mat-icon
+        >
+        }
+      </div>
+    </div>
+  </div>
+
+  @if(basicDetailView){
+  <div>
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ "position_edit.job_name" | transloco }}</label>
+    <input
+      class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-400 dark:focus:border-green-400"
+      type="text"
+      [(ngModel)]="newJob.name"
+      name="jobName"
+      required
+    />
+    @if (errorMessage) {
+      <p class="text-red-500 dark:text-red-400 text-sm mt-1">{{ errorMessage }}</p>
+    }
+  </div>
+
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ "position_edit.description" | transloco }}</label>
+    <textarea
+      class="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-green-500 focus:border-green-500 dark:focus:ring-green-400 dark:focus:border-green-400"
+      [(ngModel)]="newJob.description"
+      name="jobDescription"
+      rows="3"
+      required
+    ></textarea>
+  </div>
+
+  }
+  }
+
+
 
   <!-- @if(theRecruiter.subscriptionLevel >= 3 && recruiterService.recruiterSig()?.useExams){
   <div class="flex flex-col sm:flex-row">

@@ -118,7 +118,7 @@ export class RecruiterDashboardComponent {
     | 'candidates'
     | 'agent_chat'
     // = 'jobs'; // Default to courses
-    = 'agent_chat'; // Default to courses
+    = 'jobs_edit'; // Default to courses
 
   showSettingMenu: boolean = false;
 
@@ -216,7 +216,7 @@ export class RecruiterDashboardComponent {
 
           if(this.jobs.length == 0){
             this.setView('jobs_edit')
-            this.allowedExamsShow = false
+            // this.allowedExamsShow = false
           }
 
           this.resumes = resumes;
