@@ -14,8 +14,6 @@ import { MessageWaitingComponent } from '@components/message-waiting/message-wai
 import { ChatMessage } from '@models/chatMessage';
 
 import { VisualStatesService } from '@services/visual-states.service';
-// import { PagesService } from '@services/pages.service';
-// import { UserService } from '@services/user.service';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 

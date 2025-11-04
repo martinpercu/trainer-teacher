@@ -117,8 +117,9 @@ export class RecruiterDashboardComponent {
     | 'own_resumes'
     | 'candidates'
     | 'agent_chat'
+    | ''
     // = 'jobs'; // Default to courses
-    = 'jobs_edit'; // Default to courses
+    = 'candidates'; // Default to courses
 
   showSettingMenu: boolean = false;
 
@@ -214,10 +215,10 @@ export class RecruiterDashboardComponent {
           this.jobs = jobs; // Asignamos los trabajos al componente
           // console.log('Jobs for recruiter:', this.jobs);
 
-          if(this.jobs.length == 0){
-            this.setView('jobs_edit')
-            // this.allowedExamsShow = false
-          }
+          // if(this.jobs.length == 0){
+          //   this.setView('jobs_edit')
+          //   // this.allowedExamsShow = false
+          // }
 
           this.resumes = resumes;
           // console.log('Resumes for recruiter:', this.resumes);
@@ -242,6 +243,14 @@ export class RecruiterDashboardComponent {
 
           // Llama a la función para ordenar los trabajos una vez que los datos estén cargados
           this.orderJobsByCandidateCount();
+
+          if(this.jobs.length == 0){
+            this.setView('jobs_edit')
+          }
+          if(this.jobs.length >= 1){
+            this.setView('jobs')
+          }
+
         },
         error: (error) => {
           console.error('Error in main subscription:', error);
@@ -250,7 +259,7 @@ export class RecruiterDashboardComponent {
           console.log('All data subscriptions completed.');
         },
       });
-      console.log(' a ver si se llega');
+      console.log('esto se ejecuta de toque arranca el NgOninit');
 
   }
 

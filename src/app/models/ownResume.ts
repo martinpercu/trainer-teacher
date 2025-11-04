@@ -35,4 +35,5 @@ export interface Ownresume {
   works?: Works[]; // Texto de la pregunta
   certifications?: Certification[]; // Texto de la pregunta
   education?: Education[]; // Texto de la pregunta
+  useWithAgent?: boolean;
 }
