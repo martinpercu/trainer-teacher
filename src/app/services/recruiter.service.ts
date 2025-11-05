@@ -137,6 +137,13 @@ export class RecruiterService {
       });
   }
 
+  /**
+   * Regresa subscriptionLevel del Recruiter
+   */
+  async currentRecruitersubcriptionLevel(): Promise<number | undefined> {
+    const subscriptionLevel = this.recruiterSig()?.subscriptionLevel;
+    return subscriptionLevel; // TypeScript/JS lo envolverá automáticamente en una Promise
+}
 
     // async updateOneUser(user: Partial<Candidate>, userId: string) {
     // const userDocRef = doc(this.candidatesCollection, userId);

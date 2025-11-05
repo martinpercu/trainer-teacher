@@ -174,4 +174,8 @@ export class AuthService {
     const promise = signOut(this.firebaseAuth);
     return from(promise);
   }
+
+  getCurrentUserId(): string | null {
+    return this.firebaseAuth.currentUser?.uid || null;
+  }
 }

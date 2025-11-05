@@ -16,10 +16,12 @@ import { ChatMessage } from '@models/chatMessage';
 import { VisualStatesService } from '@services/visual-states.service';
 import { TranslocoPipe } from '@jsverse/transloco';
 
+import { SyncJobComponent } from '@recruiter/sync-job/sync-job.component'
+
 
 @Component({
   selector: 'app-agent-chat',
-  imports: [CommonModule, FormsModule, MatIconModule, MessageWaitingComponent, TranslocoPipe],
+  imports: [CommonModule, FormsModule, MatIconModule, MessageWaitingComponent, TranslocoPipe, SyncJobComponent],
   templateUrl: './agent-chat.component.html',
   styleUrl: './agent-chat.component.css'
 })

@@ -19,16 +19,16 @@ import { TeacherCrudService } from '@services/teacher-crud.service';
 import { ExamCrudService } from '@services/exam-crud.service';
 import { JobCrudService } from '@services/job-crud.service';
 
-import { Course } from '@models/course';
-import { Student } from '@models/student';
-import { User } from '@models/user';
+// import { Course } from '@models/course';
+// import { Student } from '@models/student';
+// import { User } from '@models/user';
 import { Result } from '@models/result';
 import { Exam } from '@models/exam';
 import { Job } from '@models/job';
-import { Recruiter } from '@models/recruiter';
+// import { Recruiter } from '@models/recruiter';
 import { Resume } from '@models/resume';
 
-import { Observable } from 'rxjs';
+// import { Observable } from 'rxjs';
 import { ExamResultListComponent } from '@school/exam-result-list/exam-result-list.component';
 // import { Teacher } from '@models/teacher';
 // import { TeacherListComponent } from '@school/teacher-list/teacher-list.component';
@@ -42,7 +42,7 @@ import { RecruiterAuthService } from '@services/recruiter-auth.service';
 import { CandidatesListComponent } from '@recruiter/candidates-list/candidates-list.component';
 import { JobsListComponent } from '@recruiter/jobs-list/jobs-list.component';
 
-import { LoginAndRegisterComponent } from '@recruiter/login-and-register/login-and-register.component';
+// import { LoginAndRegisterComponent } from '@recruiter/login-and-register/login-and-register.component';
 import { RecruiterAccountComponent } from '@recruiter/recruiter-account/recruiter-account.component';
 import { OwnResumesComponent } from '@recruiter/own-resumes/own-resumes.component';
 import { AgentChatComponent } from '@recruiter/agent-chat/agent-chat.component';
@@ -59,7 +59,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 
 import { of, forkJoin, from } from 'rxjs'; // Import 'of'
 import { switchMap, tap, filter, catchError, map, take } from 'rxjs/operators';
-import { LoadingBarComponent } from "@shared/loading-bar/loading-bar.component";
+// import { LoadingBarComponent } from "@shared/loading-bar/loading-bar.component";
 // import { map } from 'rxjs/operators';
 
 @Component({
@@ -77,8 +77,8 @@ import { LoadingBarComponent } from "@shared/loading-bar/loading-bar.component";
     // TeacherListComponent,
     // ExamsListComponent,
     JobsListComponent,
-    LoginAndRegisterComponent,
-    LoadingBarComponent,
+    // LoginAndRegisterComponent,
+    // LoadingBarComponent,
     RecruiterAccountComponent,
     OwnResumesComponent,
     AgentChatComponent
