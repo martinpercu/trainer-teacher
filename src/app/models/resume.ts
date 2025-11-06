@@ -18,7 +18,7 @@ export interface Education {
 }
 
 export interface Resume {
-  id?: string; // Is only to make work getResumesForJobsAndCandidates in resume.service
+  resumeId?: string; // Is only to make work getResumesForJobsAndCandidates in resume.service
   candidateUID: string;
   jobRelated: string;
   recruiterId: string;

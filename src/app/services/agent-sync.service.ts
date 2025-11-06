@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';
-import { JobCrudService } from '@services/job-crud.service';
 
 
 @Injectable({
@@ -48,6 +47,61 @@ export class AgentSyncService {
     return this.http.delete(url).toPromise();
   }
 
+
+// ===== RESUMES RESUMES RESUMES =====
+
+  syncResumes(resumes: any[]) {
+    return this.http.post(`${this.apiUrl}/resumes/sync`, {
+      resumes: resumes.map(r => ({
+        resumeId: r.resumeId,
+        candidateUID: r.candidateUID,
+        recruiterId: r.recruiterId,
+        name: r.name,
+        email: r.email,
+        phone: r.phone,
+        city: r.city,
+        zipcode: r.zipcode,
+        summary: r.summary,
+
+        // ← Convertir skills: de string a array
+        skills: this.parseToArray(r.skills),
+
+        // ← Convertir languages: de string a array
+        languages: this.parseToArray(r.languages),
+
+        works: r.works || [],
+
+        // ← Convertir certifications.year: de number a string
+        certifications: (r.certifications || []).map((c: any) => ({
+          certificate: c.certificate,
+          issuingOrganization: c.issuingOrganization,
+          year: c.year ? String(c.year) : null
+        })),
+
+        // ← Convertir education.graduationYear: de number a string
+        education: (r.education || []).map((e: any) => ({
+          degree: e.degree,
+          institution: e.institution,
+          graduationYear: e.graduationYear ? String(e.graduationYear) : null
+        }))
+      }))
+    }).toPromise();
+  }
+
+  // Función helper para parsear strings a arrays
+  private parseToArray(value: any): string[] {
+    if (!value) return [];
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string') {
+      // Separar por comas y limpiar espacios
+      return value.split(',').map(item => item.trim()).filter(item => item.length > 0);
+    }
+    return [];
+  }
+
+  deleteResumeFromAgent(resumeId: string) {
+    return this.http.delete(`${this.apiUrl}/resumes/${resumeId}`).toPromise();
+  }
 
 
 

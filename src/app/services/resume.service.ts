@@ -13,7 +13,8 @@ import {
   orderBy,
   query,
   where,
-  CollectionReference
+  CollectionReference,
+  writeBatch
 } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -59,6 +60,69 @@ export class ResumeService {
    * @returns A Promise that resolves when the data is saved.
    */
   async saveResumeDataToFirestore(resumeData: any, candidateUID: string, jobId: string, recruiterId: string): Promise<string> {
+    console.log(`Saving resume data for user: ${candidateUID}`);
+    // 1. Crear una referencia al nuevo documento **antes** de guardarlo
+    // Esto genera un ID único automáticamente.
+    const resumesRef = collection(this.firestore, 'resumes') as CollectionReference<Resume>; // Asegúrate de que resumesRef apunte a tu colección
+    const docRef = doc(resumesRef); // Referencia con el ID generado
+
+    // // **OBTENEMOS EL ID DEL DOCUMENTO GENERADO**
+    const documentId = docRef.id;
+
+    const newResume: Resume = {
+      candidateUID: candidateUID,
+      jobRelated: jobId,
+      recruiterId: recruiterId,
+      // *** AGREGAMOS EL ID DEL DOCUMENTO AQUÍ ***
+      resumeId: documentId, // Agregamos el campo para guardar el ID dentro
+
+      name: resumeData['Name'] || null,
+      email: resumeData['Email'] || null,
+      phone: resumeData['Phone Number'] || null,
+      zipcode: resumeData['Postal Code'] || null,
+      city: resumeData['City'] || null,
+
+      summary: resumeData['Summary/Objective'] || null,
+      skills: resumeData['Skills'] || null,
+      languages: resumeData['Languages'] || null,
+
+      // Validamos si 'Work Experience' existe antes de mapear
+      works: (resumeData['Work Experience'] || []).map((work: any) => ({
+        jobtitle: work['Job Title'] || null,
+        company: work['Company'] || null,
+        dates: work['Dates'] || null,
+        description: work['Description'] || null,
+      })),
+
+      // <-- CORRECCIÓN AQUÍ: Validamos si 'Certification' existe antes de mapear
+      certifications: (resumeData['Certification'] || []).map((cert: any) => ({
+        certificate: cert['Certificate'] || null,
+        issuingOrganization: cert['Issuing Organization'] || null,
+        year: cert['Year'] || null,
+      })),
+
+      // <-- CORRECCIÓN AQUÍ: Validamos si 'Education' existe antes de mapear
+      education: (resumeData['Education'] || []).map((edu: any) => ({
+        degree: edu['Degree'] || null,
+        institution: edu['Institution'] || null,
+        graduationYear: edu['Graduation Year'] || null,
+      })),
+    };
+
+    console.log(newResume);
+
+    // 3. Usar setDoc para guardar el objeto en la referencia que creamos
+    await setDoc(docRef, newResume);
+    console.log(`Resume data saved successfully with document ID: ${documentId}`);
+
+    // const docRef = await addDoc(this.resumesCollection, newResume);
+    // console.log(`Resume data saved successfully with document ID: ${docRef.id}`);
+
+    return documentId;
+  };
+
+
+  async saveResumeDataToFirestoreOld(resumeData: any, candidateUID: string, jobId: string, recruiterId: string): Promise<string> {
     console.log(`Saving resume data for user: ${candidateUID}`);
 
     const newResume: Resume = {
@@ -106,6 +170,50 @@ export class ResumeService {
 
     return docRef.id;
   };
+
+  /**
+   * Agrega el ID del documento ('resumeId') como un campo dentro de los documentos existentes.
+   * ⚠️ ADVERTENCIA: Ejecuta esto una sola vez, en un entorno controlado.
+   * @returns Una Promise que resuelve cuando la migración ha terminado.
+   */
+  async migrateResumesAddId(): Promise<void> {
+    const resumesRef = collection(this.firestore, 'resumes');
+
+    // 1. Obtiene todos los documentos
+    const querySnapshot = await getDocs(resumesRef);
+
+    // 2. Crea un lote de escritura (writeBatch) para eficiencia
+    const batch = writeBatch(this.firestore);
+
+    let updatedCount = 0;
+
+    console.log(`Iniciando migración. Documentos encontrados: ${querySnapshot.size}`);
+
+    // 3. Itera y prepara la actualización para cada documento
+    querySnapshot.forEach((docSnapshot) => {
+        // Obtenemos el ID del documento (la clave)
+        const docId = docSnapshot.id;
+
+        // Creamos una referencia para el update
+        const docRef = doc(this.firestore, 'resumes', docId);
+
+        // Añadimos la operación al lote: actualizar el campo resumeId con el ID del documento
+        batch.update(docRef, {
+            resumeId: docId
+        });
+
+        updatedCount++;
+    });
+
+    // 4. Ejecuta el lote de forma atómica
+    if (updatedCount > 0) {
+        console.log(`Ejecutando ${updatedCount} actualizaciones en lote...`);
+        await batch.commit();
+        console.log('✅ Migración de resumeId completada con éxito.');
+    } else {
+        console.log('No se encontraron documentos para actualizar.');
+    }
+  }
 
 
   async getScore(resumeData: any, description: string): Promise<any> {
@@ -315,7 +423,7 @@ export class ResumeService {
     const resumes: Resume[] = snapshot.docs.map((doc) => {
       // Usamos `doc.data()` para obtener los datos del documento
       // y `doc.id` para obtener el ID del documento.
-      return { id: doc.id, ...doc.data() } as Resume;
+      return { resumeId: doc.id, ...doc.data() } as Resume;
     });
 
     return resumes;
@@ -339,7 +447,7 @@ export class ResumeService {
 
     // Mapea los resultados al modelo Resume, incluyendo el ID del documento.
     const resumes: Resume[] = snapshot.docs.map((doc) => {
-      return { id: doc.id, ...doc.data() } as Resume;
+      return { resumeId: doc.id, ...doc.data() } as Resume;
     });
 
     return resumes;
@@ -378,6 +486,27 @@ export class ResumeService {
     const q = query(this.resumesCollection, where('recruiterId', '==', recruiterId));
     return collectionData(q, { idField: 'recruiterId' }) as Observable<Resume[]>;
   }
+
+
+  /**
+   * Obtiene un trabajo por su ID.
+   * @param resumeId El ID del trabajo.
+   * @returns Una Promise con el Job o undefined si no se encuentra.
+   */
+  async getResumeByIdRaw(resumeId: string): Promise<Resume | undefined> {
+    const jobDocRef = doc(this.firestore, `resumes/${resumeId}`);
+    const jobSnapshot = await getDoc(jobDocRef);
+    return jobSnapshot.exists()
+      ? ({ resumeId, ...jobSnapshot.data() } as unknown as Resume) // <-- Añadir 'as unknown'
+      : undefined;
+  }
+  // async getResumeByIdRaw(resumeId: string): Promise<Resume | undefined> {
+  //   const jobDocRef = doc(this.firestore, `resumes/${resumeId}`);
+  //   const jobSnapshot = await getDoc(jobDocRef);
+  //   return jobSnapshot.exists()
+  //     ? ({ resumeId, ...jobSnapshot.data() } as Resume)
+  //     : undefined;
+  // }
 
 
 

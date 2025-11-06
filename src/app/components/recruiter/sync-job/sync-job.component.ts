@@ -10,8 +10,7 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-sync-job',
   imports: [],
-  templateUrl: './sync-job.component.html',
-  styleUrl: './sync-job.component.css'
+  templateUrl: './sync-job.component.html'
 })
 export class SyncJobComponent {
   authService = inject(AuthService);
@@ -23,17 +22,6 @@ export class SyncJobComponent {
   syncing = false;
 
 
-  // async ngOnInit() {
-  //   const userId = this.authService.getCurrentUserId();
-  //   this.authService.user$
-  //   console.log(this.authService.user$);
-
-  // }
-
-  // async testButton() {
-  //   console.log(this.userId);
-  // }
-
   async syncAllJobsToAgent() {
     this.syncing = true;
 
@@ -44,10 +32,21 @@ export class SyncJobComponent {
           this.jobCrudService.getJobs(this.userId)
         );
 
-        console.log(`Sincronizando ${allJobs.length} jobs con el agente...`);
+
+        console.log('🔍 Jobs obtenidos de Firebase:', allJobs.length);
+        console.log('📦 Datos completos:', allJobs);
+
+        // ← AGREGAR ESTE CHECK
+        if (allJobs.length === 0) {
+          alert('⚠️ No hay jobs para sincronizar');
+          this.syncing = false;
+          return;
+        }
+        // console.log(`Sincronizando ${allJobs.length} jobs con el agente...`);
+        // console.log(allJobs)
 
         const result = await this.agentSyncService.syncAllJobs(allJobs);
-
+        console.log('✅ Resultado del servidor:', result);
         alert(`✅ ${allJobs.length} jobs sincronizados correctamente`);
 
       } catch (error) {
@@ -62,6 +61,7 @@ export class SyncJobComponent {
 
   async syncOneJobToAgent() {
     this.syncing = true;
+    alert('a verga')
 
     const theJob = await this.jobCrudService.getJobByIdRaw("Ca5dUqEuky5dGqQmyJJr")
     console.log(theJob);
@@ -79,7 +79,7 @@ export class SyncJobComponent {
     // 2. LLAMADA A FASTAPI/AGENTE AI (DB Secundaria)
     try {
         // Usamos await porque deleteJobFromAgent devuelve una Promise (por .toPromise())
-        await this.agentSyncService.deleteJobFromAgent("job-001");
+        await this.agentSyncService.deleteJobFromAgent("Ca5dUqEuky5dGqQmyJJr");
         console.log('✅ Job eliminado del Agente AI exitosamente.');
         // alert('✅ Job eliminado del Agente AI exitosamente.');
 
