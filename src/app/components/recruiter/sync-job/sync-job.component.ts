@@ -79,7 +79,7 @@ export class SyncJobComponent {
     // 2. LLAMADA A FASTAPI/AGENTE AI (DB Secundaria)
     try {
         // Usamos await porque deleteJobFromAgent devuelve una Promise (por .toPromise())
-        await this.agentSyncService.deleteJobFromAgent("gVHfvOKFb9YNgGOCJ3mT");
+        await this.agentSyncService.deleteJobFromAgent("job-001");
         console.log('✅ Job eliminado del Agente AI exitosamente.');
         // alert('✅ Job eliminado del Agente AI exitosamente.');
 
