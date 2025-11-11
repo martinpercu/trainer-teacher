@@ -37,6 +37,7 @@ export class SyncResumeComponent {
               resumeId: r.resumeId,
               candidateUID: r.candidateUID,
               recruiterId: r.recruiterId,
+              jobRelated: r.jobRelated,
               name: r.name,
               email: r.email,
               phone: r.phone,

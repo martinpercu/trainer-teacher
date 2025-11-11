@@ -18,6 +18,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 
 import { SyncJobComponent } from '@recruiter/sync-job/sync-job.component';
 import { SyncResumeComponent } from '@recruiter/sync-resume/sync-resume.component';
+import { AgentStateService } from '@services/agent-state.service';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class AgentChatComponent {
   private cdr = inject(ChangeDetectorRef);
 
   visualStatesService = inject(VisualStatesService);
+  agentStateService = inject(AgentStateService);
 
 
   userMessage: string = '';
@@ -129,7 +131,10 @@ export class AgentChatComponent {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ message: message })
+      body: JSON.stringify({
+        message: message,
+        recruiterId: "OgjEKmc19cR4MnQ0lBmLOVOzEFM2"
+      })
     })
     .then(response => {
       if (!response.ok) throw new Error('Network response was not ok');
@@ -316,6 +321,35 @@ export class AgentChatComponent {
     window.speechSynthesis.speak(utterance);
   }
   // End Voice
+
+  clearChatHistory(): void {
+    const threadId = '5858'; // Hardcoded por ahora
+    const url = `${environment.BACK_AGENT_BRIDGE}/threads/${threadId}`;
+
+    console.log('🗑️ Limpiando historial del thread:', threadId);
+
+    // Limpiar mensajes en el frontend inmediatamente
+    this.chatMessages = [];
+
+    // Llamar al backend para borrar el historial del thread
+    this.http.delete(url).subscribe({
+      next: (response: any) => {
+        console.log('✅ Historial borrado correctamente:', response);
+
+        if (response.status === 'deleted') {
+          console.log(`🗑️ Checkpoints eliminados: ${response.checkpoints_deleted}`);
+          console.log(`🗑️ Writes eliminados: ${response.writes_deleted}`);
+        } else if (response.status === 'not_found') {
+          console.log('ℹ️ Thread no encontrado en la base de datos');
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error al borrar historial:', err);
+        // Los mensajes ya se limpiaron en el frontend
+        // Podrías mostrar un toast/notification al usuario si quieres
+      }
+    });
+  }
 
 
 }

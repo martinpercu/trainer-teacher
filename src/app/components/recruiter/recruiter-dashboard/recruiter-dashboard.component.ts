@@ -169,7 +169,7 @@ export class RecruiterDashboardComponent {
               take(1),
               tap((resumes) => {
                 this.resumes = resumes; // Asignamos los resumes a la propiedad del componente
-                // console.log('Retrieved resumes (inside forkJoin):', this.resumes);
+                console.log('Retrieved resumes (inside forkJoin):', this.resumes);
               }),
               catchError((error) => {
                 console.error('Error fetching resumes (inside forkJoin):', error);
@@ -221,7 +221,7 @@ export class RecruiterDashboardComponent {
           // }
 
           this.resumes = resumes;
-          // console.log('Resumes for recruiter:', this.resumes);
+          console.log('Resumes for recruiter:', this.resumes);
 
           // 1. **Filtro Crucial:** Obtener los `examId` de los trabajos creados por el reclutador actual
           const recruiterExamIds = new Set(

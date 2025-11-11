@@ -70,7 +70,7 @@ export class JobsListComponent {
 
     this.magicLink = `${environment.BASEURL}/job/${this.job.magicId}`;
     console.log(this.magicLink);
-    // console.log(this.resumesForJob);
+    console.log(this.resumesForJob);
     this.combineCandidateData();
     // console.log(this.candidatesWithScores);
     // console.log(this.candidatesWithThumbUp);
