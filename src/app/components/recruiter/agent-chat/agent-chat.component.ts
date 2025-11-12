@@ -1,9 +1,6 @@
 import { Component, inject, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 
-import { environment } from '@env/environment';
-
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 
 import { MatIconModule } from '@angular/material/icon';
 
@@ -14,6 +11,7 @@ import { MessageWaitingComponent } from '@components/message-waiting/message-wai
 import { ChatMessage } from '@models/chatMessage';
 
 import { VisualStatesService } from '@services/visual-states.service';
+import { AgentChatService } from '@services/agent-chat.service';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { SyncJobComponent } from '@recruiter/sync-job/sync-job.component';
@@ -30,10 +28,10 @@ export class AgentChatComponent {
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('chatInput') chatInput!: ElementRef<HTMLTextAreaElement>;
-  private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
 
   visualStatesService = inject(VisualStatesService);
+  agentChatService = inject(AgentChatService);
 
 
   userMessage: string = '';
@@ -105,174 +103,27 @@ export class AgentChatComponent {
     this.chatMessages.push(responseMessage);
     const responseIndex = this.chatMessages.length - 1;
 
-    // Usar EventSource o fetch con streaming
-    this.streamResponse(message, responseIndex);
-
-    this.userMessage = "";
-    if (showUserMessage) {
-      setTimeout(() => {
-        this.userMessage = "";
-        this.adjustHeight();
-      }, 100);
-    }
-
-    setTimeout(() => {
-      this.scrollToBottomFromArrow();
-    }, 100);
-  }
-
-  private streamResponse(message: string, responseIndex: number): void {
-    const url = `${environment.BACK_AGENT_BRIDGE}/chat_agent/5858/stream`; // ⚠️ Agregar /stream
-
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    // Usar el servicio para el streaming
+    this.agentChatService.streamResponse(
+      message,
+      responseIndex,
+      this.chatMessages,
+      (content) => {
+        // Callback cuando llega contenido - forzar detección de cambios
+        this.chatMessages = [...this.chatMessages];
       },
-      body: JSON.stringify({ message: message })
-    })
-    .then(response => {
-      if (!response.ok) throw new Error('Network response was not ok');
-
-      const reader = response.body!.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-      let firstContentReceived = false; // 👈 Nueva bandera
-
-      const readStream = () => {
-        reader.read().then(({ done, value }) => {
-          if (done) {
-            console.log('✅ Stream completado');
-            console.log('✅ Stream completado');
-            console.log("🎯 ACA YA TENGO TODO EL MENSAJE TERMINADO");
-            console.log("📝 Mensaje completo:", this.chatMessages[responseIndex].message);
-            const the_message_finished = this.chatMessages[responseIndex].message
-            // ✅ Validación correcta
-            if (typeof the_message_finished === 'string' && the_message_finished.trim() !== '') {
-              this.speakText(the_message_finished);
-            }
-            // not needed here the this.loadingResponse. Anyway we keep it.
-            // this.loadingResponse = false;
-            return;
-          }
-
-          // Decodificar el chunk
-          buffer += decoder.decode(value, { stream: true });
-
-          // Procesar líneas completas
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              try {
-                const data = JSON.parse(line.substring(6));
-
-                if (data.type === 'content') {
-                  // 🎯 Detener el loading cuando llega el primer contenido
-                  if (!firstContentReceived) {
-                    this.loadingResponse = false;
-                    firstContentReceived = true;
-                    console.log('🚀 Primer contenido recibido - loading detenido');
-                  }
-
-                  this.chatMessages[responseIndex].message += data.content;
-                  this.chatMessages = [...this.chatMessages];
-                  this.scrollToBottom();
-                } else if (data.type === 'error') {
-                  console.error('❌ Error del servidor:', data.message);
-                  this.chatMessages[responseIndex].message = "Error getting response. Please try again.";
-                  this.loadingResponse = false;
-                }
-              } catch (e) {
-                console.error('Error parsing JSON:', e, line);
-              }
-            }
-          }
-
-          readStream();
-        }).catch(error => {
-          console.error('❌ Error en stream:', error);
-          this.chatMessages[responseIndex].message = "Error getting response. Please try again.";
-          this.chatMessages = [...this.chatMessages];
-          this.loadingResponse = false;
-        });
-      };
-
-      readStream();
-    })
-    .catch(error => {
-      console.error('❌ Error en fetch:', error);
-      this.chatMessages[responseIndex].message = "Error getting response. Please try again.";
-      this.chatMessages = [...this.chatMessages];
-      this.loadingResponse = false;
-    });
-  }
-
-  // sendMessage_no_stream No in use. Anyway keep it
-  sendMessage_no_stream(message: string, showUserMessage: boolean = true): void {
-    if (message.trim() === "") return;
-
-    this.loadingResponse = true;
-
-    if (showUserMessage) {
-      this.chatMessages.push({ role: "user", message });
-    }
-
-    console.log('📤 Mensaje enviado:', message);
-    console.log('📊 chatMessages antes:', this.chatMessages);
-
-    // Crear el mensaje del asistente vacío
-    const responseMessage = { role: "assistant", message: "" };
-    this.chatMessages.push(responseMessage);
-
-    console.log('📊 chatMessages después de push:', this.chatMessages);
-
-    const formData = {
-      message: message
-    };
-
-    this.http.post<string>(`${environment.BACK_AGENT_BRIDGE}/chat_agent/5858`, formData)
-      .subscribe({
-        next: (response: string) => {
-          console.log('✅ Respuesta recibida:', response);
-          console.log('📦 Tipo de respuesta:', typeof response);
-          console.log('📏 Longitud:', response?.length);
-
-
-          // CAMBIO AQUÍ: Actualizar el último elemento del array directamente
-          const index = this.chatMessages.length - 1;
-          this.chatMessages[index] = {
-            role: "assistant",
-            // message: ''
-            message: response.trim()
-          };
-
-          // Forzar recreación del array
-          this.chatMessages = [...this.chatMessages];
-
-          console.log('💬 Mensaje actualizado');
-          console.log('📊 chatMessages después de actualizar:', this.chatMessages);
-
-          this.loadingResponse = false;
-
-          setTimeout(() => this.scrollToBottom(), 10);
-          this.speakText(response);
-        },
-        error: (err) => {
-          console.error('❌ Error:', err);
-          const index = this.chatMessages.length - 1;
-          this.chatMessages[index] = {
-            role: "assistant",
-            message: "Error getting response. Please try again."
-          };
-          this.chatMessages = [...this.chatMessages];
-          this.loadingResponse = false;
-        }
-      });
+      (loading) => {
+        this.loadingResponse = loading;
+      },
+      () => this.scrollToBottom(),
+      (text) => this.speakText(text),
+      (errorMessage) => {
+        // Callback de error - forzar detección de cambios
+        this.chatMessages = [...this.chatMessages];
+      }
+    );
 
     this.userMessage = "";
-
     if (showUserMessage) {
       setTimeout(() => {
         this.userMessage = "";
@@ -284,9 +135,36 @@ export class AgentChatComponent {
       this.scrollToBottomFromArrow();
     }, 100);
   }
+
 
   toggleSpeak(): void {
     this.speakIsEnabled = !this.speakIsEnabled;
+  }
+
+  clearChatHistory(): void {
+    const threadId = '5858'; // Hardcoded por ahora
+
+    // Limpiar mensajes en el frontend inmediatamente
+    this.chatMessages = [];
+
+    // Llamar al servicio para borrar el historial del thread
+    this.agentChatService.clearChatHistory(threadId).subscribe({
+      next: (response) => {
+        console.log('✅ Historial borrado correctamente:', response);
+
+        if (response.status === 'deleted') {
+          console.log(`🗑️ Checkpoints eliminados: ${response.checkpoints_deleted}`);
+          console.log(`🗑️ Writes eliminados: ${response.writes_deleted}`);
+        } else if (response.status === 'not_found') {
+          console.log('ℹ️ Thread no encontrado en la base de datos');
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error al borrar historial:', err);
+        // Los mensajes ya se limpiaron en el frontend
+        // Podrías mostrar un toast/notification al usuario si quieres
+      }
+    });
   }
 
   // Nueva función para reproducir texto como voz
@@ -317,5 +195,9 @@ export class AgentChatComponent {
   }
   // End Voice
 
+  testElChabon() {
+    const test = this.agentChatService.tester()
+    console.log(test);
+  }
 
 }
