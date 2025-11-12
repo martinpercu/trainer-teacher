@@ -23,7 +23,7 @@
 
         @if(this.visualStatesService.showChatList()) {
         <div (click)="$event.stopPropagation()">
-          <div class="absolute -top-1 left-0 right-0 h-[100dvh] bg-green-500 bg-opacity-5"
+          <div class="absolute -top-1 left-0 right-0 h-[100dvh]"
           (click)="visualStatesService.handleShowChatList()">
             <app-agent-chats-list></app-agent-chats-list>
           </div>

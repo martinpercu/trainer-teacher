@@ -5,40 +5,18 @@
     class="flex flex-col w-80 h-fit text-sm text-neutral-700 dark:text-neutral-200 bg26 bg-white dark:bg-neutral-750 rounded-2xl shadow-lg border border-gray-200 dark:border-neutral-700"
   >
 
+    @for (item of chatItems; track item.text; let last = $last) {
     <div
-      class="flex flex-row px-2 py-1 border-b border-gray-200 dark:border-gray-600"
+      [class]="'flex flex-row px-2 py-1 ' + (!last ? 'border-b border-gray-200 dark:border-gray-600' : '')"
     >
       <div
         class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
       >
         <mat-icon>robot_2</mat-icon>
-        <div class="pl-3">{{ "top_right.dark" | transloco }}</div>
+        <div class="pl-3">{{ item.text }}</div>
       </div>
     </div>
-
-    <div
-      class="flex flex-row px-2 py-1 border-b border-gray-200 dark:border-gray-600"
-    >
-      <div
-        class="flex flex-row p-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
-      >
-        <mat-icon>robot_2</mat-icon>
-        <div class="pl-3">{{ "top_right.light" | transloco }}</div>
-      </div>
-    </div>
-
-    <div
-      class="flex flex-row px-2 py-1 border-gray-200 dark:border-gray-600"
-    >
-      <div
-        class="flex flex-row px-2 py-2 grow cursor-pointer rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 items-center"
-      >
-        <mat-icon>robot_2</mat-icon>
-        <div class="pl-3 font-semibold">
-          {{ "top_right.logout" | transloco }}
-        </div>
-      </div>
-    </div>
+    }
 
   </div>
 
