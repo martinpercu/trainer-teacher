@@ -250,6 +250,9 @@ export class RecruiterDashboardComponent {
           if(this.jobs.length >= 1){
             this.setView('jobs')
           }
+          if(this.jobs.length >= 1){
+            this.setView('agent_chat')
+          }
 
         },
         error: (error) => {

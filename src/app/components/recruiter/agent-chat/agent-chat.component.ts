@@ -16,11 +16,12 @@ import { TranslocoPipe } from '@jsverse/transloco';
 
 import { SyncJobComponent } from '@recruiter/sync-job/sync-job.component';
 import { SyncResumeComponent } from '@recruiter/sync-resume/sync-resume.component';
+import { AgentChatsListComponent } from '@recruiter/agent-chats-list/agent-chats-list.component';
 
 
 @Component({
   selector: 'app-agent-chat',
-  imports: [CommonModule, FormsModule, MatIconModule, MessageWaitingComponent, TranslocoPipe, SyncJobComponent, SyncResumeComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, MessageWaitingComponent, TranslocoPipe, SyncJobComponent, SyncResumeComponent, AgentChatsListComponent],
   templateUrl: './agent-chat.component.html',
   styleUrl: './agent-chat.component.css'
 })

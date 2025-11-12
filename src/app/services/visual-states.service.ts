@@ -12,6 +12,8 @@ export class VisualStatesService {
   showRecruiterAccountEdit = signal<Boolean>(false);
   showMenuTopRight = signal<Boolean>(false);
 
+  showChatList = signal<Boolean>(false);
+
 
   constructor() { }
 
@@ -28,6 +30,11 @@ export class VisualStatesService {
   handleRecruiterAccountShow() {
     this.showRecruiterAccountEdit.update(prevState => !prevState)
     console.log(this.showRecruiterAccountEdit());
+  }
+
+  handleShowChatList() {
+    this.showChatList.update(prevState => !prevState)
+    console.log(this.showChatList());
   }
 
 

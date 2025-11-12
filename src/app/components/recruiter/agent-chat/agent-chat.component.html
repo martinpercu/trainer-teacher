@@ -3,33 +3,42 @@
   <div class="flex h-full w-full flex-col focus-visible:outline-0">
 
 
-    <div class="w-full flex flex-row justify-center sm:justify-normal h-[60px] shadow-sm pb-1 dark:border-b border-neutral-700">
+    <div class="w-full flex flex-row justify-between items-center h-[60px] shadow-sm pb-1 dark:border-b border-neutral-700">
 
-    <h1 class="bg-red-500 px-2 py-4 sm:p-4 text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
-      {{ "recruiter.ai_agent" | transloco }}
-    </h1>
+      <div (click)="visualStatesService.handleShowChatList()" class="z-10 p-2 sm:pr-4 flex flex-col items-end">
 
-      <!-- <div (click)="toggleShowLeftMenuHeader()"
-        class="fixed cursor-pointer scale-125 left-4 top-3 flex items-center text-neutral-600 dark:text-neutral-200 z-50 rounded-lg p-1">
+        <button
+          class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 rounded-xl border border-gray-200 dark:border-neutral-700"
+        >
+          <mat-icon class="">format_list_bulleted</mat-icon>
+          <span class="hidden sm:block">
+            {{ "agent.chat_list" | transloco }}
+          </span>
+          @if(this.visualStatesService.showChatList()){
+            <mat-icon class="">expand_circle_up</mat-icon>
+          }@else {
+            <mat-icon class="">expand_circle_down</mat-icon>
+          }
+        </button>
 
-        @if(this.visualStatesService.leftMenuCondition()) {
-        <div class="md:hidden h-6">
-          <mat-icon>left_panel_close</mat-icon>
-        </div>
-        <div class="hidden md:block h-6">
-          <mat-icon>left_panel_open</mat-icon>
+        @if(this.visualStatesService.showChatList()) {
+        <div (click)="$event.stopPropagation()">
+          <div class="absolute -top-1 left-0 right-0 h-[100dvh] bg-green-500 bg-opacity-5"
+          (click)="visualStatesService.handleShowChatList()">
+            <app-agent-chats-list></app-agent-chats-list>
+          </div>
         </div>
         }
-        @if(!this.visualStatesService.leftMenuCondition()) {
-        <div class="md:hidden h-6">
-          <mat-icon>left_panel_open</mat-icon>
-        </div>
-        <div class="hidden md:block h-6">
-          <mat-icon>left_panel_close</mat-icon>
-        </div>
-        }
+      </div>
 
+
+      <div class="absolute left-1/2 -translate-x-1/2 px-2 py-4 sm:p-4 text-2xl font-semibold text-neutral-800 dark:text-neutral-200">
+        {{ "recruiter.ai_agent" | transloco }}
+      </div>
+
+      <!-- <div class="bg-green-200">
       </div> -->
+
 
     </div>
 

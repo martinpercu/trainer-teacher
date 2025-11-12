@@ -101,6 +101,9 @@
     "use_manager": "Usar Manager",
     "here_show_all_resumes": "Aquí encontrarás los CV y perfiles. Los que usted cargue como los que envíen los candidatos"
   },
+  "agent": {
+    "chat_list": "Lista de Chats"
+  },
   "recruiter_auth": {
     "login": "Iniciar sesión",
     "signin": "Registrarse",
