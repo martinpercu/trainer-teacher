@@ -4,6 +4,7 @@ import { environment } from '@env/environment';
 import { ChatMessage } from '@models/chatMessage';
 import { AuthService } from '@services/auth.service';
 import { RecruiterService } from '@services/recruiter.service';
+import { AgentChatListService } from '@services/agent-chat-list.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,51 +14,18 @@ export class AgentChatService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private recruiterService = inject(RecruiterService);
-
-  private maxThreads!: number;
+  private agentChatListService = inject(AgentChatListService);
 
   constructor() {
     const recruiter = this.recruiterService.recruiterSig()
     console.log(recruiter);
-
   }
 
-
-  async getSubscritpionLevel() {
-    // Usamos 'await' para esperar que la Promise se resuelva y obtener el valor directo
-    console.log(this.recruiterService.currentRecruitersubcriptionLevel());
-    const subscriptionLevel = await this.recruiterService.currentRecruitersubcriptionLevel();
-    alert('este es el subscription level ' + subscriptionLevel!)
-    if (subscriptionLevel) {
-      if (subscriptionLevel >= 9) {
-        this.maxThreads = 20;
-      } else if (subscriptionLevel >= 7) {
-        this.maxThreads = 10;
-      } else if (subscriptionLevel >= 5) {
-        this.maxThreads = 5;
-      } else if (subscriptionLevel >= 3) {
-        this.maxThreads = 2;
-      } else {
-        this.maxThreads = 1; // Default para niveles menores a 3
-      }
-    }
-  }
-
-  tester() {
-    const aaaa = this.authService.getCurrentUserId()
-    console.log(aaaa);
-    this.getSubscritpionLevel()
-    return this.authService.getCurrentUserId()
-  }
-
-  theThreadId() {
-    const threadId = `${this.authService.getCurrentUserId()}_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-    return threadId
-  }
 
   /**
    * Envía un mensaje y recibe la respuesta en modo streaming
    * @param message - Mensaje a enviar
+   * @param threadId - ID del thread (conversación)
    * @param responseIndex - Índice del mensaje de respuesta en el array
    * @param chatMessages - Referencia al array de mensajes
    * @param onLoadingChange - Callback para cambiar el estado de loading
@@ -66,6 +34,7 @@ export class AgentChatService {
    */
   streamResponse(
     message: string,
+    threadId: string,
     responseIndex: number,
     chatMessages: ChatMessage[],
     onContentReceived: (content: string) => void,
@@ -74,10 +43,9 @@ export class AgentChatService {
     onSpeakText: (text: string) => void,
     onError: (errorMessage: string) => void
   ): void {
-    const threadId = `${this.tester()}_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-    console.log(threadId);
+    console.log('🔵 Usando threadId:', threadId);
 
-    const url = `${environment.BACK_AGENT_BRIDGE}/chat_agent/${this.theThreadId()}/stream`;
+    const url = `${environment.BACK_AGENT_BRIDGE}/chat_agent/${threadId}/stream`;
 
 
     fetch(url, {
@@ -88,8 +56,7 @@ export class AgentChatService {
       body: JSON.stringify({
         message: message,
         recruiterId: this.authService.getCurrentUserId(),
-        max_threads: this.maxThreads  // 👈 Plan
-        // max_threads: 8  // 👈 Plan FREE
+        max_threads: this.agentChatListService.getMaxThreads()  // 👈 Obtenido del servicio según subscription
       })
     })
     .then(response => {
@@ -239,4 +206,24 @@ export class AgentChatService {
       message?: string;
     }>(url);
   }
+
+  /**
+   * Obtiene el historial de mensajes de un thread desde el backend
+   * @param threadId - ID del thread
+   * @param limit - Límite de mensajes a obtener (por defecto 50)
+   * @returns Observable con el historial de mensajes
+   */
+  getThreadHistory(threadId: string, limit: number = 50) {
+    const url = `${environment.BACK_AGENT_BRIDGE}/chat_agent/${threadId}/history`;
+
+    console.log('📜 Obteniendo historial del thread:', threadId, 'Límite:', limit);
+
+    return this.http.get<{
+      thread_id: string;
+      messages: ChatMessage[];
+    }>(url, {
+      params: { limit: limit.toString() }
+    });
+  }
+
 }

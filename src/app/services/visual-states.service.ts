@@ -34,6 +34,7 @@ export class VisualStatesService {
 
   handleShowChatList() {
     this.showChatList.update(prevState => !prevState)
+    this.showMenuTopRight.set(false)
     console.log(this.showChatList());
   }
 

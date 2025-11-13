@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, ChangeDetectorRef, OnInit, effect } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
@@ -12,6 +12,7 @@ import { ChatMessage } from '@models/chatMessage';
 
 import { VisualStatesService } from '@services/visual-states.service';
 import { AgentChatService } from '@services/agent-chat.service';
+import { AgentChatListService } from '@services/agent-chat-list.service';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { SyncJobComponent } from '@recruiter/sync-job/sync-job.component';
@@ -25,7 +26,7 @@ import { AgentChatsListComponent } from '@recruiter/agent-chats-list/agent-chats
   templateUrl: './agent-chat.component.html',
   styleUrl: './agent-chat.component.css'
 })
-export class AgentChatComponent {
+export class AgentChatComponent implements OnInit {
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('chatInput') chatInput!: ElementRef<HTMLTextAreaElement>;
@@ -33,6 +34,7 @@ export class AgentChatComponent {
 
   visualStatesService = inject(VisualStatesService);
   agentChatService = inject(AgentChatService);
+  agentChatListService = inject(AgentChatListService);
 
 
   userMessage: string = '';
@@ -54,7 +56,79 @@ export class AgentChatComponent {
   message_3: string = "easy"
   message_4: string = "hard"
 
+  // Para rastrear el thread anterior
+  private previousThreadId: string | null = null;
 
+  constructor() {
+    // 👂 Escuchar cambios en el threadId seleccionado
+    effect(() => {
+      const threadId = this.agentChatListService.currentThreadId();
+      if (threadId) {
+        this.loadMessagesForThread(threadId);
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    // El effect ya se encargará de cargar los mensajes iniciales
+  }
+
+  /**
+   * Carga los mensajes para un thread específico usando estrategia híbrida:
+   * 1. Muestra inmediatamente mensajes del caché (si existen)
+   * 2. En paralelo, pide al backend el historial
+   * 3. Actualiza con los mensajes del backend
+   * @param threadId - ID del thread
+   */
+  private loadMessagesForThread(threadId: string): void {
+    console.log('🔄 Cambiando a thread:', threadId);
+
+    // Guardar los mensajes actuales en el caché del thread anterior (si existe)
+    if (this.previousThreadId && this.previousThreadId !== threadId && this.chatMessages.length > 0) {
+      console.log(`💾 Guardando ${this.chatMessages.length} mensajes del thread anterior: ${this.previousThreadId}`);
+      this.agentChatListService.saveMessagesToCache(this.previousThreadId, this.chatMessages);
+    }
+
+    // 1️⃣ PASO 1: Cargar inmediatamente desde caché (respuesta instantánea)
+    const cachedMessages = this.agentChatListService.getMessagesFromCache(threadId);
+    if (cachedMessages.length > 0) {
+      console.log(`⚡ Mostrando ${cachedMessages.length} mensajes desde caché`);
+      this.chatMessages = [...cachedMessages];
+      setTimeout(() => this.scrollToBottomFromArrow(), 100);
+    } else {
+      // Si no hay caché, limpiar la pantalla
+      this.chatMessages = [];
+    }
+
+    // 2️⃣ PASO 2: Pedir al backend en paralelo (para sincronizar)
+    console.log('🌐 Solicitando historial al backend...');
+    this.agentChatService.getThreadHistory(threadId, 50).subscribe({
+      next: (response) => {
+        console.log(`✅ Historial recibido del backend: ${response.messages.length} mensajes`);
+
+        // Actualizar con los mensajes del backend
+        this.chatMessages = [...response.messages];
+
+        // Guardar en caché para la próxima vez
+        this.agentChatListService.saveMessagesToCache(threadId, response.messages);
+
+        // Hacer scroll al final
+        setTimeout(() => this.scrollToBottomFromArrow(), 100);
+      },
+      error: (err) => {
+        console.error('❌ Error al obtener historial del backend:', err);
+        // Si falla, mantener los mensajes del caché (si los había)
+        if (cachedMessages.length === 0) {
+          console.log('ℹ️ No hay mensajes en caché ni en el backend para este thread');
+        } else {
+          console.log('ℹ️ Manteniendo mensajes del caché a pesar del error');
+        }
+      }
+    });
+
+    // Actualizar el thread anterior
+    this.previousThreadId = threadId;
+  }
 
   toggleShowLeftMenuHeader() {
     this.visualStatesService.togleShowLeftMenu()
@@ -91,6 +165,16 @@ export class AgentChatComponent {
   sendMessage(message: string, showUserMessage: boolean = true): void {
     if (message.trim() === "") return;
 
+    // Obtener el threadId actual del servicio
+    const threadId = this.agentChatListService.getCurrentThreadId();
+    if (!threadId) {
+      console.error('❌ No hay threadId seleccionado');
+      return;
+    }
+
+    // Mover este thread al principio de la lista (más reciente)
+    this.agentChatListService.moveThreadToTop(threadId);
+
     this.loadingResponse = true;
 
     if (showUserMessage) {
@@ -98,6 +182,7 @@ export class AgentChatComponent {
     }
 
     console.log('📤 Mensaje enviado:', message);
+    console.log('🔵 ThreadId usado:', threadId);
 
     // Crear el mensaje del asistente vacío
     const responseMessage = { role: "assistant", message: "" };
@@ -107,20 +192,29 @@ export class AgentChatComponent {
     // Usar el servicio para el streaming
     this.agentChatService.streamResponse(
       message,
+      threadId,
       responseIndex,
       this.chatMessages,
       (content) => {
         // Callback cuando llega contenido - forzar detección de cambios
         this.chatMessages = [...this.chatMessages];
+        // 💾 Guardar en caché cada vez que llega contenido
+        this.agentChatListService.saveMessagesToCache(threadId, this.chatMessages);
       },
       (loading) => {
         this.loadingResponse = loading;
+        // 💾 Guardar en caché cuando termina el loading
+        if (!loading) {
+          this.agentChatListService.saveMessagesToCache(threadId, this.chatMessages);
+        }
       },
       () => this.scrollToBottom(),
       (text) => this.speakText(text),
       (errorMessage) => {
         // Callback de error - forzar detección de cambios
         this.chatMessages = [...this.chatMessages];
+        // 💾 Guardar en caché incluso si hay error
+        this.agentChatListService.saveMessagesToCache(threadId, this.chatMessages);
       }
     );
 
@@ -143,10 +237,19 @@ export class AgentChatComponent {
   }
 
   clearChatHistory(): void {
-    const threadId = '5858'; // Hardcoded por ahora
+    const threadId = this.agentChatListService.getCurrentThreadId();
+    if (!threadId) {
+      console.error('❌ No hay threadId seleccionado');
+      return;
+    }
+
+    console.log('🗑️ Limpiando historial del thread:', threadId);
 
     // Limpiar mensajes en el frontend inmediatamente
     this.chatMessages = [];
+
+    // 💾 Limpiar también el caché del thread
+    this.agentChatListService.clearThreadCache(threadId);
 
     // Llamar al servicio para borrar el historial del thread
     this.agentChatService.clearChatHistory(threadId).subscribe({
@@ -196,9 +299,9 @@ export class AgentChatComponent {
   }
   // End Voice
 
-  testElChabon() {
-    const test = this.agentChatService.tester()
-    console.log(test);
-  }
+  // testElChabon() {
+  //   const test = this.agentChatService.tester()
+  //   console.log(test);
+  // }
 
 }

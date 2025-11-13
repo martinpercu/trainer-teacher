@@ -102,7 +102,7 @@
     "here_show_all_resumes": "The résumés and profiles will be here: yours and those submitted by candidates"
   },
   "agent": {
-    "chat_list": "Chats List"
+    "chat_list": "Session List"
   },
   "recruiter_auth": {
     "login" : "Log in",
