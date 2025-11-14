@@ -102,7 +102,8 @@
     "here_show_all_resumes": "Les CV et profils s'y trouveront : ceux que vous mettrez en ligne et ceux des candidats"
   },
   "agent": {
-    "chat_list": "Séances d'IA"
+    "chat_list": "Séances d'IA",
+    "add_new_chat": "Nouvelle conversation"
   },
   "recruiter_auth": {
     "login": "Se connecter",

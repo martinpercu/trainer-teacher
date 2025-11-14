@@ -43,7 +43,7 @@ export class AgentChatListService {
 
     // Intentar cargar threads existentes desde chatsData
     if (recruiter && recruiter.chatsData && recruiter.chatsData.length > 0) {
-      console.log('📦 Cargando threads con nombres fijos desde Firestore:', recruiter.chatsData);
+      console.log('📦 Cargando threads existentes desde Firestore:', recruiter.chatsData);
 
       // Crear threads desde los datos guardados (con nombres fijos)
       const threads: ChatThread[] = recruiter.chatsData.map((chatData) => ({
@@ -59,54 +59,16 @@ export class AgentChatListService {
       }, 0);
       this.nextChatNumber = maxChatNum + 1;
 
-      // Si hay menos threads de los que debería, crear los faltantes
-      if (threads.length < this.maxThreads) {
-        console.log(`📝 Creando ${this.maxThreads - threads.length} threads adicionales`);
-        for (let i = threads.length; i < this.maxThreads; i++) {
-          const threadId = this.generateThreadId();
-          threads.push({
-            threadId,
-            name: `Chat ${this.nextChatNumber++}`,  // Nombre único incremental
-            createdAt: new Date()
-          });
-        }
-        // Guardar los nuevos threads en Firestore
-        await this.saveThreadsToFirestore(threads);
-      }
-
-      // Si hay más threads de los que debería, solo tomar los permitidos
-      if (threads.length > this.maxThreads) {
-        console.log(`✂️ Limitando a ${this.maxThreads} threads`);
-        threads.splice(this.maxThreads);
-      }
-
       this.chatThreads.set(threads);
+
+      // NO seleccionar ningún thread - el usuario debe elegir
+      console.log(`✅ ${threads.length} threads cargados desde Firestore`);
     } else {
-      // No hay threads guardados, crear nuevos
-      console.log('🆕 Creando nuevos threads');
-      const threads: ChatThread[] = [];
-      for (let i = 1; i <= this.maxThreads; i++) {
-        const threadId = this.generateThreadId();
-        threads.push({
-          threadId,
-          name: `Chat ${i}`,
-          createdAt: new Date()
-        });
-      }
-      this.nextChatNumber = this.maxThreads + 1;
-      this.chatThreads.set(threads);
-
-      // Guardar en Firestore
-      await this.saveThreadsToFirestore(threads);
+      // No hay threads guardados - lista vacía
+      console.log('📭 No hay threads existentes. Usuario debe crear uno al enviar su primer mensaje.');
+      this.chatThreads.set([]);
+      // NO seleccionar ningún thread
     }
-
-    // Seleccionar el primer thread por defecto
-    const threads = this.chatThreads();
-    if (threads.length > 0) {
-      this.currentThreadId.set(threads[0].threadId);
-    }
-
-    console.log(`✅ ${this.chatThreads().length} threads inicializados según subscription level`);
   }
 
   // Guarda los threads con sus nombres en Firestore
@@ -147,7 +109,7 @@ export class AgentChatListService {
       } else if (subscriptionLevel >= 5) {
         this.maxThreads = 5;
       } else if (subscriptionLevel >= 3) {
-        this.maxThreads = 2;
+        this.maxThreads = 3;
       } else {
         this.maxThreads = 1;
       }
@@ -170,11 +132,84 @@ export class AgentChatListService {
   }
 
   // Selecciona un thread (NO lo mueve, solo cambia la selección)
-  selectThread(threadId: string) {
+  selectThread(threadId: string | null) {
     this.currentThreadId.set(threadId);
     console.log('🎯 Thread seleccionado:', threadId);
 
     // NO mover el thread aquí - solo se mueve cuando el user envía un mensaje
+  }
+
+  // Deselecciona el thread actual (para modo "nuevo chat")
+  deselectThread() {
+    this.currentThreadId.set(null);
+    console.log('🔓 Thread deseleccionado');
+  }
+
+  /**
+   * Crea un nuevo thread y lo agrega al principio de la lista
+   * @returns El threadId del nuevo thread creado
+   */
+  async createNewThread(): Promise<string> {
+    const threadId = this.generateThreadId();
+    const name = `Chat ${this.nextChatNumber}`;
+
+    const newThread: ChatThread = {
+      threadId,
+      name,
+      createdAt: new Date()
+    };
+
+    console.log(`✨ Creando nuevo thread: ${name} (${threadId})`);
+
+    // Agregar al principio de la lista
+    const currentThreads = this.chatThreads();
+    currentThreads.unshift(newThread);
+    this.chatThreads.set([...currentThreads]);
+
+    // Incrementar el contador
+    this.nextChatNumber++;
+
+    // Seleccionar el nuevo thread
+    this.currentThreadId.set(threadId);
+
+    // Guardar en Firestore
+    await this.saveThreadsToFirestore(currentThreads);
+
+    console.log(`✅ Thread creado: ${name}`);
+
+    return threadId;
+  }
+
+  /**
+   * Elimina el thread más antiguo (último de la lista)
+   * @returns El thread eliminado
+   */
+  async deleteOldestThread(): Promise<ChatThread | null> {
+    const threads = this.chatThreads();
+
+    if (threads.length === 0) {
+      console.error('❌ No hay threads para eliminar');
+      return null;
+    }
+
+    // El más antiguo es el último de la lista
+    const oldestThread = threads[threads.length - 1];
+
+    console.log(`🗑️ Eliminando thread más antiguo: ${oldestThread.name} (${oldestThread.threadId})`);
+
+    // Remover de la lista
+    threads.pop();
+    this.chatThreads.set([...threads]);
+
+    // Limpiar el caché de mensajes de ese thread
+    this.clearThreadCache(oldestThread.threadId);
+
+    // Guardar en Firestore
+    await this.saveThreadsToFirestore(threads);
+
+    console.log(`✅ Thread eliminado: ${oldestThread.name}`);
+
+    return oldestThread;
   }
 
   // Obtiene todos los threads

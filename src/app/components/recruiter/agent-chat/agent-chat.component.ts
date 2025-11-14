@@ -63,9 +63,8 @@ export class AgentChatComponent implements OnInit {
     // 👂 Escuchar cambios en el threadId seleccionado
     effect(() => {
       const threadId = this.agentChatListService.currentThreadId();
-      if (threadId) {
-        this.loadMessagesForThread(threadId);
-      }
+      // Siempre llamar, incluso si es null (para limpiar pantalla)
+      this.loadMessagesForThread(threadId);
     });
   }
 
@@ -78,9 +77,17 @@ export class AgentChatComponent implements OnInit {
    * 1. Muestra inmediatamente mensajes del caché (si existen)
    * 2. En paralelo, pide al backend el historial
    * 3. Actualiza con los mensajes del backend
-   * @param threadId - ID del thread
+   * @param threadId - ID del thread (null para limpiar pantalla)
    */
-  private loadMessagesForThread(threadId: string): void {
+  private loadMessagesForThread(threadId: string | null): void {
+    // Si threadId es null, limpiar pantalla (modo "nuevo chat")
+    if (!threadId) {
+      console.log('📭 Sin thread seleccionado - limpiando pantalla');
+      this.chatMessages = [];
+      this.previousThreadId = null;
+      return;
+    }
+
     console.log('🔄 Cambiando a thread:', threadId);
 
     // Guardar los mensajes actuales en el caché del thread anterior (si existe)
@@ -162,18 +169,51 @@ export class AgentChatComponent implements OnInit {
     }
   }
 
-  sendMessage(message: string, showUserMessage: boolean = true): void {
+  async sendMessage(message: string, showUserMessage: boolean = true): Promise<void> {
     if (message.trim() === "") return;
 
     // Obtener el threadId actual del servicio
-    const threadId = this.agentChatListService.getCurrentThreadId();
-    if (!threadId) {
-      console.error('❌ No hay threadId seleccionado');
-      return;
-    }
+    let threadId = this.agentChatListService.getCurrentThreadId();
 
-    // Mover este thread al principio de la lista (más reciente)
-    this.agentChatListService.moveThreadToTop(threadId);
+    // Si no hay thread seleccionado, crear uno nuevo
+    if (!threadId) {
+      console.log('📭 No hay thread seleccionado');
+
+      // Verificar si ya llegó al máximo de threads
+      const threads = this.agentChatListService.getThreads();
+      const maxThreads = this.agentChatListService.getMaxThreads();
+
+      if (threads.length >= maxThreads) {
+        // Mostrar alert preguntando si quiere borrar el más antiguo
+        const confirmed = confirm(
+          'Cantidad máxima de chats alcanzados. ¿Quieres enviar igualmente el mensaje? Se borrará tu conversación más antigua'
+        );
+
+        if (!confirmed) {
+          console.log('❌ Usuario canceló la creación de nuevo thread');
+          return;
+        }
+
+        // Borrar el thread más antiguo
+        const deletedThread = await this.agentChatListService.deleteOldestThread();
+        console.log('🗑️ Thread más antiguo eliminado:', deletedThread?.name);
+
+        // También borrar del backend
+        if (deletedThread) {
+          this.agentChatService.clearChatHistory(deletedThread.threadId).subscribe({
+            next: () => console.log('✅ Thread eliminado del backend'),
+            error: (err) => console.error('❌ Error al eliminar thread del backend:', err)
+          });
+        }
+      }
+
+      // Crear nuevo thread
+      threadId = await this.agentChatListService.createNewThread();
+      console.log('✨ Nuevo thread creado automáticamente:', threadId);
+    } else {
+      // Si ya hay thread seleccionado, moverlo al principio
+      await this.agentChatListService.moveThreadToTop(threadId);
+    }
 
     this.loadingResponse = true;
 

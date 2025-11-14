@@ -25,9 +25,39 @@ export class AgentChatsListComponent {
     return this.agentChatListService.getCurrentThreadId();
   }
 
+  // Verificar si se puede crear un nuevo thread
+  get canCreateNewThread(): boolean {
+    const threads = this.agentChatListService.getThreads();
+    const maxThreads = this.agentChatListService.getMaxThreads();
+    return threads.length < maxThreads;
+  }
+
+  // Verificar si se alcanzó el máximo de threads
+  get isMaxThreadsReached(): boolean {
+    return !this.canCreateNewThread;
+  }
+
   // Seleccionar un thread
   selectThread(threadId: string) {
     this.agentChatListService.selectThread(threadId);
+  }
+
+  // Método para el botón "ADD NEW CHAT"
+  onAddNewChat(): void {
+    if (this.isMaxThreadsReached) {
+      console.log('❌ Máximo de threads alcanzado');
+      return;
+    }
+
+    console.log('➕ Preparando nuevo chat...');
+
+    // Deseleccionar thread actual (limpia pantalla)
+    this.agentChatListService.deselectThread();
+
+    // Cerrar el sidebar de la lista
+    this.visualStatesService.handleShowChatList();
+
+    console.log('✅ Listo para crear nuevo chat. Envía un mensaje para crearlo.');
   }
 
 }
