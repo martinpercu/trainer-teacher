@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { VisualStatesService } from '@services/visual-states.service';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { TranslocoPipe } from '@jsverse/transloco';
 
@@ -8,7 +9,7 @@ import { AgentChatListService, ChatThread } from '@services/agent-chat-list.serv
 
 @Component({
   selector: 'app-agent-chats-list',
-  imports: [CommonModule, MatIconModule, TranslocoPipe],
+  imports: [CommonModule, MatIconModule, MatMenuModule, TranslocoPipe],
   templateUrl: './agent-chats-list.component.html'
 })
 export class AgentChatsListComponent {
@@ -40,6 +41,7 @@ export class AgentChatsListComponent {
   // Seleccionar un thread
   selectThread(threadId: string) {
     this.agentChatListService.selectThread(threadId);
+    this.visualStatesService.triggerTextareaFocus()
   }
 
   // Método para el botón "ADD NEW CHAT"
@@ -58,6 +60,45 @@ export class AgentChatsListComponent {
     this.visualStatesService.handleShowChatList();
 
     console.log('✅ Listo para crear nuevo chat. Envía un mensaje para crearlo.');
+  }
+
+  // Renombrar un thread
+  onRename(threadId: string): void {
+    const thread = this.chatThreads.find(t => t.threadId === threadId);
+    if (!thread) {
+      console.error('❌ Thread no encontrado:', threadId);
+      return;
+    }
+
+    const newName = prompt('Nuevo nombre para el chat:', thread.name);
+
+    if (newName && newName.trim() !== '') {
+      console.log('✏️ Renombrando thread:', threadId, 'a:', newName);
+      this.agentChatListService.renameThread(threadId, newName.trim());
+    } else {
+      console.log('❌ Rename cancelado o nombre vacío');
+    }
+  }
+
+  // Eliminar un thread
+  async onDelete(threadId: string): Promise<void> {
+    const thread = this.chatThreads.find(t => t.threadId === threadId);
+    if (!thread) {
+      console.error('❌ Thread no encontrado:', threadId);
+      return;
+    }
+
+    const confirmed = confirm(`¿Estás seguro de eliminar el chat "${thread.name}"?`);
+
+    if (confirmed) {
+      console.log('🗑️ Eliminando thread:', threadId);
+      await this.agentChatListService.deleteThread(threadId);
+
+      // TODO: También eliminar del backend si es necesario
+      // this.agentChatService.clearChatHistory(threadId).subscribe(...)
+    } else {
+      console.log('❌ Delete cancelado');
+    }
   }
 
 }

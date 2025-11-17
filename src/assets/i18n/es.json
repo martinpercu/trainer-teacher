@@ -103,7 +103,9 @@
   },
   "agent": {
     "chat_list": "Sesiones IA",
-    "add_new_chat": "Nuevo Chat"
+    "add_new_chat": "Nuevo Chat",
+    "rename": "Cambiar Nombre",
+    "delete": "Borrar"
   },
   "recruiter_auth": {
     "login": "Iniciar sesión",

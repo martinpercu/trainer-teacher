@@ -18,9 +18,8 @@ export class AgentChatListService {
   private recruiterService = inject(RecruiterService);
 
   private maxThreads: number = 3; // Default
-  private nextChatNumber: number = 1; // Contador para nombres únicos
 
-  // Lista de threads (empezamos con 3)
+  // Lista de threads
   chatThreads = signal<ChatThread[]>([]);
 
   // Thread seleccionado actualmente
@@ -51,13 +50,6 @@ export class AgentChatListService {
         name: chatData.name,  // Nombre fijo guardado
         createdAt: new Date()
       }));
-
-      // Calcular el próximo número de chat para nuevos threads
-      const maxChatNum = threads.reduce((max, t) => {
-        const match = t.name.match(/Chat (\d+)/);
-        return match ? Math.max(max, parseInt(match[1])) : max;
-      }, 0);
-      this.nextChatNumber = maxChatNum + 1;
 
       this.chatThreads.set(threads);
 
@@ -147,11 +139,14 @@ export class AgentChatListService {
 
   /**
    * Crea un nuevo thread y lo agrega al principio de la lista
+   * @param firstMessage - Primer mensaje del usuario (usado para generar el nombre)
    * @returns El threadId del nuevo thread creado
    */
-  async createNewThread(): Promise<string> {
+  async createNewThread(firstMessage: string): Promise<string> {
     const threadId = this.generateThreadId();
-    const name = `Chat ${this.nextChatNumber}`;
+
+    // Generar nombre desde el primer mensaje (primeros 50 caracteres)
+    const name = firstMessage.trim().substring(0, 50);
 
     const newThread: ChatThread = {
       threadId,
@@ -159,15 +154,12 @@ export class AgentChatListService {
       createdAt: new Date()
     };
 
-    console.log(`✨ Creando nuevo thread: ${name} (${threadId})`);
+    console.log(`✨ Creando nuevo thread: "${name}" (${threadId})`);
 
     // Agregar al principio de la lista
     const currentThreads = this.chatThreads();
     currentThreads.unshift(newThread);
     this.chatThreads.set([...currentThreads]);
-
-    // Incrementar el contador
-    this.nextChatNumber++;
 
     // Seleccionar el nuevo thread
     this.currentThreadId.set(threadId);
@@ -175,9 +167,48 @@ export class AgentChatListService {
     // Guardar en Firestore
     await this.saveThreadsToFirestore(currentThreads);
 
-    console.log(`✅ Thread creado: ${name}`);
+    console.log(`✅ Thread creado: "${name}"`);
 
     return threadId;
+  }
+
+  /**
+   * Elimina un thread específico por su ID
+   * @param threadId - ID del thread a eliminar
+   * @returns El thread eliminado o null si no se encontró
+   */
+  async deleteThread(threadId: string): Promise<ChatThread | null> {
+    const threads = this.chatThreads();
+
+    // Buscar el índice del thread
+    const index = threads.findIndex(t => t.threadId === threadId);
+
+    if (index === -1) {
+      console.error('❌ Thread no encontrado:', threadId);
+      return null;
+    }
+
+    const deletedThread = threads[index];
+    console.log(`🗑️ Eliminando thread: ${deletedThread.name} (${deletedThread.threadId})`);
+
+    // Remover de la lista
+    threads.splice(index, 1);
+    this.chatThreads.set([...threads]);
+
+    // Si era el thread seleccionado, deseleccionarlo
+    if (this.currentThreadId() === threadId) {
+      this.currentThreadId.set(null);
+    }
+
+    // Limpiar el caché de mensajes de ese thread
+    this.clearThreadCache(threadId);
+
+    // Guardar en Firestore
+    await this.saveThreadsToFirestore(threads);
+
+    console.log(`✅ Thread eliminado: ${deletedThread.name}`);
+
+    return deletedThread;
   }
 
   /**
@@ -197,19 +228,42 @@ export class AgentChatListService {
 
     console.log(`🗑️ Eliminando thread más antiguo: ${oldestThread.name} (${oldestThread.threadId})`);
 
-    // Remover de la lista
-    threads.pop();
-    this.chatThreads.set([...threads]);
+    // Usar el método deleteThread para mantener consistencia
+    return await this.deleteThread(oldestThread.threadId);
+  }
 
-    // Limpiar el caché de mensajes de ese thread
-    this.clearThreadCache(oldestThread.threadId);
+  /**
+   * Renombra un thread específico
+   * @param threadId - ID del thread a renombrar
+   * @param newName - Nuevo nombre para el thread
+   * @returns true si se renombró exitosamente, false si no se encontró
+   */
+  async renameThread(threadId: string, newName: string): Promise<boolean> {
+    const threads = this.chatThreads();
+
+    // Buscar el thread
+    const index = threads.findIndex(t => t.threadId === threadId);
+
+    if (index === -1) {
+      console.error('❌ Thread no encontrado:', threadId);
+      return false;
+    }
+
+    const oldName = threads[index].name;
+    console.log(`✏️ Renombrando thread de "${oldName}" a "${newName}"`);
+
+    // Actualizar el nombre
+    threads[index].name = newName;
+
+    // Actualizar el signal
+    this.chatThreads.set([...threads]);
 
     // Guardar en Firestore
     await this.saveThreadsToFirestore(threads);
 
-    console.log(`✅ Thread eliminado: ${oldestThread.name}`);
+    console.log(`✅ Thread renombrado exitosamente`);
 
-    return oldestThread;
+    return true;
   }
 
   // Obtiene todos los threads

@@ -103,7 +103,9 @@
   },
   "agent": {
     "chat_list": "Session List",
-    "add_new_chat": "New Chat"
+    "add_new_chat": "New Chat",
+    "rename": "Rename",
+    "delete": "Delete"
   },
   "recruiter_auth": {
     "login" : "Log in",

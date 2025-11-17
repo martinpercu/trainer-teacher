@@ -103,7 +103,9 @@
   },
   "agent": {
     "chat_list": "Séances d'IA",
-    "add_new_chat": "Nouvelle conversation"
+    "add_new_chat": "Nouvelle conversation",
+    "rename": "Modifier nom",
+    "delete": "Effacer"
   },
   "recruiter_auth": {
     "login": "Se connecter",

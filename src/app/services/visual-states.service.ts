@@ -13,6 +13,7 @@ export class VisualStatesService {
   showMenuTopRight = signal<Boolean>(false);
 
   showChatList = signal<Boolean>(false);
+  shouldFocusTextarea = signal<boolean>(true);
 
 
   constructor() { }
@@ -36,6 +37,13 @@ export class VisualStatesService {
     this.showChatList.update(prevState => !prevState)
     this.showMenuTopRight.set(false)
     console.log(this.showChatList());
+    if(this.showChatList() == false) {
+      this.triggerTextareaFocus();
+    }
+  }
+
+  triggerTextareaFocus() {
+    this.shouldFocusTextarea.set(true);
   }
 
 

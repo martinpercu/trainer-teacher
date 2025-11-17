@@ -66,6 +66,20 @@ export class AgentChatComponent implements OnInit {
       // Siempre llamar, incluso si es null (para limpiar pantalla)
       this.loadMessagesForThread(threadId);
     });
+
+    // 👂 Escuchar cuando se necesita hacer focus en el textarea
+    effect(() => {
+      const shouldFocus = this.visualStatesService.shouldFocusTextarea();
+      if (shouldFocus) {
+        setTimeout(() => {
+          if (this.chatInput) {
+            this.chatInput.nativeElement.focus();
+          }
+          // Resetear el signal
+          this.visualStatesService.shouldFocusTextarea.set(false);
+        }, 100);
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -207,8 +221,8 @@ export class AgentChatComponent implements OnInit {
         }
       }
 
-      // Crear nuevo thread
-      threadId = await this.agentChatListService.createNewThread();
+      // Crear nuevo thread con el mensaje como nombre
+      threadId = await this.agentChatListService.createNewThread(message);
       console.log('✨ Nuevo thread creado automáticamente:', threadId);
     } else {
       // Si ya hay thread seleccionado, moverlo al principio
@@ -276,25 +290,25 @@ export class AgentChatComponent implements OnInit {
     this.speakIsEnabled = !this.speakIsEnabled;
   }
 
-  clearChatHistory(): void {
+  async clearChatHistory(): Promise<void> {
     const threadId = this.agentChatListService.getCurrentThreadId();
     if (!threadId) {
       console.error('❌ No hay threadId seleccionado');
       return;
     }
 
-    console.log('🗑️ Limpiando historial del thread:', threadId);
+    console.log('🗑️ Eliminando thread completamente:', threadId);
 
     // Limpiar mensajes en el frontend inmediatamente
     this.chatMessages = [];
 
-    // 💾 Limpiar también el caché del thread
-    this.agentChatListService.clearThreadCache(threadId);
+    // Eliminar el thread de la lista (también limpia caché y deselecciona)
+    await this.agentChatListService.deleteThread(threadId);
 
-    // Llamar al servicio para borrar el historial del thread
+    // Llamar al servicio para borrar el historial del thread en el backend
     this.agentChatService.clearChatHistory(threadId).subscribe({
       next: (response) => {
-        console.log('✅ Historial borrado correctamente:', response);
+        console.log('✅ Thread eliminado del backend:', response);
 
         if (response.status === 'deleted') {
           console.log(`🗑️ Checkpoints eliminados: ${response.checkpoints_deleted}`);
@@ -304,9 +318,8 @@ export class AgentChatComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error('❌ Error al borrar historial:', err);
-        // Los mensajes ya se limpiaron en el frontend
-        // Podrías mostrar un toast/notification al usuario si quieres
+        console.error('❌ Error al borrar thread del backend:', err);
+        // El thread ya fue eliminado del frontend y Firestore
       }
     });
   }
