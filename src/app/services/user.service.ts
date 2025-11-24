@@ -70,7 +70,7 @@ export class UserService {
    */
   setUserSig(user: User | null) {
     this.userSig.set(user);
-    console.log(this.userSig());
+    // console.log(this.userSig());
   }
 
   /**

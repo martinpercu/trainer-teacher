@@ -10,6 +10,7 @@ export interface Candidate {
   lastJobId?: string;
   resumePath?: string;
   resumeDocName?: string;
+  resumeInDB?: boolean;
   phone?: string;
   birthdate?: string;
   optionalText?: string;

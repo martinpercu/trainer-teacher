@@ -11,6 +11,8 @@ export class LogoutComponent {
   authService = inject(AuthService);
 
   logout(){
+    console.log('log peroddo');
+
     this.authService.logout();
   }
 

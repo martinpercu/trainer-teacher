@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CandidateAuthService } from '@services/candidate-auth.service';
+// import { CandidateAuthService } from '@services/candidate-auth.service';
+import { TranslocoPipe } from '@jsverse/transloco';
 
 import {
   FormControl,
@@ -16,11 +17,11 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-candidate-edit',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslocoPipe],
   templateUrl: './candidate-edit.component.html',
 })
 export class CandidateEditComponent {
-  private candidateAuthService = inject(CandidateAuthService);
+  // private candidateAuthService = inject(CandidateAuthService);
   private candidateService = inject(CandidateService);
   private router = inject(Router);
   private formBuilder = inject(FormBuilder);
@@ -30,9 +31,9 @@ export class CandidateEditComponent {
   candidate!: Candidate;
   candidateId!: string;
 
-  editPersoInfo: boolean = true;
+  editBasicInfo: boolean = true;
   editShipping: boolean = false;
-  editBilling: boolean = false;
+  // editBilling: boolean = false;
 
   constructor() {
     const candidateSigned = this.candidateService.candidateSig();
@@ -63,12 +64,12 @@ export class CandidateEditComponent {
   private buildForm() {
     this.form = this.formBuilder.group({
       firstname: [this.candidate.username, [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
-      lastname: [this.candidate.lastname, [Validators.minLength(1), Validators.maxLength(30)]],
+      lastname: [this.candidate.lastname, [Validators.required, Validators.minLength(2), Validators.maxLength(30)]],
       email: [this.candidate.email, [Validators.required, Validators.email, Validators.maxLength(80)]],
-      phone: [this.candidate.phone, [Validators.minLength(9), Validators.maxLength(15), Validators.pattern("^[0-9]*$")]],
+      phone: [this.candidate.phone, [Validators.required, Validators.minLength(9), Validators.maxLength(15), Validators.pattern("^[0-9]*$")]],
       birthdate: [this.candidate.birthdate, [Validators.minLength(7)]],
-      address: [this.candidate.address, Validators.minLength(8)],
-      city: [this.candidate.city, [Validators.minLength(2)]],
+      // address: [this.candidate.address, Validators.minLength(8)],
+      city: [this.candidate.city, [Validators.required, Validators.minLength(3)]],
       state: [this.candidate.state],
       zipCode: [this.candidate.zipCode, [Validators.minLength(5), Validators.maxLength(8)]],
       // // country: [this.candidate.country],
@@ -80,21 +81,22 @@ export class CandidateEditComponent {
   saveUser(event: Event) {
     if (this.form.valid) {
     // console.log(this.form.value);
-    this.candidateService.updateOneUser(this.form.value, this.candidateId);
+    const updatedUser = this.candidateService.updateOneUser(this.form.value, this.candidateId);
+    // this.candidate = updatedUser
     // this.user = this.form.value;
     // console.log(this.userId);
+    // this.getOneCandidate(); // very important each time save!!!
+    console.log(updatedUser);
+    // window.location.reload();
 
-    this.getOneCandidate(); // very important each time save!!!
-    this.editPersoInfo = false;
-    this.editShipping = false;
-    this.editBilling = false;
+    // this.editBasicInfo = false;
+    // this.editShipping = false;
+    // this.editBilling = false;
+
     } else {
       this.form.markAllAsTouched();
     };
-
-
   };
-
 
   get firstnameField() {
     return this.form.get('firstname')
@@ -111,7 +113,6 @@ export class CandidateEditComponent {
   get birthdateField() {
     return this.form.get('birthdate')
   };
-
   get addressField() {
     return this.form.get('address')
   };
@@ -195,24 +196,23 @@ export class CandidateEditComponent {
 
 
   changeEditPersonalInfo() {
-    this.editPersoInfo = !this.editPersoInfo;
+    this.editBasicInfo = !this.editBasicInfo;
     this.editShipping = false;
-    this.editBilling = false;
-    console.log(this.editPersoInfo);
+    // this.editBilling = false;
+    console.log(this.editBasicInfo);
   };
 
   changeEditShipping() {
     this.editShipping = !this.editShipping;
-    this.editPersoInfo = false;
-    this.editBilling = false;
+    this.editBasicInfo = false;
+    // this.editBilling = false;
     console.log(this.editShipping);
   };
 
   changeEditBilling() {
-    this.editBilling = !this.editBilling;
+    // this.editBilling = !this.editBilling;
     this.editShipping = false;
-    this.editPersoInfo = false;
-    console.log(this.editBilling);
+    this.editBasicInfo = false;
   };
 
   updateUser() {

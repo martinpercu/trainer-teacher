@@ -15,6 +15,10 @@ import {
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Candidate } from '@models/candidate';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom, timeout } from 'rxjs';
+import { environment } from '@env/environment';
+
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +26,10 @@ import { Candidate } from '@models/candidate';
 export class CandidateService {
   private firestore = inject(Firestore);
   private candidatesCollection = collection(this.firestore, 'candidates');
+
+  private http = inject(HttpClient);
+  private apiUrl = environment.BACK_CHAT_URL; // Define esto en tu environment.ts
+
 
   candidateSig = signal<Candidate | null>(null);
 
@@ -110,7 +118,6 @@ getCandidatesByRecruiter(recruiterUid: string): Observable<Candidate[]> {
 
   async getThisCandidate(userId: string) {
     // const clientDocRef = doc(this.firestore, `users/${clientId}`);
-
     const userDocRef = doc(this.firestore, 'candidates', userId);
     console.log(userDocRef);
     const candidate = (await getDoc(userDocRef)).data();
@@ -132,17 +139,41 @@ getCandidatesByRecruiter(recruiterUid: string): Observable<Candidate[]> {
    * @param user Datos parciales del usuario
    * @param userId ID del usuario
    */
-  updateOneUser(user: Partial<Candidate>, userId: string) {
-    const userDocRef = doc(this.candidatesCollection, userId);
-    return updateDoc(userDocRef, user)
-      .then(() => {
-        console.log('Candidate updated');
-      })
-      .catch((error) => {
-        console.error('Error al actualizar usuario:', error);
-        throw error;
-      });
+  // async updateOneUser(user: Partial<Candidate>, userId: string) {
+  //   const userDocRef = doc(this.candidatesCollection, userId);
+  //   return updateDoc(userDocRef, user)
+  //     .then(() => {
+  //       console.log('Candidate updated');
+  //       // this.setUserSig(user)
+  //       // this.candidateSig.set();
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error al actualizar usuario:', error);
+  //       throw error;
+  //     });
+  // }
+  async updateOneUser(user: Partial<Candidate>, userId: string) {
+  const userDocRef = doc(this.candidatesCollection, userId);
+  return updateDoc(userDocRef, user)
+    .then(() => {
+      console.log('Candidate updated');
+      // Merge partial updates with current signal value
+      const currentCandidate = this.candidateSig();
+      if (currentCandidate) {
+        const updatedCandidate = { ...currentCandidate, ...user };
+        this.setUserSig(updatedCandidate);
+      } else {
+        console.warn('No current candidate in signal');
+        this.setUserSig(null);
+      }
+    })
+    .catch((error) => {
+      console.error('Error al actualizar usuario:', error);
+      throw error;
+    });
   }
+
+
 
   async updateCandidateIfNeeded(
     userId: string,
@@ -196,9 +227,60 @@ getCandidatesByRecruiter(recruiterUid: string): Observable<Candidate[]> {
     console.log(candidate);
 
     this.updateOneUser(candidate, userId);
-
-
-
     console.log(jobId, jobRecruiterId);
   }
+
+  // async getThisCurrentCandidate() {
+  //   // const clientDocRef = doc(this.firestore, `users/${clientId}`);
+  //   const userDocRef = doc(this.firestore, 'candidates', userId);
+  //   console.log(userDocRef);
+  //   const candidate = (await getDoc(userDocRef)).data();
+  //   console.log(candidate);
+  //   return candidate as Candidate;
+  // }
+
+  // MODIFICACIÓN AQUÍ: Agrega 'fileType' como parámetro
+  // processResumeWithPython(resumeUrl: string, userId: string, fileType: string): Promise<any> {
+  //   const body = { resume_url: resumeUrl, user_id: userId, file_type: fileType };
+  //   // Cambiamos .toPromise() por firstValueFrom()
+  //   return firstValueFrom(this.http.post(`${this.apiUrl}/process_resume_content`, body));
+  // }
+  async processResumeWithPython(resumeUrl: string, userId: string, fileType: string): Promise<any> {
+    const body = { resume_url: resumeUrl, user_id: userId, file_type: fileType };
+    // const timeoutDuration = 30000;
+
+    return firstValueFrom(this.http.post(`${this.apiUrl}/process_resume_content`, body));
+
+    // return firstValueFrom(
+    //   this.http.post(`${this.apiUrl}/process_resume_content`, body).pipe(
+    //     timeout(timeoutDuration)
+    //   )
+    // );
+  }
+
+  async processResumeWithPythonTest(resumeUrl: string, userId: string, fileType: string): Promise<any> {
+    const body = { resume_url: resumeUrl, user_id: userId, file_type: fileType };
+    const timeoutDuration = 30000;
+    console.log(body);
+
+    return firstValueFrom(
+      this.http.post(`${this.apiUrl}/process_resume_content`, body).pipe(
+        timeout(timeoutDuration)
+      )
+    );
+  }
+
+  // // MODIFICACIÓN AQUÍ: Agrega 'fileType' como parámetro
+  // processResumeWithPython(resumeUrl: string, userId: string, fileType: string): Promise<any> {
+  //   const body = { resume_url: resumeUrl, user_id: userId, file_type: fileType };
+
+  //   // Configura un tiempo de espera de 50 segundos
+  //   const timeoutDuration = 50000; // 50 segundos en milisegundos
+
+  //   return firstValueFrom(
+  //     this.http.post(`${this.apiUrl}/process_resume_content`, body).pipe(
+  //       timeout(timeoutDuration) // <-- APLICA EL OPERADOR 'timeout' AQUI
+  //     )
+  //   );
+  // }
 }
