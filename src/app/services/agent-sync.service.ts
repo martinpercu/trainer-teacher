@@ -56,6 +56,9 @@ export class AgentSyncService {
         resumeId: r.resumeId,
         candidateUID: r.candidateUID,
         recruiterId: r.recruiterId,
+        jobRelated: r.jobRelated,
+        scoreToPosition: r.scoreToPosition ? String(r.scoreToPosition) : null,  // ← Convertir a string
+        thumbUp: r.thumbUp,
         name: r.name,
         email: r.email,
         phone: r.phone,

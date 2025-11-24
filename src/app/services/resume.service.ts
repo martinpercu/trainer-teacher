@@ -484,7 +484,7 @@ export class ResumeService {
    */
   getResumesForRecruiter(recruiterId: string): Observable<Resume[]> {
     const q = query(this.resumesCollection, where('recruiterId', '==', recruiterId));
-    return collectionData(q, { idField: 'recruiterId' }) as Observable<Resume[]>;
+    return collectionData(q, { idField: 'resumeId' }) as Observable<Resume[]>;
   }
 
 

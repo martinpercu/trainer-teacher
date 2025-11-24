@@ -6,6 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { FormsModule } from '@angular/forms';
 
+import { firstValueFrom } from 'rxjs';
+
 import { MessageWaitingComponent } from '@components/message-waiting/message-waiting.component';
 
 import { ChatMessage } from '@models/chatMessage';
@@ -63,8 +65,14 @@ export class AgentChatComponent implements OnInit {
     // 👂 Escuchar cambios en el threadId seleccionado
     effect(() => {
       const threadId = this.agentChatListService.currentThreadId();
-      // Siempre llamar, incluso si es null (para limpiar pantalla)
-      this.loadMessagesForThread(threadId);
+
+      // Solo cargar mensajes si el thread CAMBIÓ (no si se actualizó el mismo thread)
+      if (threadId !== this.previousThreadId) {
+        console.log('🔄 Thread cambió de', this.previousThreadId, 'a', threadId);
+        this.loadMessagesForThread(threadId);
+      } else {
+        console.log('✅ Thread no cambió, no recargar mensajes');
+      }
     });
 
     // 👂 Escuchar cuando se necesita hacer focus en el textarea
@@ -82,8 +90,94 @@ export class AgentChatComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    // Limpiar threads vacíos con nombre ". . ." al cargar el componente
+    await this.cleanEmptyThreads();
+
     // El effect ya se encargará de cargar los mensajes iniciales
+  }
+
+  /**
+   * Limpia threads con nombre ". . ." que no tienen mensajes reales
+   * (solo tienen el mensaje trigger o están completamente vacíos)
+   */
+  private async cleanEmptyThreads(): Promise<void> {
+    const threads = this.agentChatListService.getThreads();
+
+    // Buscar threads con nombre ". . ."
+    const emptyThreads = threads.filter(t => t.name === '. . .');
+
+    if (emptyThreads.length === 0) {
+      console.log('✅ No hay threads vacíos para limpiar');
+      return;
+    }
+
+    console.log(`🧹 Encontrados ${emptyThreads.length} threads con nombre ". . ." - verificando si están vacíos...`);
+
+    for (const thread of emptyThreads) {
+      // Obtener mensajes del caché
+      const cachedMessages = this.agentChatListService.getMessagesFromCache(thread.threadId);
+
+      // Si no hay mensajes en caché, intentar obtener del backend
+      if (cachedMessages.length === 0) {
+        try {
+          const response = await firstValueFrom(this.agentChatService.getThreadHistory(thread.threadId, 50));
+
+          // 🔍 DEBUG: Ver qué devuelve el backend
+          console.log(`🔍 Backend response para thread ${thread.threadId}:`, response);
+          console.log(`🔍 Mensajes recibidos:`, response?.messages);
+
+          // Verificar si hay mensajes reales del usuario (no solo el trigger)
+          const messages = response?.messages || [];
+          const hasUserMessages = messages.some(m => m.role === 'user');
+
+          console.log(`🔍 hasUserMessages: ${hasUserMessages}, messages.length: ${messages.length}`);
+
+          // También verificar si SOLO tiene el mensaje trigger (sin otros mensajes)
+          const onlyHasTrigger = messages.length === 0 ||
+                                 (messages.length === 1 && messages[0].message === 'start-loading-state');
+
+          console.log(`🔍 onlyHasTrigger: ${onlyHasTrigger}`);
+
+          if (!hasUserMessages || onlyHasTrigger) {
+            console.log(`🗑️ Eliminando thread vacío (sin mensajes del user o solo trigger): ${thread.threadId}`);
+            await this.agentChatListService.deleteThread(thread.threadId);
+
+            // También borrar del backend
+            this.agentChatService.clearChatHistory(thread.threadId).subscribe({
+              next: () => console.log('✅ Thread vacío eliminado del backend'),
+              error: (err) => console.error('❌ Error al eliminar thread del backend:', err)
+            });
+          } else {
+            console.log(`✅ Thread tiene mensajes válidos - NO eliminar`);
+          }
+        } catch (error) {
+          // Si falla al obtener historial, asumir que está vacío y borrarlo
+          console.log(`🗑️ Error al obtener historial - eliminando thread: ${thread.threadId}`, error);
+          await this.agentChatListService.deleteThread(thread.threadId);
+        }
+      } else {
+        // Hay mensajes en caché - verificar si hay mensajes del usuario
+        const hasUserMessages = cachedMessages.some(m => m.role === 'user');
+
+        // También verificar si solo tiene el trigger
+        const onlyHasTrigger = cachedMessages.length === 1 &&
+                               cachedMessages[0].message === 'start-loading-state';
+
+        if (!hasUserMessages || onlyHasTrigger) {
+          console.log(`🗑️ Eliminando thread vacío (solo caché sin user o solo trigger): ${thread.threadId}`);
+          await this.agentChatListService.deleteThread(thread.threadId);
+
+          // También borrar del backend
+          this.agentChatService.clearChatHistory(thread.threadId).subscribe({
+            next: () => console.log('✅ Thread vacío eliminado del backend'),
+            error: (err) => console.error('❌ Error al eliminar thread del backend:', err)
+          });
+        }
+      }
+    }
+
+    console.log('✅ Limpieza de threads vacíos completada');
   }
 
   /**
@@ -126,6 +220,7 @@ export class AgentChatComponent implements OnInit {
     this.agentChatService.getThreadHistory(threadId, 50).subscribe({
       next: (response) => {
         console.log(`✅ Historial recibido del backend: ${response.messages.length} mensajes`);
+        console.log('📋 DETALLE DE MENSAJES:', response.messages);
 
         // Actualizar con los mensajes del backend
         this.chatMessages = [...response.messages];
@@ -183,51 +278,105 @@ export class AgentChatComponent implements OnInit {
     }
   }
 
+  /**
+   * Se ejecuta cuando el usuario hace focus en el textarea
+   * Crea un thread vacío + envía trigger si no hay thread seleccionado
+   */
+  async onTextareaFocus(): Promise<void> {
+    const currentThreadId = this.agentChatListService.getCurrentThreadId();
+
+    // Si ya hay un thread seleccionado, no hacer nada
+    if (currentThreadId) {
+      console.log('✅ Ya hay thread seleccionado:', currentThreadId);
+      return;
+    }
+
+    // Verificar si ya alcanzó el máximo de threads
+    const threads = this.agentChatListService.getThreads();
+    const maxThreads = this.agentChatListService.getMaxThreads();
+
+    if (threads.length >= maxThreads) {
+      console.log('⚠️ Máximo de threads alcanzado - NO crear thread en focus');
+      return;
+    }
+
+    console.log('🎯 Focus en textarea sin thread - creando thread automáticamente...');
+
+    // Crear thread vacío
+    const newThreadId = await this.agentChatListService.createEmptyThread();
+    console.log('✨ Thread creado automáticamente en focus:', newThreadId);
+
+    // Enviar trigger para cargar state
+    await this.agentChatService.sendTriggerMessage(newThreadId);
+    console.log('🔔 Trigger enviado en focus para thread:', newThreadId);
+
+    console.log('✅ Thread listo para recibir mensajes');
+  }
+
   async sendMessage(message: string, showUserMessage: boolean = true): Promise<void> {
     if (message.trim() === "") return;
 
     // Obtener el threadId actual del servicio
     let threadId = this.agentChatListService.getCurrentThreadId();
 
-    // Si no hay thread seleccionado, crear uno nuevo
+    // ⚠️ CASO EDGE: Si por alguna razón no hay thread (no debería pasar gracias al focus)
     if (!threadId) {
-      console.log('📭 No hay thread seleccionado');
+      console.warn('⚠️ No hay thread en sendMessage - esto no debería pasar (el focus debería haberlo creado)');
 
-      // Verificar si ya llegó al máximo de threads
-      const threads = this.agentChatListService.getThreads();
-      const maxThreads = this.agentChatListService.getMaxThreads();
+      // Crear thread de emergencia
+      threadId = await this.agentChatListService.createEmptyThread();
+      await this.agentChatService.sendTriggerMessage(threadId);
+      console.log('✨ Thread de emergencia creado:', threadId);
+    }
 
-      if (threads.length >= maxThreads) {
-        // Mostrar alert preguntando si quiere borrar el más antiguo
-        const confirmed = confirm(
-          'Cantidad máxima de chats alcanzados. ¿Quieres enviar igualmente el mensaje? Se borrará tu conversación más antigua'
-        );
+    // Verificar si alcanzó el máximo de threads ANTES de enviar el mensaje
+    const threads = this.agentChatListService.getThreads();
+    const maxThreads = this.agentChatListService.getMaxThreads();
 
-        if (!confirmed) {
-          console.log('❌ Usuario canceló la creación de nuevo thread');
-          return;
-        }
+    if (threads.length > maxThreads) {
+      // Hay más threads que el máximo permitido (porque se creó uno en el focus)
+      console.log('⚠️ Máximo de threads alcanzado. Mostrando alert...');
 
-        // Borrar el thread más antiguo
-        const deletedThread = await this.agentChatListService.deleteOldestThread();
-        console.log('🗑️ Thread más antiguo eliminado:', deletedThread?.name);
+      const confirmed = confirm(
+        'Cantidad máxima de chats alcanzados. ¿Quieres enviar igualmente el mensaje? Se borrará tu conversación más antigua'
+      );
+
+      if (!confirmed) {
+        // Usuario canceló - BORRAR el thread actual (creado en el focus)
+        console.log('❌ Usuario canceló - eliminando thread actual');
+        await this.agentChatListService.deleteThread(threadId);
 
         // También borrar del backend
-        if (deletedThread) {
-          this.agentChatService.clearChatHistory(deletedThread.threadId).subscribe({
-            next: () => console.log('✅ Thread eliminado del backend'),
-            error: (err) => console.error('❌ Error al eliminar thread del backend:', err)
-          });
-        }
+        this.agentChatService.clearChatHistory(threadId).subscribe({
+          next: () => console.log('✅ Thread eliminado del backend'),
+          error: (err) => console.error('❌ Error al eliminar thread del backend:', err)
+        });
+
+        return;
       }
 
-      // Crear nuevo thread con el mensaje como nombre
-      threadId = await this.agentChatListService.createNewThread(message);
-      console.log('✨ Nuevo thread creado automáticamente:', threadId);
-    } else {
-      // Si ya hay thread seleccionado, moverlo al principio
-      await this.agentChatListService.moveThreadToTop(threadId);
+      // Usuario aceptó - borrar el thread más antiguo
+      const deletedThread = await this.agentChatListService.deleteOldestThread();
+      console.log('🗑️ Thread más antiguo eliminado:', deletedThread?.name);
+
+      // También borrar del backend
+      if (deletedThread) {
+        this.agentChatService.clearChatHistory(deletedThread.threadId).subscribe({
+          next: () => console.log('✅ Thread más antiguo eliminado del backend'),
+          error: (err) => console.error('❌ Error al eliminar thread del backend:', err)
+        });
+      }
     }
+
+    // Si el thread se llama ". . .", renombrarlo con el primer mensaje
+    const currentThread = threads.find(t => t.threadId === threadId);
+    if (currentThread && currentThread.name === '. . .') {
+      console.log('📝 Renombrando thread ". . ." con el primer mensaje');
+      await this.agentChatListService.renameThread(threadId, message.substring(0, 50));
+    }
+
+    // Mover el thread al principio
+    await this.agentChatListService.moveThreadToTop(threadId);
 
     this.loadingResponse = true;
 

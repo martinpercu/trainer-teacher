@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { TranslocoPipe } from '@jsverse/transloco';
 
 import { AgentChatListService, ChatThread } from '@services/agent-chat-list.service';
+import { AgentChatService } from '@services/agent-chat.service';
 
 @Component({
   selector: 'app-agent-chats-list',
@@ -15,6 +16,7 @@ import { AgentChatListService, ChatThread } from '@services/agent-chat-list.serv
 export class AgentChatsListComponent {
   visualStatesService = inject(VisualStatesService);
   agentChatListService = inject(AgentChatListService);
+  agentChatService = inject(AgentChatService);
 
   // Obtener threads desde el servicio
   get chatThreads(): ChatThread[] {
@@ -45,21 +47,30 @@ export class AgentChatsListComponent {
   }
 
   // Método para el botón "ADD NEW CHAT"
-  onAddNewChat(): void {
+  async onAddNewChat(): Promise<void> {
     if (this.isMaxThreadsReached) {
       console.log('❌ Máximo de threads alcanzado');
       return;
     }
 
-    console.log('➕ Preparando nuevo chat...');
+    console.log('➕ Creando nuevo chat...');
 
-    // Deseleccionar thread actual (limpia pantalla)
-    this.agentChatListService.deselectThread();
-
-    // Cerrar el sidebar de la lista
+    // 1. Cerrar el sidebar PRIMERO (mejor UX - no se ve el parpadeo)
     this.visualStatesService.handleShowChatList();
 
-    console.log('✅ Listo para crear nuevo chat. Envía un mensaje para crearlo.');
+    // 2. Crear thread vacío
+    const newThreadId = await this.agentChatListService.createEmptyThread();
+    console.log('✨ Thread vacío creado:', newThreadId);
+
+    // 3. Enviar mensaje trigger para cargar state en el backend
+    await this.agentChatService.sendTriggerMessage(newThreadId);
+    console.log('🔔 Trigger enviado para thread:', newThreadId);
+
+    // 4. El thread ya está seleccionado (createEmptyThread lo hace)
+    // 5. Focus en el textarea para que el usuario pueda escribir
+    this.visualStatesService.triggerTextareaFocus();
+
+    console.log('✅ Nuevo chat listo. Usuario puede escribir su primer mensaje.');
   }
 
   // Renombrar un thread
@@ -95,7 +106,10 @@ export class AgentChatsListComponent {
       await this.agentChatListService.deleteThread(threadId);
 
       // TODO: También eliminar del backend si es necesario
-      // this.agentChatService.clearChatHistory(threadId).subscribe(...)
+      this.agentChatService.clearChatHistory(threadId).subscribe({
+        next: () => console.log('✅ Thread eliminado del backend'),
+        error: (err) => console.error('❌ Error al eliminar thread del backend:', err)
+      });
     } else {
       console.log('❌ Delete cancelado');
     }

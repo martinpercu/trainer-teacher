@@ -101,7 +101,20 @@ export class AgentChatService {
                     console.log('🚀 Primer contenido recibido - loading detenido');
                   }
 
+                  // 🔍 DEBUG: Ver qué contenido llega del backend
+                  console.log('📦 Chunk recibido:', data.content);
+
+                  // ⚠️ IMPORTANTE: El backend envía el mensaje completo al final
+                  // Si el chunk es igual al mensaje actual, NO agregarlo (evitar duplicado)
+                  const currentMessage = chatMessages[responseIndex].message || '';
+
+                  if (data.content === currentMessage) {
+                    console.log('⚠️ Chunk duplicado detectado (mensaje completo) - IGNORADO');
+                    return; // No agregar el chunk duplicado
+                  }
+
                   chatMessages[responseIndex].message += data.content;
+
                   onContentReceived(data.content);
                   onScroll();
                 } else if (data.type === 'error') {
@@ -224,6 +237,48 @@ export class AgentChatService {
     }>(url, {
       params: { limit: limit.toString() }
     });
+  }
+
+  /**
+   * Envía el mensaje trigger "start-loading-state" al backend
+   * para que cargue el state inicial del agente con datos de la DB
+   * @param threadId - ID del thread que se está iniciando
+   * @returns Promise que se resuelve cuando el trigger fue enviado
+   */
+  async sendTriggerMessage(threadId: string): Promise<void> {
+    const url = `${environment.BACK_AGENT_BRIDGE}/chat_agent/${threadId}/stream`;
+
+    console.log('🔔 Enviando mensaje trigger para cargar state del thread:', threadId);
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: 'start-loading-state',
+          recruiterId: this.authService.getCurrentUserId(),
+          max_threads: this.agentChatListService.getMaxThreads()
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Consumir el stream pero no procesarlo (no nos interesa la respuesta)
+      const reader = response.body!.getReader();
+      while (true) {
+        const { done } = await reader.read();
+        if (done) break;
+      }
+
+      console.log('✅ Mensaje trigger enviado exitosamente');
+    } catch (error) {
+      console.error('❌ Error al enviar mensaje trigger:', error);
+      // No lanzar error - es mejor que el sistema continúe aunque falle el trigger
+    }
   }
 
 }

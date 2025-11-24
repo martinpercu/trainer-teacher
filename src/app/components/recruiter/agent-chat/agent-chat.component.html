@@ -50,7 +50,7 @@
         <div class="flex flex-col sm:w-12/12 md:w-11/12 lg:w-[640px] xl:w-[768px] m-auto"
           *ngFor="let message of chatMessages">
 
-          <div
+          <div *ngIf="!(message.message === 'start-loading-state')"
             class="max-w-[80%] rounded-3xl rounded-br-md text-neutral-800 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-750 mt-3 mb-4 py-2 px-4 break-words whitespace-pre-wrap"
             [ngClass]="{
               'assistant-message self-start bg-transparent dark:bg-transparent': message.role === 'assistant',
@@ -69,15 +69,15 @@
         }
       </div>
 
-<!--
-      <div class="bg-blue-300">
+
+      <!-- <div class="bg-blue-300">
         <app-sync-resume></app-sync-resume>
-      </div>
+      </div> -->
 
-
-      <div class="bg-red-300">
+      <!-- <div class="bg-red-300">
         <app-sync-job></app-sync-job>
       </div> -->
+
 
       <!-- This is footer Form BLOCK including arrow -->
 
@@ -103,8 +103,8 @@
             <div class="grow">
               <textarea #chatInput [(ngModel)]="userMessage"
                 class="w-full text-gray-800 dark:text-gray-200 py-1 px-3 ring-0 bg-transparent resize-none overflow-hidden focus:outline-none focus:ring-0 focus:border-none appearance-none dark:placeholder-neutral-400"
-                rows="1" placeholder="Ask me here — I’ll help you out" aria-label="Ask me here — I’ll help you out"
-                (input)="adjustHeight()" (keydown)="handleKeydown($event)">
+                rows="1" placeholder="Ask me here — I'll help you out" aria-label="Ask me here — I'll help you out"
+                (input)="adjustHeight()" (keydown)="handleKeydown($event)" (focus)="onTextareaFocus()">
               </textarea>
             </div>
 

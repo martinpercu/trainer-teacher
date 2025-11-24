@@ -138,6 +138,43 @@ export class AgentChatListService {
   }
 
   /**
+   * Crea un nuevo thread vacío (sin mensaje) y lo agrega al principio de la lista
+   * @param name - Nombre opcional para el thread (por defecto ". . .")
+   * @returns El threadId del nuevo thread creado
+   */
+  async createEmptyThread(name: string = '. . .'): Promise<string> {
+    const threadId = this.generateThreadId();
+
+    const newThread: ChatThread = {
+      threadId,
+      name,
+      createdAt: new Date()
+    };
+
+    console.log(`✨ Creando nuevo thread vacío: "${name}" (${threadId})`);
+
+    // Agregar al principio de la lista
+    const currentThreads = this.chatThreads();
+    currentThreads.unshift(newThread);
+    this.chatThreads.set([...currentThreads]);
+
+    // Seleccionar el nuevo thread
+    this.currentThreadId.set(threadId);
+
+    // ⚠️ NO guardar en Firestore si es ". . ." (thread temporal)
+    // Se guardará cuando el usuario envíe su primer mensaje y se renombre
+    if (name !== '. . .') {
+      await this.saveThreadsToFirestore(currentThreads);
+    } else {
+      console.log('⏸️ Thread temporal ". . ." NO guardado en Firestore (se guardará al renombrar)');
+    }
+
+    console.log(`✅ Thread vacío creado: "${name}"`);
+
+    return threadId;
+  }
+
+  /**
    * Crea un nuevo thread y lo agrega al principio de la lista
    * @param firstMessage - Primer mensaje del usuario (usado para generar el nombre)
    * @returns El threadId del nuevo thread creado
