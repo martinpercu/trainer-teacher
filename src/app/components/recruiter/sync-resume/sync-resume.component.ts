@@ -141,6 +141,14 @@ export class SyncResumeComponent {
 
 
     async runMigration() {
+    // Alert de confirmación antes de ejecutar
+    const confirmed = confirm('⚠️ ¿Are you SURE to run this method, this migration ?\n\nThis action modified register in DB.');
+
+    if (!confirmed) {
+      console.log('Migración cancelada por el usuario.');
+      return;
+    }
+
     console.log("Iniciando la migración de datos...");
     try {
       // Llama a la nueva función del servicio

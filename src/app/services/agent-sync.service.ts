@@ -57,7 +57,7 @@ export class AgentSyncService {
         candidateUID: r.candidateUID,
         recruiterId: r.recruiterId,
         jobRelated: r.jobRelated,
-        scoreToPosition: r.scoreToPosition ? String(r.scoreToPosition) : null,  // ← Convertir a string
+        scoreToPosition: this.convertToPercentage(r.scoreToPosition),  // ← Convertir a porcentaje redondeado
         thumbUp: r.thumbUp,
         name: r.name,
         email: r.email,
@@ -100,6 +100,15 @@ export class AgentSyncService {
       return value.split(',').map(item => item.trim()).filter(item => item.length > 0);
     }
     return [];
+  }
+
+  // Función helper para convertir score a porcentaje redondeado
+  private convertToPercentage(score: any): string | null {
+    if (!score) return null;
+    const numScore = Number(score);
+    if (isNaN(numScore)) return null;
+    const percentage = Math.round(numScore / 10);
+    return `${percentage}%`;
   }
 
   deleteResumeFromAgent(resumeId: string) {
