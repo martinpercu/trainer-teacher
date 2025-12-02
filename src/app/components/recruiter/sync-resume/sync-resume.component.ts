@@ -5,10 +5,11 @@ import { ResumeService } from '@services/resume.service';
 import { AgentSyncService } from '@services/agent-sync.service';
 import { firstValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-sync-resume',
-  imports: [],
+  imports: [MatIconModule],
   templateUrl: './sync-resume.component.html'
 })
 export class SyncResumeComponent {

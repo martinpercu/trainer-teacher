@@ -208,6 +208,26 @@
     }
 
 
+    <button
+      (click)="setView('admin_agent')"
+      class="flex items-center gap-2 px-4 py-2 rounded-lg text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 border border-transparent dark:border-neutral-700"
+      [ngClass]="{
+        'bg-neutral-100 dark:bg-neutral-800 font-semibold shadow-sm shadow-neutral-300':
+          currentView === 'admin_agent'
+      }"
+    >
+      <mat-icon>manage_accounts</mat-icon>
+      <span
+        class="hidden sm:block"
+        [ngClass]="{
+          'pl-1': currentView === 'admin_agent'
+        }"
+        >ADMIN-AGENT</span
+      >
+    </button>
+
+
+
 
     <!-- <button (click)="setView('students')"
       class="flex items-center gap-2 px-4 py-2 rounded-3xl text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
@@ -404,9 +424,25 @@
     ></app-student-list>
     } } -->
 
+
+  @if (currentView === "admin_agent") {
+  <div class="flex-1 overflow-auto">
+    <h1 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200 mb-4">
+      Admin-AGENTES
+    </h1>
+    <div class="">
+      <app-admin-agent></app-admin-agent>
+    </div>
+  </div>
+  }  
+
+
+
   </div>
 
   }
+
+
 
   @if (currentView === "agent_chat") {
   <div class="flex-1 overflow-auto">
@@ -420,6 +456,9 @@
     </div>
   </div>
   }
+
+
+
 
   <!-- END ALL CONTENT -->
 

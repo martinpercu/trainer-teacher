@@ -4,12 +4,11 @@ import { AuthService } from '@services/auth.service';
 import { JobCrudService } from '@services/job-crud.service';
 import { AgentSyncService } from '@services/agent-sync.service';
 import { firstValueFrom } from 'rxjs';
-
-
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-sync-job',
-  imports: [],
+  imports: [MatIconModule],
   templateUrl: './sync-job.component.html'
 })
 export class SyncJobComponent {
