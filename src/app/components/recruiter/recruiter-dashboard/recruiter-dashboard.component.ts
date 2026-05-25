@@ -61,6 +61,7 @@ import { of, forkJoin, from } from 'rxjs'; // Import 'of'
 import { switchMap, tap, filter, catchError, map, take } from 'rxjs/operators';
 // import { LoadingBarComponent } from "@shared/loading-bar/loading-bar.component";
 // import { map } from 'rxjs/operators';
+import { AdminAgentComponent } from '@recruiter/admin-agent/admin-agent.component'
 
 @Component({
   selector: 'app-recruiter-dashboard',
@@ -81,7 +82,8 @@ import { switchMap, tap, filter, catchError, map, take } from 'rxjs/operators';
     // LoadingBarComponent,
     RecruiterAccountComponent,
     OwnResumesComponent,
-    AgentChatComponent
+    AgentChatComponent,
+    AdminAgentComponent
 ],
   templateUrl: './recruiter-dashboard.component.html',
 })
@@ -117,6 +119,7 @@ export class RecruiterDashboardComponent {
     | 'own_resumes'
     | 'candidates'
     | 'agent_chat'
+    | 'admin_agent'
     | ''
     // = 'jobs'; // Default to courses
     = 'candidates'; // Default to courses
@@ -280,6 +283,7 @@ export class RecruiterDashboardComponent {
       | 'candidates'
       | 'own_resumes'
       | 'agent_chat'
+      | 'admin_agent'
   ) {
     this.currentView = view;
   }
